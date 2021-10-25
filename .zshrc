@@ -109,3 +109,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# Set up pure prompt
+autoload -U promptinit; promptinit
+prompt pure
+
