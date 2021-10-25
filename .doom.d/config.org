@@ -100,17 +100,27 @@ Emacs config, requires [[https://github.com/hlissner/doom-emacs][Doom Emacs]].
 (add-hook 'dired-mode-hook 'org-download-enable)
 
 ;; Allow "C-c o" to quickly open up a file in the org directory
+(defun open-org-directory ()
+  (interactive) (ido-find-file-in-dir org-directory))
 (global-set-key (kbd "C-c o")
-                (lambda ()
-                  (interactive)
-                  (ido-find-file-in-dir org-directory)))
+                'open-org-directory)
 
 ;; Use custom todo keywords
 (after! org
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "IDEA(i)" "SOMEDAY(s)" "|" "DONE" "CANCELLED(c)"))))
-#+end_src
+        '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w)"
+                    "IDEA(i)" "|" "DONE" "CANCELLED(c)"))))
 
+;; Set other todo colors according to the nord theme (https://www.nordtheme.com/)
+(setq org-todo-keyword-faces
+      '(("IN-PROGRESS" . "#88C0D0")
+        ("WAITING" . "#5E81AC")
+        ("IDEA" . "#EBCB8B")
+        ("CANCELED" . "#BF616A"))
+      )
+
+(setq org-log-done 'time)
+#+end_src
 * Line numbering
 #+begin_src elisp
 ;; This determines the style of line numbers in effect. If set to `nil', line
