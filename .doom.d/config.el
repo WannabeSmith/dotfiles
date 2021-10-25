@@ -88,7 +88,7 @@
 ;; Use custom todo keywords
 (after! org
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "IDEA(i)" "|" "DONE" "CANCELLED(c)"))))
+        '((sequence "TODO(t)" "INPROGRESS(p)" "WAITING(w)" "IDEA(i)" "SOMEDAY(s)" "|" "DONE" "CANCELLED(c)"))))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
