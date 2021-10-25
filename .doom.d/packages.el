@@ -12,6 +12,8 @@
 ;; If I don't use bind-key, then C-j will not switch buffers.
 (package! use-package)
 
+;; Use org-downlaod so that screenshots can be dragged and dropped
+;; into org documents.
 (package! org-download)
 
 ;; To install a package directly from a remote git repo, you must specify a
