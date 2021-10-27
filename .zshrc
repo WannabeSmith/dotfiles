@@ -1,5 +1,8 @@
 alias v=nvim
 
+# Homebrew sbin
+export PATH="/usr/local/sbin:$PATH"
+# For doom
 export PATH="$HOME/.emacs.d/bin:$PATH"
 
 # If you come from bash you might have to change your $PATH.
@@ -114,4 +117,3 @@ source $ZSH/oh-my-zsh.sh
 # Set up pure prompt
 autoload -U promptinit; promptinit
 prompt pure
-
