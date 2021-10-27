@@ -9,8 +9,10 @@ Emacs config, requires [[https://github.com/hlissner/doom-emacs][Doom Emacs]].
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-;; (moom-fill-screen)
+;; Make emacs maximized one startup
 (add-hook 'doom-init-ui-hook 'toggle-frame-maximized)
+
+;; Might be useful in the future: https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/
 
 #+end_src
 * Me
@@ -129,34 +131,35 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c c <char>" with
 (setq doom-theme 'doom-nord)
 #+end_src
 * Org-mode
+This directory allows syncing with beorg on iOS. Pretty cool!
 #+begin_src elisp
-;; This directory allows syncing with beorg on iOS. Pretty cool!
 (setq
  org-directory
  "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
 
-(custom-set-faces
- '(org-level-1 ((t (:inherit outline-1 :height 1.3))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.1))))
- '(org-level-3 ((t (:inherit outline-3 :height 1))))
- '(org-level-4 ((t (:inherit outline-4 :height 1))))
- '(org-level-5 ((t (:inherit outline-5 :height 1))))
- '(org-level-6 ((t (:inherit outline-6 :height 1))))
- '(org-level-7 ((t (:inherit outline-7 :height 1))))
- '(org-level-8 ((t (:inherit outline-8 :height 1))))
- )
+#+end_src
+Make the first level org heading a little larger.
+#+begin_src elisp
+(custom-set-faces '(org-level-1 ((t (:inherit outline-1 :height 1.2)))))
+#+end_src
 
-;; Enable org-download
+Enable org-download so that we can drag and drop screenshots into org.
+#+begin_src elisp
 (require 'org-download)
 (add-hook 'dired-mode-hook 'org-download-enable)
+#+end_src
 
-;; Allow "C-c o" to quickly open up a file in the org directory
+
+Allow "C-c o" to quickly open up a file in the org directory
+#+begin_src elisp
 (defun my/open-org-directory ()
   (interactive) (ido-find-file-in-dir org-directory))
 (global-set-key (kbd "C-c o")
                 'my/open-org-directory)
+#+end_src
 
-;; Use custom todo keywords
+Use custom todo keywords and colours.
+#+begin_src elisp
 (after! org
   (setq org-todo-keywords
         '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w)"
@@ -181,6 +184,9 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c c <char>" with
 #+end_src
 * Misc
 #+begin_src elisp
+;; Disable "jk" exiting insert mode
+(setq evil-escape-key-sequence nil)
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one

@@ -3,8 +3,10 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-;; (moom-fill-screen)
+;; Make emacs maximized one startup
 (add-hook 'doom-init-ui-hook 'toggle-frame-maximized)
+
+;; Might be useful in the future: https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
@@ -105,33 +107,20 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-nord)
 
-;; This directory allows syncing with beorg on iOS. Pretty cool!
 (setq
  org-directory
  "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
 
-(custom-set-faces
- '(org-level-1 ((t (:inherit outline-1 :height 1.3))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.1))))
- '(org-level-3 ((t (:inherit outline-3 :height 1))))
- '(org-level-4 ((t (:inherit outline-4 :height 1))))
- '(org-level-5 ((t (:inherit outline-5 :height 1))))
- '(org-level-6 ((t (:inherit outline-6 :height 1))))
- '(org-level-7 ((t (:inherit outline-7 :height 1))))
- '(org-level-8 ((t (:inherit outline-8 :height 1))))
- )
+(custom-set-faces '(org-level-1 ((t (:inherit outline-1 :height 1.2)))))
 
-;; Enable org-download
 (require 'org-download)
 (add-hook 'dired-mode-hook 'org-download-enable)
 
-;; Allow "C-c o" to quickly open up a file in the org directory
 (defun my/open-org-directory ()
   (interactive) (ido-find-file-in-dir org-directory))
 (global-set-key (kbd "C-c o")
                 'my/open-org-directory)
 
-;; Use custom todo keywords
 (after! org
   (setq org-todo-keywords
         '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w)"
@@ -150,6 +139,9 @@
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type 'relative)
+
+;; Disable "jk" exiting insert mode
+(setq evil-escape-key-sequence nil)
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
