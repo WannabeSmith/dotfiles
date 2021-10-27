@@ -3,100 +3,13 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+;; (moom-fill-screen)
+(add-hook 'doom-init-ui-hook 'toggle-frame-maximized)
+
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Ian Waudby-Smith"
       user-mail-address "iwaudbysmith@gmail.com")
-
-;; Some useful functions for centering emacs frame,
-;; courtesy of Christian Tietze (https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/)
-(defun my/frame-monitor-usable-height (&optional frame)
-  "Return the usable height in pixels of the monitor of FRAME.
-FRAME can be a frame name, a terminal name, or a frame.
-If FRAME is omitted or nil, use currently selected frame.
-
-Uses the monitor's workarea. See `display-monitor-attributes-list'."
-  (cadddr (frame-monitor-workarea frame)))
-
-(defun my/frame-monitor-usable-width (&optional frame)
-  "Return the usable width in pixels of the monitor of FRAME.
-FRAME can be a frame name, a terminal name, or a frame.
-If FRAME is omitted or nil, use currently selected frame.
-
-Uses the monitor's workarea. See `display-monitor-attributes-list'."
-  (caddr (frame-monitor-workarea frame)))
-
-(defun my/frame-monitor-usable-left (&optional frame)
-  "Return the left-most usable pixel of the monitor of FRAME.
-FRAME can be a frame name, a terminal name, or a frame.
-If FRAME is omitted or nil, use currently selected frame.
-
-Uses the monitor's workarea. See `display-monitor-attributes-list'."
-  (car (frame-monitor-workarea frame)))
-
-(defun my/frame-monitor-usable-top (&optional frame)
-  "Return the top-most usable pixel of the monitor of FRAME.
-FRAME can be a frame name, a terminal name, or a frame.
-If FRAME is omitted or nil, use currently selected frame.
-
-Uses the monitor's workarea. See `display-monitor-attributes-list'."
-  (car (frame-monitor-workarea frame)))
-
-(defun my/center-box (w h cw ch)
-  "Center a box inside another box.
-
-Returns a list of `(TOP LEFT)' representing the centered position
-of the box `(w h)' inside the box `(cw ch)'."
-  (list (/ (- cw w) 2) (/ (- ch h) 2)))
-
-(defun my/frame-get-center (frame)
-  "Return the center position of FRAME on it's display."
-  (my/center-box (frame-pixel-width frame) (frame-pixel-height frame)
-                 (my/frame-monitor-usable-width frame) (my/frame-monitor-usable-height frame)))
-
-(defun my/frame-recenter (&optional frame)
-  "Center a frame on the screen."
-  (interactive)
-  (let* ((frame (or (and (boundp 'frame) frame) (selected-frame)))
-         (center (my/frame-get-center frame)))
-    (apply 'set-frame-position (flatten-list (list frame center)))))
-
-
-
-;; Define useful variables for setting frame position/size
-(setq my/frame-padding 30)
-
-(defun my/frame-width ()
-  (- (my/frame-monitor-usable-width)
-     (* my/frame-padding 2)))
-
-(defun my/frame-height ()
-  (- (my/frame-monitor-usable-height)
-     (* my/frame-padding 2)))
-
-(defun my/frame-top ()
-  (+ (my/frame-monitor-usable-top)
-     my/frame-padding))
-
-(defun my/frame-left ()
-  (+ (my/frame-monitor-usable-left)
-     my/frame-padding))
-
-(defun my/frame-resize ()
-  (interactive)
-  (set-frame-position (selected-frame)
-                      (my/frame-left)
-                      (my/frame-top))
-  (set-frame-size (selected-frame)
-                  (my/frame-width)
-                  (my/frame-height)
-                  t))
-;; Resize frames pixel-wise
-(setq frame-resize-pixelwise t)
-
-(my/frame-resize)
-(my/frame-recenter)
-;; (add-hook 'after-init-hook #'my/frame-resize)
 
 ;; Use C-hjkl to move between windows
 ;; This overwrites some bindings I don't need.
@@ -115,6 +28,8 @@ of the box `(w h)' inside the box `(cw ch)'."
 ;; Switch to the new window after splitting
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
+
+(bind-key "C-c f" 'toggle-frame-maximized)
 
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."
@@ -235,8 +150,6 @@ of the box `(w h)' inside the box `(cw ch)'."
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type 'relative)
-
-(setq confirm-kill-emacs nil)
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;

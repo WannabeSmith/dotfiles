@@ -8,13 +8,12 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 
-;; Need this package so that I can use bind-key* in config.el.
-;; If I don't use bind-key, then C-j will not switch buffers.
-(package! use-package)
-
 ;; Use org-downlaod so that screenshots can be dragged and dropped
 ;; into org documents.
 (package! org-download)
+
+;; Use (https://github.com/millejoh/emacs-ipython-notebook)
+(package! ein)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
