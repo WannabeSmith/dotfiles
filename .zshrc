@@ -2,8 +2,12 @@ alias v=nvim
 
 # Homebrew sbin
 export PATH="/usr/local/sbin:$PATH"
+#
 # For doom
 export PATH="$HOME/.emacs.d/bin:$PATH"
+
+# pyenv
+eval "$(pyenv init -)"
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
