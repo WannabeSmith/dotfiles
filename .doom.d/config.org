@@ -2,6 +2,8 @@
 
 Emacs config, requires [[https://github.com/hlissner/doom-emacs][Doom Emacs]].
 
+This config is written as an org file ([[./config.el][config.el]]) and auto-compiles to [[./config.el][config.el]] using the ":config literate" option in [[./init.el][init.el]].
+
 * Startup
 #+begin_src elisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
@@ -28,10 +30,10 @@ Emacs config, requires [[https://github.com/hlissner/doom-emacs][Doom Emacs]].
 ;; This overwrites some bindings I don't need.
 ;; e.g. to use C-h, can use "SPC h", and C-jkl are
 ;; unneeded due to evil mode.
-(bind-key* "C-h"  'windmove-left)
-(bind-key* "C-l"  'windmove-right)
-(bind-key* "C-k"  'windmove-up)
-(bind-key* "C-j"  'windmove-down)
+(bind-key* "C-h"  'evil-window-left)
+(bind-key* "C-l"  'evil-window-right)
+(bind-key* "C-k"  'evil-window-up)
+(bind-key* "C-j"  'evil-window-down)
 
 ;; Split windows using C-a l/j to keep consistent bindings with tmux
 ;; This does not overwrite anything as far as I can tell
@@ -44,8 +46,64 @@ Emacs config, requires [[https://github.com/hlissner/doom-emacs][Doom Emacs]].
 
 (bind-key "C-c f" 'toggle-frame-maximized)
 #+end_src
+
+* Coding
+#+begin_src elisp
+;; C-c c will contain all coding-related bindings
+(global-set-key (kbd "C-c c") 'my/coding)
+
+(defalias 'my/coding
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "p") 'my/python)
+    (define-key map (kbd "l") 'my/latex)
+    (define-key map (kbd "r") 'my/r)
+    (define-key map (kbd "j") 'my/julia)
+    map) "Coding-related bindings")
+#+end_src
+
+** Python
+#+begin_src elisp
+(defalias 'my/python
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "r") #'run-python)
+    (define-key map (kbd "v") #'pyvenv-activate)
+    (define-key map (kbd "f") #'python-black-buffer)
+    map) "Python-related bindings")
+#+end_src
+
+** LaTeX
+#+begin_src elisp
+;; Make default latex viewer pdf-tools
+;; (setq +latex-viewers '(pdf-tools))
+
+;; Use pdf-tools to open PDF files
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-compilation-finished-functions
+          #'TeX-revert-document-buffer)
+
+;; Make AUCTeX ask for main tex file in multi-document structure
+(setq-default TeX-master nil)
+
+;; Prevent AUCTeX from inserting braces automatically
+(setq TeX-electric-sub-and-superscript nil)
+#+end_src
+#+begin_src elisp
+#+end_src
+* Treemacs
+#+begin_src elisp
+(global-set-key (kbd "C-c t") 'my/treemacs)
+
+(defalias 'my/treemacs
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "a") 'treemacs-add-project-to-workspace)
+    (define-key map (kbd "r") 'treemacs-remove-project-from-workspace)
+    map) "Treemacs-related bindings")
+#+end_src
 * Config management
-Opening config.org, config.el, init.el, and packages.el uses "C-c c <char>" with <char> replaced by c, C, i, or p, respectively.
+Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with <char> replaced by c, C, i, or p, respectively.
 #+begin_src elisp
 
 (defun my/goto-private-config-org-file ()
@@ -69,7 +127,7 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c c <char>" with
   (find-file (expand-file-name "packages.el" doom-private-dir)))
 
 ;; C-c c will contain all config-related stuff
-(global-set-key (kbd "C-c c") 'my/config)
+(global-set-key (kbd "C-c e") 'my/config)
 
 (defalias 'my/config
   (let ((map (make-sparse-keymap)))
@@ -78,25 +136,6 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c c <char>" with
     (define-key map (kbd "i") #'my/goto-private-init-file)
     (define-key map (kbd "p") #'my/goto-private-packages-file)
     map) "Config-related bindings")
-#+end_src
-* LaTeX
-#+begin_src elisp
-;; Make default latex viewer pdf-tools
-;; (setq +latex-viewers '(pdf-tools))
-
-;; Use pdf-tools to open PDF files
-(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-      TeX-source-correlate-start-server t)
-
-;; Update PDF buffers after successful LaTeX runs
-(add-hook 'TeX-after-compilation-finished-functions
-          #'TeX-revert-document-buffer)
-
-;; Make AUCTeX ask for main tex file in multi-document structure
-(setq-default TeX-master nil)
-
-;; Prevent AUCTeX from inserting braces automatically
-(setq TeX-electric-sub-and-superscript nil)
 #+end_src
 * Autocomplete/company
 #+begin_src elisp
@@ -175,7 +214,18 @@ Use custom todo keywords and colours.
 
 (setq org-log-done 'time)
 #+end_src
+* Shells
+#+begin_src elisp
+;; C-c s will contain all shell-related commands
+(global-set-key (kbd "C-c s") 'my/shells)
 
+(defalias 'my/shells
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "s") 'shell)
+    (define-key map (kbd "e") 'eshell)
+    (define-key map (kbd "t") 'term)
+    map) "Shell-related bindings")
+#+end_src
 * Line numbering
 #+begin_src elisp
 ;; This determines the style of line numbers in effect. If set to `nil', line

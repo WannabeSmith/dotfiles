@@ -17,10 +17,10 @@
 ;; This overwrites some bindings I don't need.
 ;; e.g. to use C-h, can use "SPC h", and C-jkl are
 ;; unneeded due to evil mode.
-(bind-key* "C-h"  'windmove-left)
-(bind-key* "C-l"  'windmove-right)
-(bind-key* "C-k"  'windmove-up)
-(bind-key* "C-j"  'windmove-down)
+(bind-key* "C-h"  'evil-window-left)
+(bind-key* "C-l"  'evil-window-right)
+(bind-key* "C-k"  'evil-window-up)
+(bind-key* "C-j"  'evil-window-down)
 
 ;; Split windows using C-a l/j to keep consistent bindings with tmux
 ;; This does not overwrite anything as far as I can tell
@@ -32,6 +32,51 @@
       evil-vsplit-window-right t)
 
 (bind-key "C-c f" 'toggle-frame-maximized)
+
+;; C-c c will contain all coding-related bindings
+(global-set-key (kbd "C-c c") 'my/coding)
+
+(defalias 'my/coding
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "p") 'my/python)
+    (define-key map (kbd "l") 'my/latex)
+    (define-key map (kbd "r") 'my/r)
+    (define-key map (kbd "j") 'my/julia)
+    map) "Coding-related bindings")
+
+(defalias 'my/python
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "r") #'run-python)
+    (define-key map (kbd "v") #'pyvenv-activate)
+    (define-key map (kbd "f") #'python-black-buffer)
+    map) "Python-related bindings")
+
+;; Make default latex viewer pdf-tools
+;; (setq +latex-viewers '(pdf-tools))
+
+;; Use pdf-tools to open PDF files
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-compilation-finished-functions
+          #'TeX-revert-document-buffer)
+
+;; Make AUCTeX ask for main tex file in multi-document structure
+(setq-default TeX-master nil)
+
+;; Prevent AUCTeX from inserting braces automatically
+(setq TeX-electric-sub-and-superscript nil)
+
+
+
+(global-set-key (kbd "C-c t") 'my/treemacs)
+
+(defalias 'my/treemacs
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "a") 'treemacs-add-project-to-workspace)
+    (define-key map (kbd "r") 'treemacs-remove-project-from-workspace)
+    map) "Treemacs-related bindings")
 
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."
@@ -54,7 +99,7 @@
   (find-file (expand-file-name "packages.el" doom-private-dir)))
 
 ;; C-c c will contain all config-related stuff
-(global-set-key (kbd "C-c c") 'my/config)
+(global-set-key (kbd "C-c e") 'my/config)
 
 (defalias 'my/config
   (let ((map (make-sparse-keymap)))
@@ -63,23 +108,6 @@
     (define-key map (kbd "i") #'my/goto-private-init-file)
     (define-key map (kbd "p") #'my/goto-private-packages-file)
     map) "Config-related bindings")
-
-;; Make default latex viewer pdf-tools
-;; (setq +latex-viewers '(pdf-tools))
-
-;; Use pdf-tools to open PDF files
-(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-      TeX-source-correlate-start-server t)
-
-;; Update PDF buffers after successful LaTeX runs
-(add-hook 'TeX-after-compilation-finished-functions
-          #'TeX-revert-document-buffer)
-
-;; Make AUCTeX ask for main tex file in multi-document structure
-(setq-default TeX-master nil)
-
-;; Prevent AUCTeX from inserting braces automatically
-(setq TeX-electric-sub-and-superscript nil)
 
 ;; Make autocomplete less clunky: https://github.com/hlissner/doom-emacs/issues/77
 (require 'company)
@@ -135,6 +163,16 @@
       )
 
 (setq org-log-done 'time)
+
+;; C-c s will contain all shell-related commands
+(global-set-key (kbd "C-c s") 'my/shells)
+
+(defalias 'my/shells
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "s") 'shell)
+    (define-key map (kbd "e") 'eshell)
+    (define-key map (kbd "t") 'term)
+    map) "Shell-related bindings")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
