@@ -100,7 +100,8 @@
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "s") 'shell)
     (define-key map (kbd "e") 'eshell)
-    (define-key map (kbd "t") 'vterm)
+    (define-key map (kbd "t") 'term)
+    (define-key map (kbd "v") 'vterm)
     map) "Shell-related bindings")
 
 (setq
