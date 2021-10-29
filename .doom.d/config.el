@@ -8,32 +8,6 @@
 
 ;; Might be useful in the future: https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/
 
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets.
-(setq user-full-name "Ian Waudby-Smith"
-      user-mail-address "iwaudbysmith@gmail.com")
-
-;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
-;; are the three important ones:
-;;
-;; + `doom-font'
-;; + `doom-variable-pitch-font'
-;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
-;;   presentations or streaming.
-;;
-;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
-;; font string. You generally only need these two:
-;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
-;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "Fira Mono" :size 15))
-(setq doom-variable-pitch-font (font-spec :family "Fira Sans" :size 15))
-(setq +zen-text-scale 0.25)
-
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-nord)
-
 (add-hook 'after-init-hook 'global-visual-line-mode)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -163,6 +137,32 @@
     (define-key map (kbd "i") #'my/goto-private-init-file)
     (define-key map (kbd "p") #'my/goto-private-packages-file)
     map) "Config-related bindings")
+
+;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
+;; are the three important ones:
+;;
+;; + `doom-font'
+;; + `doom-variable-pitch-font'
+;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;;
+;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+;; font string. You generally only need these two:
+;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
+;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
+(setq doom-font (font-spec :family "Fira Mono" :size 15))
+(setq doom-variable-pitch-font (font-spec :family "Fira Sans" :size 15))
+(setq +zen-text-scale 0.25)
+
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+(setq doom-theme 'doom-nord)
+
+;; Some functionality uses this to identify you, e.g. GPG configuration, email
+;; clients, file templates and snippets.
+(setq user-full-name "Ian Waudby-Smith"
+      user-mail-address "iwaudbysmith@gmail.com")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
