@@ -8,7 +8,7 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 
-;; Use org-downlaod so that screenshots can be dragged and dropped
+;; Use org-download so that screenshots can be dragged and dropped
 ;; into org documents.
 (package! org-download)
 

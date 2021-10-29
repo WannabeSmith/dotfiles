@@ -13,25 +13,48 @@
 (setq user-full-name "Ian Waudby-Smith"
       user-mail-address "iwaudbysmith@gmail.com")
 
-;; Use C-hjkl to move between windows
-;; This overwrites some bindings I don't need.
-;; e.g. to use C-h, can use "SPC h", and C-jkl are
-;; unneeded due to evil mode.
-(bind-key* "C-h"  'evil-window-left)
-(bind-key* "C-l"  'evil-window-right)
-(bind-key* "C-k"  'evil-window-up)
-(bind-key* "C-j"  'evil-window-down)
+;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
+;; are the three important ones:
+;;
+;; + `doom-font'
+;; + `doom-variable-pitch-font'
+;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;;
+;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+;; font string. You generally only need these two:
+;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
+;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
+(setq doom-font (font-spec :family "Fira Mono" :size 15))
+(setq doom-variable-pitch-font (font-spec :family "Fira Sans" :size 15))
+(setq +zen-text-scale 0.25)
 
-;; Split windows using C-a l/j to keep consistent bindings with tmux
-;; This does not overwrite anything as far as I can tell
-(bind-key* "C-a l"  'evil-window-vsplit)
-(bind-key* "C-a j"  'evil-window-split)
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+(setq doom-theme 'doom-nord)
+
+(add-hook 'after-init-hook 'global-visual-line-mode)
+
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type 'relative)
+
+(setq evil-escape-key-sequence nil)
 
 ;; Switch to the new window after splitting
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
 
 (bind-key "C-c f" 'toggle-frame-maximized)
+
+(global-set-key (kbd "C-c t") 'my/treemacs)
+
+(defalias 'my/treemacs
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "a") 'treemacs-add-project-to-workspace)
+    (define-key map (kbd "r") 'treemacs-remove-project-from-workspace)
+    map) "Treemacs-related bindings")
 
 ;; C-c c will contain all coding-related bindings
 (global-set-key (kbd "C-c c") 'my/coding)
@@ -70,13 +93,44 @@
 
 
 
-(global-set-key (kbd "C-c t") 'my/treemacs)
+;; C-c s will contain all shell-related commands
+(global-set-key (kbd "C-c s") 'my/shells)
 
-(defalias 'my/treemacs
+(defalias 'my/shells
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "a") 'treemacs-add-project-to-workspace)
-    (define-key map (kbd "r") 'treemacs-remove-project-from-workspace)
-    map) "Treemacs-related bindings")
+    (define-key map (kbd "s") 'shell)
+    (define-key map (kbd "e") 'eshell)
+    (define-key map (kbd "t") 'vterm)
+    map) "Shell-related bindings")
+
+(setq
+ org-directory
+ "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
+
+(custom-set-faces '(org-level-1 ((t (:inherit outline-1 :height 1.2)))))
+
+(require 'org-download)
+(add-hook 'dired-mode-hook 'org-download-enable)
+
+(defun my/open-org-directory ()
+  (interactive) (ido-find-file-in-dir org-directory))
+(global-set-key (kbd "C-c o")
+                'my/open-org-directory)
+
+(after! org
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w)"
+                    "IDEA(i)" "|" "DONE" "CANCELLED(c)"))))
+
+;; Set other todo colors according to the nord theme (https://www.nordtheme.com/)
+(setq org-todo-keyword-faces
+      '(("IN-PROGRESS" . "#88C0D0")
+        ("WAITING" . "#5E81AC")
+        ("IDEA" . "#EBCB8B")
+        ("CANCELED" . "#BF616A"))
+      )
+
+(setq org-log-done 'time)
 
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."
@@ -109,78 +163,6 @@
     (define-key map (kbd "p") #'my/goto-private-packages-file)
     map) "Config-related bindings")
 
-;; Make autocomplete less clunky: https://github.com/hlissner/doom-emacs/issues/77
-(require 'company)
-(setq company-idle-delay 0.2
-      company-minimum-prefix-length 4)
-
-;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
-;; are the three important ones:
-;;
-;; + `doom-font'
-;; + `doom-variable-pitch-font'
-;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
-;;   presentations or streaming.
-;;
-;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
-;; font string. You generally only need these two:
-;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
-;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "Fira Mono" :size 15))
-(setq doom-variable-pitch-font (font-spec :family "Fira Sans" :size 15))
-(setq +zen-text-scale 0.25)
-
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-nord)
-
-(setq
- org-directory
- "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
-
-(custom-set-faces '(org-level-1 ((t (:inherit outline-1 :height 1.2)))))
-
-(require 'org-download)
-(add-hook 'dired-mode-hook 'org-download-enable)
-
-(defun my/open-org-directory ()
-  (interactive) (ido-find-file-in-dir org-directory))
-(global-set-key (kbd "C-c o")
-                'my/open-org-directory)
-
-(after! org
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w)"
-                    "IDEA(i)" "|" "DONE" "CANCELLED(c)"))))
-
-;; Set other todo colors according to the nord theme (https://www.nordtheme.com/)
-(setq org-todo-keyword-faces
-      '(("IN-PROGRESS" . "#88C0D0")
-        ("WAITING" . "#5E81AC")
-        ("IDEA" . "#EBCB8B")
-        ("CANCELED" . "#BF616A"))
-      )
-
-(setq org-log-done 'time)
-
-;; C-c s will contain all shell-related commands
-(global-set-key (kbd "C-c s") 'my/shells)
-
-(defalias 'my/shells
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "s") 'shell)
-    (define-key map (kbd "e") 'eshell)
-    (define-key map (kbd "t") 'term)
-    map) "Shell-related bindings")
-
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type 'relative)
-
-;; Disable "jk" exiting insert mode
-(setq evil-escape-key-sequence nil)
-
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -197,3 +179,8 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+
+;; Make autocomplete less clunky: https://github.com/hlissner/doom-emacs/issues/77
+;; (require 'company)
+;; (setq company-idle-delay 0.2
+;;       company-minimum-prefix-length 4)
