@@ -47,6 +47,9 @@ set mouse=a
 set linebreak
 " Enable folding with tab
 nnoremap <tab> za
+" Make j/k go up or down visual lines, rather than logical lines.
+nnoremap j gj
+nnoremap k gk
 " Always have folds open by default
 set foldlevel=99
 " Make backspace behave like a usual text editor
