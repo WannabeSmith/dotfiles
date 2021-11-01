@@ -58,11 +58,18 @@ Kill buffer and window
     map) "Buffer-related bindings")
 #+end_src
 
-** Project files/folders using treemacs
+** Files/folders
 #+begin_src elisp
 ;; "C-c f" for files/folders
-(global-set-key (kbd "C-c f") 'my/treemacs)
+(global-set-key (kbd "C-c f") 'my/files)
 
+(defalias 'my/files
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "t") 'my/treemacs)
+    map) "Files-related bindings")
+#+end_src
+*** Treemacs
+#+begin_src elisp
 (defalias 'my/treemacs
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "t") 'treemacs) ;; Toggle treemacs
@@ -225,7 +232,7 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with
 ;; C-c c will contain all config-related stuff
 (global-set-key (kbd "C-c e") 'my/config)
 
-(defalias 'my/config
+(defalias 'my/emacs-config
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "c") #'my/goto-private-config-org-file)
     (define-key map (kbd "C") #'my/goto-private-config-file)

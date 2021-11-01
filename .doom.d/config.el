@@ -30,7 +30,12 @@
     map) "Buffer-related bindings")
 
 ;; "C-c f" for files/folders
-(global-set-key (kbd "C-c f") 'my/treemacs)
+(global-set-key (kbd "C-c f") 'my/files)
+
+(defalias 'my/files
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "t") 'my/treemacs)
+    map) "Files-related bindings")
 
 (defalias 'my/treemacs
   (let ((map (make-sparse-keymap)))
@@ -158,7 +163,7 @@
 ;; C-c c will contain all config-related stuff
 (global-set-key (kbd "C-c e") 'my/config)
 
-(defalias 'my/config
+(defalias 'my/emacs-config
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "c") #'my/goto-private-config-org-file)
     (define-key map (kbd "C") #'my/goto-private-config-file)
