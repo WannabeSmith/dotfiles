@@ -17,6 +17,9 @@
 ;; Needs to go in init.el as per https://github.com/hlissner/doom-emacs/issues/401
 (setq evil-respect-visual-line-mode t)
 
+;; Issue with org-encrypt-entries error https://github.com/hlissner/doom-emacs/issues/5706
+(defun native-comp-available-p nil)
+
 (doom! :input
        ;;chinese
        ;;japanese
@@ -143,7 +146,7 @@
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
-       latex             ; writing papers in Emacs has never been so fun
+       (latex +latexmk)             ; writing papers in Emacs has never been so fun
        ;;lean              ; for folks with too much to prove
        ;;ledger            ; be audit you can be
        ;;lua               ; one-based indices? one-based indices

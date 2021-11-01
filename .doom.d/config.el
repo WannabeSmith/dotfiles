@@ -12,20 +12,29 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type 'relative)
+;; (setq display-line-numbers-type 'nil)
 
 (setq evil-escape-key-sequence nil)
 
-;; Switch to the new window after splitting
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
 
-(bind-key "C-c f" 'toggle-frame-maximized)
+(bind-key "C-c F" 'toggle-frame-maximized)
 
-(global-set-key (kbd "C-c t") 'my/treemacs)
+;; C-c c will contain all buffer-related bindings
+(global-set-key (kbd "C-c b") 'my/buffer)
+
+(defalias 'my/buffer
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "k") 'kill-buffer-and-window)
+    map) "Buffer-related bindings")
+
+;; "C-c f" for files/folders
+(global-set-key (kbd "C-c f") 'my/treemacs)
 
 (defalias 'my/treemacs
   (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "t") 'treemacs) ;; Toggle treemacs
     (define-key map (kbd "a") 'treemacs-add-project-to-workspace)
     (define-key map (kbd "r") 'treemacs-remove-project-from-workspace)
     map) "Treemacs-related bindings")
@@ -36,9 +45,10 @@
 (defalias 'my/coding
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "p") 'my/python)
-    (define-key map (kbd "l") 'my/latex)
     (define-key map (kbd "r") 'my/r)
+    (define-key map (kbd "c") 'my/cpp)
     (define-key map (kbd "j") 'my/julia)
+    (define-key map (kbd "h") 'my/haskell)
     map) "Coding-related bindings")
 
 (defalias 'my/python
@@ -47,6 +57,20 @@
     (define-key map (kbd "v") #'pyvenv-activate)
     (define-key map (kbd "f") #'python-black-buffer)
     map) "Python-related bindings")
+
+;; C-c w will contain all writing-related bindings
+(global-set-key (kbd "C-c w") 'my/writing)
+
+(defalias 'my/writing
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "t") 'my/tex)
+    (define-key map (kbd "o") 'my/org-mode)
+    map) "Writing-related bindings")
+
+(defalias 'my/tex
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "c") 'tex-count-words)
+    map))
 
 ;; Make default latex viewer pdf-tools
 ;; (setq +latex-viewers '(pdf-tools))
@@ -67,16 +91,14 @@
 
 
 
-;; C-c s will contain all shell-related commands
-(global-set-key (kbd "C-c s") 'my/shells)
+;; Quickly open up a file in the org directory
+(defun my/open-org-directory ()
+  (interactive) (ido-find-file-in-dir org-directory))
 
-(defalias 'my/shells
+(defalias 'my/org-mode
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "s") 'shell)
-    (define-key map (kbd "e") 'eshell)
-    (define-key map (kbd "t") 'term)
-    (define-key map (kbd "v") 'vterm)
-    map) "Shell-related bindings")
+    (define-key map (kbd "o") 'my/open-org-directory)
+    map))
 
 (setq
  org-directory
@@ -86,11 +108,6 @@
 
 (require 'org-download)
 (add-hook 'dired-mode-hook 'org-download-enable)
-
-(defun my/open-org-directory ()
-  (interactive) (ido-find-file-in-dir org-directory))
-(global-set-key (kbd "C-c o")
-                'my/open-org-directory)
 
 (after! org
   (setq org-todo-keywords
@@ -106,6 +123,17 @@
       )
 
 (setq org-log-done 'time)
+
+;; C-c s will contain all shell-related commands
+(global-set-key (kbd "C-c s") 'my/shells)
+
+(defalias 'my/shells
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "s") 'shell)
+    (define-key map (kbd "e") 'eshell)
+    (define-key map (kbd "t") 'term)
+    (define-key map (kbd "v") 'vterm)
+    map) "Shell-related bindings")
 
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."
@@ -151,7 +179,7 @@
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 (setq doom-font (font-spec :family "Fira Mono" :size 15))
-(setq doom-variable-pitch-font (font-spec :family "Fira Sans" :size 15))
+(setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 15))
 (setq +zen-text-scale 0.25)
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
