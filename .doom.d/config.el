@@ -4,9 +4,8 @@
 ;; sync' after modifying this file!
 
 ;; Make emacs maximized one startup
-(add-hook 'doom-init-ui-hook 'toggle-frame-maximized)
-
 ;; Might be useful in the future: https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/
+(add-hook 'doom-init-ui-hook 'toggle-frame-maximized)
 
 (add-hook 'after-init-hook 'global-visual-line-mode)
 
@@ -44,38 +43,49 @@
     (define-key map (kbd "r") 'treemacs-remove-project-from-workspace)
     map) "Treemacs-related bindings")
 
-;; C-c c will contain all coding-related bindings
-(global-set-key (kbd "C-c c") 'my/coding)
+(global-set-key (kbd "C-c m") 'my/<localleader>)
 
-(defalias 'my/coding
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "p") 'my/python)
-    (define-key map (kbd "r") 'my/r)
-    (define-key map (kbd "c") 'my/cpp)
-    (define-key map (kbd "j") 'my/julia)
-    (define-key map (kbd "h") 'my/haskell)
-    map) "Coding-related bindings")
+(defun my/bind-python-keys ()
+  (defalias 'my/<localleader>
+    (let ((map (make-sparse-keymap)))
+      ;; REPL
+      (define-key map (kbd "r") #'run-python)
+      ;; Virtual environment
+      (define-key map (kbd "v") #'pyvenv-activate)
+      ;; Format
+      (define-key map (kbd "f") #'python-black-buffer)
+      map)))
+(add-hook 'python-mode-hook 'my/bind-python-keys)
 
-(defalias 'my/python
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "r") #'run-python)
-    (define-key map (kbd "v") #'pyvenv-activate)
-    (define-key map (kbd "f") #'python-black-buffer)
-    map) "Python-related bindings")
+(defun my/latexmk ()
+  (interactive)
+  (TeX-command "LatexMk" #'TeX-master-file nil))
 
-;; C-c w will contain all writing-related bindings
-(global-set-key (kbd "C-c w") 'my/writing)
+(defun my/bibtex ()
+  (interactive)
+  (TeX-command "BibTeX" #'TeX-master-file nil))
 
-(defalias 'my/writing
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "t") 'my/tex)
-    (define-key map (kbd "o") 'my/org-mode)
-    map) "Writing-related bindings")
+(defun my/latex-view ()
+    (interactive)
+  (TeX-command "View" #'TeX-master-file nil))
 
-(defalias 'my/tex
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "c") 'tex-count-words)
-    map))
+(defun my/bind-latex-keys ()
+  (defalias 'my/<localleader>
+    (let ((map (make-sparse-keymap)))
+      ;; Compile
+      (define-key map (kbd "c") #'my/latexmk)
+      ;; Recompile BibTeX
+      (define-key map (kbd "b") #'my/bibtex)
+      ;; Word count
+      (define-key map (kbd "w") #'tex-count-words)
+      map)))
+
+(defun my/latexmk-on-save ()
+  "Run LatexMk after saving .tex files"
+  (add-hook 'after-save-hook 'my/latexmk))
+
+(add-hook 'LaTeX-mode-hook 'my/bind-latex-keys)
+(add-hook 'LaTeX-mode-hook 'my/latexmk-on-save)
 
 ;; Make default latex viewer pdf-tools
 ;; (setq +latex-viewers '(pdf-tools))
@@ -94,20 +104,14 @@
 ;; Prevent AUCTeX from inserting braces automatically
 (setq TeX-electric-sub-and-superscript nil)
 
-
-
-;; Quickly open up a file in the org directory
-(defun my/open-org-directory ()
-  (interactive) (ido-find-file-in-dir org-directory))
-
-(defalias 'my/org-mode
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "o") 'my/open-org-directory)
-    map))
-
 (setq
  org-directory
  "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
+
+(defun my/open-org-directory ()
+  (interactive) (ido-find-file-in-dir org-directory))
+
+(global-set-key (kbd "C-c o") 'my/open-org-directory)
 
 (custom-set-faces '(org-level-1 ((t (:inherit outline-1 :height 1.2)))))
 
