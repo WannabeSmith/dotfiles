@@ -161,7 +161,7 @@
   (find-file (expand-file-name "packages.el" doom-private-dir)))
 
 ;; C-c c will contain all config-related stuff
-(global-set-key (kbd "C-c e") 'my/config)
+(global-set-key (kbd "C-c e") 'my/emacs-config)
 
 (defalias 'my/emacs-config
   (let ((map (make-sparse-keymap)))
