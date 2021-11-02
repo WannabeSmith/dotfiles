@@ -89,7 +89,7 @@
 (add-hook 'python-mode-hook
           '(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
 
-(defun venv_pattern ()
+(defun my/venv_pattern ()
   "User-customizable virtual environment pattern"
   "venv_*")
 
@@ -100,9 +100,9 @@
    (directory-files (projectile-project-root))))
 
 (defun my/python-venv-auto-activate ()
-  "Activate the virtual environment satisfying the pattern given by the function, venv_pattern if it's a unique match, otherwise do nothing"
+  "Activate the virtual environment satisfying the pattern given by the function, my/venv_pattern if it's a unique match, otherwise do nothing"
   (interactive)
-  (setq matching-venvs (my/get-matching-project-root-files (venv_pattern)))
+  (setq matching-venvs (my/get-matching-project-root-files (my/venv_pattern)))
   ;; If there's a unique match, set the venv. Otherwise, do nothing
   (when (equal (length matching-venvs) 1)
     (pyvenv-activate (car matching-venvs))))
