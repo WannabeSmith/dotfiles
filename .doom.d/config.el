@@ -100,7 +100,7 @@
    (directory-files (projectile-project-root))))
 
 (defun my/python-venv-auto-activate ()
-  "Activate the virtual environment satisfying the pattern 'venv_*' if it's a unique match, otherwise do nothing"
+  "Activate the virtual environment satisfying the pattern given by the function, venv_pattern if it's a unique match, otherwise do nothing"
   (interactive)
   (setq matching-venvs (my/get-matching-project-root-files (venv_pattern)))
   ;; If there's a unique match, set the venv. Otherwise, do nothing
