@@ -55,7 +55,9 @@
       ;; Format
       (define-key map (kbd "f") #'python-black-buffer)
       map)))
+
 (add-hook 'python-mode-hook 'my/bind-python-keys)
+;; (add-hook 'python-mode-hook 'python-black-on-save-mode)
 
 (defun my/latexmk ()
   (interactive)
@@ -80,11 +82,40 @@
       (define-key map (kbd "w") #'tex-count-words)
       map)))
 
+(add-hook 'LaTeX-mode-hook 'my/bind-latex-keys)
+
+(defun my/python-lsp-ignore-venv ()
+  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv_*"))
+(add-hook 'python-mode-hook
+          '(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
+
+(defun venv_pattern ()
+  "User-customizable virtual environment pattern"
+  "venv_*")
+
+(defun my/get-matching-project-root-files (regexp)
+  "Find all root directories/files that begin with `regexp`"
+  (seq-filter
+   (lambda (x) (equal 0 (string-match-p regexp x)))
+   (directory-files (projectile-project-root))))
+
+(defun my/python-venv-auto-activate ()
+  "Activate the virtual environment satisfying the pattern 'venv_*' if it's a unique match, otherwise do nothing"
+  (interactive)
+  (setq matching-venvs (my/get-matching-project-root-files (venv_pattern)))
+  ;; If there's a unique match, set the venv. Otherwise, do nothing
+  (when (equal (length matching-venvs) 1)
+    (pyvenv-activate (car matching-venvs))))
+
+(add-hook 'python-mode-hook 'my/python-venv-auto-activate)
+
+(defun my/latex-format-environment-on-save ()
+  (add-hook 'after-save-hook #'LaTeX-fill-environment))
+
 (defun my/latexmk-on-save ()
   "Run LatexMk after saving .tex files"
   (add-hook 'after-save-hook 'my/latexmk))
 
-(add-hook 'LaTeX-mode-hook 'my/bind-latex-keys)
 (add-hook 'LaTeX-mode-hook 'my/latexmk-on-save)
 
 ;; Make default latex viewer pdf-tools
