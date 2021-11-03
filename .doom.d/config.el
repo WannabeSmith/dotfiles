@@ -29,12 +29,14 @@
     map) "Buffer-related bindings")
 
 ;; "C-c f" for files/folders
-(global-set-key (kbd "C-c f") 'my/files)
+;; (global-set-key (kbd "C-c f") 'my/files)
 
-(defalias 'my/files
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "t") 'my/treemacs)
-    map) "Files-related bindings")
+;; (defalias 'my/files
+;;   (let ((map (make-sparse-keymap)))
+;;     (define-key map (kbd "t") 'my/treemacs)
+;;     map) "Files-related bindings")
+
+(global-set-key (kbd "C-c t") 'my/treemacs)
 
 (defalias 'my/treemacs
   (let ((map (make-sparse-keymap)))
@@ -49,7 +51,9 @@
   (defalias 'my/<localleader>
     (let ((map (make-sparse-keymap)))
       ;; REPL
-      (define-key map (kbd "r") #'run-python)
+      (define-key map (kbd "R") #'run-python)
+      ;; Restart python
+      (define-key map (kbd "r") #'pyvenv-restart-python)
       ;; Virtual environment
       (define-key map (kbd "v") #'pyvenv-activate)
       ;; Format
@@ -105,7 +109,7 @@
   (setq matching-venvs (my/get-matching-project-root-files (my/venv_pattern)))
   ;; If there's a unique match, set the venv. Otherwise, do nothing
   (when (equal (length matching-venvs) 1)
-    (pyvenv-activate (car matching-venvs))))
+    (pyvenv-activate (concat (projectile-project-root) (car matching-venvs)))))
 
 (add-hook 'python-mode-hook 'my/python-venv-auto-activate)
 
