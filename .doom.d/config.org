@@ -32,6 +32,21 @@ Use global-visual-line-mode by default so that jk does not go up/down based on l
 (setq evil-escape-key-sequence nil)
 #+end_src
 ** Window management
+
+Use "C-hjkl" for moving left/down/up/right
+#+begin_src elisp
+(bind-keys* ("C-h" . evil-window-left)
+            ("C-j" . evil-window-down)
+            ("C-k" . evil-window-up)
+            ("C-l" . evil-window-right))
+#+end_src
+
+Use "C-c l" and "C-c j" for splitting windows vertically (right) and horizontally (down)
+#+begin_src elisp
+(bind-keys* ("C-c l" . evil-window-vsplit))
+(bind-keys* ("C-c j" . evil-window-split))
+#+end_src
+
 Switch to the new window after splitting
 #+begin_src elisp
 (setq evil-split-window-below t

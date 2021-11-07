@@ -15,6 +15,14 @@
 
 (setq evil-escape-key-sequence nil)
 
+(bind-keys* ("C-h" . evil-window-left)
+            ("C-j" . evil-window-down)
+            ("C-k" . evil-window-up)
+            ("C-l" . evil-window-right))
+
+(bind-keys* ("C-c l" . evil-window-vsplit))
+(bind-keys* ("C-c j" . evil-window-split))
+
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
 
