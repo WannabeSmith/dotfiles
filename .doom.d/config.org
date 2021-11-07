@@ -14,7 +14,6 @@ This config is written as an org file ([[./config.el][config.el]]) and auto-comp
 ;; Make emacs maximized one startup
 ;; Might be useful in the future: https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/
 (add-hook 'doom-init-ui-hook 'toggle-frame-maximized)
-
 #+end_src
 * Navigation
 ** Visual line mode everywhere
@@ -37,7 +36,6 @@ Switch to the new window after splitting
 #+begin_src elisp
 (setq evil-split-window-below t
       evil-vsplit-window-right t)
-
 #+end_src
 
 Fullscreen/maximized mode toggle
@@ -69,7 +67,8 @@ This code block contains generality for "C-c f" as a "files" binding but it's cu
 #+end_src
 *** Treemacs
 #+begin_src elisp
-(global-set-key (kbd "C-c t") 'my/treemacs)
+;; "C-c f" for "files" and "folders"
+(global-set-key (kbd "C-c f") 'my/treemacs)
 
 (defalias 'my/treemacs
   (let ((map (make-sparse-keymap)))
@@ -79,7 +78,7 @@ This code block contains generality for "C-c f" as a "files" binding but it's cu
     map) "Treemacs-related bindings")
 #+end_src
 
-* Mode-specific custom keybindings
+* Major mode-specific custom keybindings
 Denote "C-c m" my/<localleader>, following Doom's naming of "SPC m".
 #+begin_src elisp
 (global-set-key (kbd "C-c m") 'my/<localleader>)
@@ -97,14 +96,40 @@ Denote "C-c m" my/<localleader>, following Doom's naming of "SPC m".
       ;; Virtual environment
       (define-key map (kbd "v") #'pyvenv-activate)
       ;; Format
-      (define-key map (kbd "f") #'python-black-buffer)
+      (define-key map (kbd "f") #'+format/buffer)
+      ;; LSP-related bindings
+      (define-key map (kbd "l") #'my/lsp)
+      map)))
+
+(defun my/bind-python-lsp-keys ()
+  (defalias 'my/lsp
+    (let ((map (make-sparse-keymap)))
+      ;; Restart lsp server
+      (define-key map (kbd "r") #'lsp-workspace-restart)
       map)))
 
 (add-hook 'python-mode-hook 'my/bind-python-keys)
+(add-hook 'python-mode-hook
+          '(lambda ()
+             (add-hook 'lsp-mode-hook
+                       #'my/bind-python-lsp-keys)))
 ;; (add-hook 'python-mode-hook 'python-black-on-save-mode)
 #+end_src
 
 ** Writing
+*** Spellcheck
+#+begin_src elisp
+(global-set-key (kbd "C-c s") 'my/spelling)
+
+(defun my/bind-spell-fu-bindings ()
+  (defalias 'my/spelling
+    (let ((map (make-sparse-keymap)))
+      ;; Add word to dictionary
+      (define-key map (kbd "a") #'spell-fu-word-add)
+      map)))
+
+(add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
+#+end_src
 *** TeX
 #+begin_src elisp
 (defun my/latexmk ()
@@ -246,18 +271,19 @@ Use custom todo keywords and colours.
 
 (setq org-log-done 'time)
 #+end_src
-* Shells
+* Terminals
+Use "C-c t" to open up vterm.
 #+begin_src elisp
-;; C-c s will contain all shell-related commands
-(global-set-key (kbd "C-c s") 'my/shells)
+(global-set-key (kbd "C-c t") 'vterm)
 
-(defalias 'my/shells
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "s") 'shell)
-    (define-key map (kbd "e") 'eshell)
-    (define-key map (kbd "t") 'term)
-    (define-key map (kbd "v") 'vterm)
-    map) "Shell-related bindings")
+;; Other shells are cool but I don't use them enough. Might uncomment later.
+;; (defalias 'my/shells
+;;   (let ((map (make-sparse-keymap)))
+;;     (define-key map (kbd "s") 'shell)
+;;     (define-key map (kbd "e") 'eshell)
+;;     (define-key map (kbd "t") 'term)
+;;     (define-key map (kbd "v") 'vterm)
+;;     map) "Shell-related bindings")
 #+end_src
 * Config management
 Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with <char> replaced by c, C, i, or p, respectively.

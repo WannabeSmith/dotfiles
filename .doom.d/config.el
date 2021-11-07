@@ -36,7 +36,8 @@
 ;;     (define-key map (kbd "t") 'my/treemacs)
 ;;     map) "Files-related bindings")
 
-(global-set-key (kbd "C-c t") 'my/treemacs)
+;; "C-c f" for "files" and "folders"
+(global-set-key (kbd "C-c f") 'my/treemacs)
 
 (defalias 'my/treemacs
   (let ((map (make-sparse-keymap)))
@@ -57,11 +58,35 @@
       ;; Virtual environment
       (define-key map (kbd "v") #'pyvenv-activate)
       ;; Format
-      (define-key map (kbd "f") #'python-black-buffer)
+      (define-key map (kbd "f") #'+format/buffer)
+      ;; LSP-related bindings
+      (define-key map (kbd "l") #'my/lsp)
+      map)))
+
+(defun my/bind-python-lsp-keys ()
+  (defalias 'my/lsp
+    (let ((map (make-sparse-keymap)))
+      ;; Restart lsp server
+      (define-key map (kbd "r") #'lsp-workspace-restart)
       map)))
 
 (add-hook 'python-mode-hook 'my/bind-python-keys)
+(add-hook 'python-mode-hook
+          '(lambda ()
+             (add-hook 'lsp-mode-hook
+                       #'my/bind-python-lsp-keys)))
 ;; (add-hook 'python-mode-hook 'python-black-on-save-mode)
+
+(global-set-key (kbd "C-c s") 'my/spelling)
+
+(defun my/bind-spell-fu-bindings ()
+  (defalias 'my/spelling
+    (let ((map (make-sparse-keymap)))
+      ;; Add word to dictionary
+      (define-key map (kbd "a") #'spell-fu-word-add)
+      map)))
+
+(add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
 
 (defun my/latexmk ()
   (interactive)
@@ -168,16 +193,16 @@
 
 (setq org-log-done 'time)
 
-;; C-c s will contain all shell-related commands
-(global-set-key (kbd "C-c s") 'my/shells)
+(global-set-key (kbd "C-c t") 'vterm)
 
-(defalias 'my/shells
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "s") 'shell)
-    (define-key map (kbd "e") 'eshell)
-    (define-key map (kbd "t") 'term)
-    (define-key map (kbd "v") 'vterm)
-    map) "Shell-related bindings")
+;; Other shells are cool but I don't use them enough. Might uncomment later.
+;; (defalias 'my/shells
+;;   (let ((map (make-sparse-keymap)))
+;;     (define-key map (kbd "s") 'shell)
+;;     (define-key map (kbd "e") 'eshell)
+;;     (define-key map (kbd "t") 'term)
+;;     (define-key map (kbd "v") 'vterm)
+;;     map) "Shell-related bindings")
 
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."
