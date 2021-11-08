@@ -69,21 +69,36 @@
       (define-key map (kbd "f") #'+format/buffer)
       ;; LSP-related bindings
       (define-key map (kbd "l") #'my/lsp)
+      ;; Jupyter-related bindings
+      (define-key map (kbd "j") #'my/jupyter)
       map)))
+
+(add-hook 'python-mode-hook 'my/bind-python-keys)
 
 (defun my/bind-python-lsp-keys ()
   (defalias 'my/lsp
     (let ((map (make-sparse-keymap)))
       ;; Restart lsp server
       (define-key map (kbd "r") #'lsp-workspace-restart)
+      ;; Find definition
+      (define-key map (kbd "f") #'lsp-find-definition)
       map)))
 
-(add-hook 'python-mode-hook 'my/bind-python-keys)
 (add-hook 'python-mode-hook
           '(lambda ()
              (add-hook 'lsp-mode-hook
                        #'my/bind-python-lsp-keys)))
-;; (add-hook 'python-mode-hook 'python-black-on-save-mode)
+
+(defun my/bind-python-jupyter-keys ()
+  (defalias 'my/jupyter
+    (let ((map (make-sparse-keymap)))
+      ;; Run jupyter REPL associated with current buffer
+      (define-key map (kbd "R") #'jupyter-repl-associate-buffer)
+      ;; Restart jupyter REPL
+      (define-key map (kbd "r") #'jupyter-repl-restart-kernel)
+      map)))
+
+(add-hook 'python-mode-hook #'my/bind-python-jupyter-keys)
 
 (global-set-key (kbd "C-c s") 'my/spelling)
 
@@ -145,6 +160,8 @@
     (pyvenv-activate (concat (projectile-project-root) (car matching-venvs)))))
 
 (add-hook 'python-mode-hook 'my/python-venv-auto-activate)
+
+(add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
 
 (defun my/latex-format-environment-on-save ()
   (add-hook 'after-save-hook #'LaTeX-fill-environment))

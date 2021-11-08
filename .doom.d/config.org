@@ -114,21 +114,48 @@ Denote "C-c m" my/<localleader>, following Doom's naming of "SPC m".
       (define-key map (kbd "f") #'+format/buffer)
       ;; LSP-related bindings
       (define-key map (kbd "l") #'my/lsp)
+      ;; Jupyter-related bindings
+      (define-key map (kbd "j") #'my/jupyter)
       map)))
 
+(add-hook 'python-mode-hook 'my/bind-python-keys)
+#+end_src
+
+LSP bindings
+#+begin_src elisp
 (defun my/bind-python-lsp-keys ()
   (defalias 'my/lsp
     (let ((map (make-sparse-keymap)))
       ;; Restart lsp server
       (define-key map (kbd "r") #'lsp-workspace-restart)
+      ;; Find definition
+      (define-key map (kbd "f") #'lsp-find-definition)
       map)))
 
-(add-hook 'python-mode-hook 'my/bind-python-keys)
+#+end_src
+
+Add Python+LSP bindings on python-mode and lsp-mode hooks
+#+begin_src elisp
 (add-hook 'python-mode-hook
           '(lambda ()
              (add-hook 'lsp-mode-hook
                        #'my/bind-python-lsp-keys)))
-;; (add-hook 'python-mode-hook 'python-black-on-save-mode)
+
+#+end_src
+
+Jupyter bindings
+#+begin_src elisp
+(defun my/bind-python-jupyter-keys ()
+  (defalias 'my/jupyter
+    (let ((map (make-sparse-keymap)))
+      ;; Run jupyter REPL associated with current buffer
+      (define-key map (kbd "R") #'jupyter-repl-associate-buffer)
+      ;; Restart jupyter REPL
+      (define-key map (kbd "r") #'jupyter-repl-restart-kernel)
+      map)))
+
+(add-hook 'python-mode-hook #'my/bind-python-jupyter-keys)
+
 #+end_src
 
 ** Writing
@@ -206,7 +233,11 @@ Search for any virtual environments with pattern "venv_*" and if there's a uniqu
 
 (add-hook 'python-mode-hook 'my/python-venv-auto-activate)
 #+end_src
-
+*** Jupyter REPL
+This allows sending code from a buffer straight to the REPL
+#+begin_src elisp
+(add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
+#+end_src
 * LaTeX
 Format environment and LatexMk on save
 #+begin_src elisp

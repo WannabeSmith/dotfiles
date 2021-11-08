@@ -95,7 +95,7 @@
        ;;direnv
        ;;docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces
-       ;;ein               ; tame Jupyter notebooks with emacs
+       ;; ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
        lookup              ; navigate your code and its documentation
@@ -154,7 +154,9 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +pretty)               ; organize your plain life in plain text
+       (org :editor evil
+            +pretty
+            +dragndrop)               ; organize your plain life in plain text
                                    ; May cause speed issues. Remove +pretty if so.
                                    ; https://github.com/hlissner/doom-emacs/issues/2802
        ;;php               ; perl's insecure younger brother

@@ -8,15 +8,7 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 
-;; Use org-download so that screenshots can be dragged and dropped
-;; into org documents.
-(package! org-download)
-
-;; Use (https://github.com/millejoh/emacs-ipython-notebook)
-;; (package! ein)
-
-;; Use (https://github.com/wbolster/emacs-python-black)
-;; (package! python-black)
+(package! jupyter)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
