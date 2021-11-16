@@ -100,6 +100,15 @@
 
 (add-hook 'python-mode-hook #'my/bind-python-jupyter-keys)
 
+(defun my/bind-ess-r-keys ()
+  (defalias 'my/<localleader>
+    (let ((map (make-sparse-keymap)))
+      ;; REPL
+      (define-key map (kbd "R") #'run-ess-r)
+      map)))
+
+(add-hook 'ess-r-mode-hook 'my/bind-ess-r-keys)
+
 (global-set-key (kbd "C-c s") 'my/spelling)
 
 (defun my/bind-spell-fu-bindings ()

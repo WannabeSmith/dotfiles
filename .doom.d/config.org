@@ -158,6 +158,17 @@ Jupyter bindings
 
 #+end_src
 
+*** R
+#+begin_src elisp
+(defun my/bind-ess-r-keys ()
+  (defalias 'my/<localleader>
+    (let ((map (make-sparse-keymap)))
+      ;; REPL
+      (define-key map (kbd "R") #'run-ess-r)
+      map)))
+
+(add-hook 'ess-r-mode-hook 'my/bind-ess-r-keys)
+#+end_src
 ** Writing
 *** Spellcheck
 #+begin_src elisp
