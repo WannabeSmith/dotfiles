@@ -145,6 +145,17 @@
 
 (add-hook 'LaTeX-mode-hook 'my/bind-latex-keys)
 
+(defun my/bind-markdown-keys ()
+  (defalias 'my/<localleader>
+    (let ((map (make-sparse-keymap)))
+      ;; Format markdown table
+      (define-key map (kbd "f") #'markdown-table-align)
+      ;; Refresh toc
+      (define-key map (kbd "r") #'markdown-toc-refresh-toc)
+      map)))
+
+(add-hook 'markdown-mode-hook 'my/bind-markdown-keys)
+
 (defun my/python-lsp-ignore-venv ()
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv_*"))
 (add-hook 'python-mode-hook

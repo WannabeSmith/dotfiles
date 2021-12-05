@@ -210,6 +210,19 @@ Jupyter bindings
 
 (add-hook 'LaTeX-mode-hook 'my/bind-latex-keys)
 #+end_src
+*** Markdown
+#+begin_src elisp
+(defun my/bind-markdown-keys ()
+  (defalias 'my/<localleader>
+    (let ((map (make-sparse-keymap)))
+      ;; Format markdown table
+      (define-key map (kbd "f") #'markdown-table-align)
+      ;; Refresh toc
+      (define-key map (kbd "r") #'markdown-toc-refresh-toc)
+      map)))
+
+(add-hook 'markdown-mode-hook 'my/bind-markdown-keys)
+#+end_src
 * Coding
 ** Python
 Make LSP ignore virtual environments which satisfy the pattern "venv_*"
