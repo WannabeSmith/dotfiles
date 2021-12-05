@@ -113,3 +113,11 @@ augroup END
 
 colorscheme nord
 
+if v:version < 801
+  " Vim version is less than 8.1
+  " Example use-case: logging into PSC/Bridges where Vim version = 8.0
+  " Disable CoC
+  let g:coc_disable_startup_warning = 1
+  let g:coc_start_at_startup=0
+endif
+
