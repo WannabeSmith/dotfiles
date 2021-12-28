@@ -282,8 +282,8 @@ Format environment and LatexMk on save
 ;; (setq +latex-viewers '(pdf-tools))
 
 ;; Use pdf-tools to open PDF files
-(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-      TeX-source-correlate-start-server t)
+;; (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+;;       TeX-source-correlate-start-server t)
 
 ;; Update PDF buffers after successful LaTeX runs
 (add-hook 'TeX-after-compilation-finished-functions
@@ -294,6 +294,15 @@ Format environment and LatexMk on save
 
 ;; Prevent AUCTeX from inserting braces automatically
 (setq TeX-electric-sub-and-superscript nil)
+
+
+;; Disable smartparens auto double-quoting in latex (https://emacs.stackexchange.com/questions/52233/disable-tex-modes-auto-tex-insert-quote-functionaliy)
+(map! :after tex
+      :map TeX-mode-map
+      "\"" nil)
+(after! smartparens-latex
+  (sp-local-pair '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
+                  "``" "''" :actions :rem))
 #+end_src
 
 * Org-mode
