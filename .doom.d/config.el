@@ -3,9 +3,25 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-;; Make emacs maximized one startup
-;; Might be useful in the future: https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/
-(add-hook 'doom-init-ui-hook 'toggle-frame-maximized)
+;; Set initial frame size and position
+;; We love /u/rnadler (https://www.reddit.com/r/emacs/comments/9c0a4d/tip_setting_initial_frame_size_and_position/)
+;; It's still imperfect but it'll have to do for now.
+(defun my/set-initial-frame ()
+  (interactive)
+  (let* ((base-factor 0.93)
+         (a-width (* (display-pixel-width) base-factor))
+         (a-height (* (display-pixel-height) base-factor))
+         (a-left (truncate (/ (- (display-pixel-width) a-width) 2)))
+         (a-top (truncate (/ (- (display-pixel-height)
+                                a-height) 2))))
+    (set-frame-position (selected-frame)
+                        a-left a-top)
+    (set-frame-size (selected-frame)
+                    (truncate a-width)
+                    (truncate a-height) t)))
+(setq frame-resize-pixelwise t)
+
+(add-hook 'window-setup-hook 'my/set-initial-frame)
 
 (add-hook 'after-init-hook 'global-visual-line-mode)
 
@@ -209,14 +225,14 @@
 ;; Prevent AUCTeX from inserting braces automatically
 (setq TeX-electric-sub-and-superscript nil)
 
-
-;; Disable smartparens auto double-quoting in latex (https://emacs.stackexchange.com/questions/52233/disable-tex-modes-auto-tex-insert-quote-functionaliy)
-(map! :after tex
-      :map TeX-mode-map
-      "\"" nil)
-(after! smartparens-latex
-  (sp-local-pair '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
-                  "``" "''" :actions :rem))
+;; ;; Disable smartparens auto double-quoting in latex (https://emacs.stackexchange.com/questions/52233/disable-tex-modes-auto-tex-insert-quote-functionaliy)
+;; ;; Uncommented because it was causing issues with org fancy priority. Might need to revisit.
+;; (map! :after tex
+;;       :map TeX-mode-map
+;;       "\"" nil)
+;; (after! smartparens-latex
+;;   (sp-local-pair '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
+;;                   "``" "''" :actions :rem))
 
 (setq
  org-directory
@@ -303,7 +319,6 @@
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 (setq doom-font (font-spec :family "Fira Mono" :size 15))
 (setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 15))
-(setq +zen-text-scale 0.25)
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
