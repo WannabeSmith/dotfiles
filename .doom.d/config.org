@@ -4,7 +4,8 @@ Emacs config, requires [[https://github.com/hlissner/doom-emacs][Doom Emacs]].
 
 This config is written as an org file ([[./config.el][config.el]]) and auto-compiles to [[./config.el][config.el]] using the ":config literate" option in [[./init.el][init.el]].
 
-* Startup
+* General
+** Window size on startup
 #+begin_src elisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
@@ -31,7 +32,6 @@ This config is written as an org file ([[./config.el][config.el]]) and auto-comp
 
 (add-hook 'window-setup-hook 'my/set-initial-frame)
 #+end_src
-* Navigation
 ** Visual line mode everywhere
 Use global-visual-line-mode by default so that jk does not go up/down based on logical lines. Taken from [[https://emacs.stackexchange.com/questions/33360/how-to-open-org-files-with-visual-line-mode-automatically-turned-on][stackexchange]]. The goal here is to get vim-like behaviour of `nnoremap j gj` and `nnoremap k gk` in emacs.
 #+begin_src elisp
@@ -108,7 +108,6 @@ This code block contains generality for "C-c f" as a "files" binding but it's cu
     (define-key map (kbd "r") 'treemacs-remove-project-from-workspace)
     map) "Treemacs-related bindings")
 #+end_src
-
 * Major mode-specific custom keybindings
 Denote "C-c m" my/<localleader>, following Doom's naming of "SPC m".
 #+begin_src elisp
