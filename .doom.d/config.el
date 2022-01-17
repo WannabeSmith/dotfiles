@@ -31,11 +31,11 @@
 
 (setq evil-escape-key-sequence nil)
 
-(defun my/evil-delete-advice (orig-fn beg end &optional type _ &rest args)
-    "Make d, c, x to not write to clipboard."
-    (apply orig-fn beg end type ?_ args))
-(advice-add 'evil-delete :around 'my/evil-delete-advice)
-(advice-add 'evil-change :around 'my/evil-delete-advice)
+;; (defun my/evil-delete-advice (orig-fn beg end &optional type _ &rest args)
+;;     "Make d, c, x to not write to clipboard."
+;;     (apply orig-fn beg end type ?_ args))
+;; (advice-add 'evil-delete :around 'my/evil-delete-advice)
+;; (advice-add 'evil-change :around 'my/evil-delete-advice)
 
 (bind-keys* ("C-h" . evil-window-left)
             ("C-j" . evil-window-down)
