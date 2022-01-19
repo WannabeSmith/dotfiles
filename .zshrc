@@ -1,10 +1,13 @@
 alias v=nvim
 
-# Homebrew sbin
-export PATH="/usr/local/sbin:$PATH"
-#
-# For doom
+# MacPorts bin & sbin
+export PATH="/opt/local/bin:$PATH"
+export PATH="/opt/local/sbin:$PATH"
+
+# Add doom to path
 export PATH="$HOME/.emacs.d/bin:$PATH"
+# Add emacs command to path for doom
+export PATH="/Applications/MacPorts/EmacsMac.app/Contents/MacOS:$PATH"
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
