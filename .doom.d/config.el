@@ -1,27 +1,40 @@
-;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-
-;; Place your private configuration here! Remember, you do not need to run 'doom
-;; sync' after modifying this file!
-
-;; Set initial frame size and position
-;; We love /u/rnadler (https://www.reddit.com/r/emacs/comments/9c0a4d/tip_setting_initial_frame_size_and_position/)
-;; It's still imperfect but it'll have to do for now.
-(defun my/set-initial-frame ()
+(defun my/set-initial-frame-size ()
+  "Set the initial frame size to something reasonable. Works on multiple monitors"
   (interactive)
   (let* ((base-factor 0.93)
-         (a-width (* (display-pixel-width) base-factor))
-         (a-height (* (display-pixel-height) base-factor))
-         (a-left (truncate (/ (- (display-pixel-width) a-width) 2)))
-         (a-top (truncate (/ (- (display-pixel-height)
-                                a-height) 2))))
-    (set-frame-position (selected-frame)
-                        a-left a-top)
+         (monitor-w (nth 2 (frame-monitor-workarea (selected-frame))))
+         (monitor-h (nth 3 (frame-monitor-workarea (selected-frame))))
+         (a-width (* monitor-w base-factor))
+         (a-height (* monitor-h base-factor)))
     (set-frame-size (selected-frame)
                     (truncate a-width)
                     (truncate a-height) t)))
-(setq frame-resize-pixelwise t)
 
-(add-hook 'window-setup-hook 'my/set-initial-frame)
+(defun my/frame-recenter (&optional frame)
+  "Center FRAME on the screen.
+FRAME can be a frame name, a terminal name, or a frame.
+If FRAME is omitted or nil, use currently selected frame."
+  (interactive)
+  (unless (eq 'maximised (frame-parameter nil 'fullscreen))
+    (let* ((frame (or (and (boundp 'frame)
+                           frame)
+                      (selected-frame)))
+           (frame-w (frame-pixel-width frame))
+           (frame-h (frame-pixel-height frame))
+           ;; frame-monitor-workarea returns (x y width height) for the monitor
+           (monitor-w (nth 2 (frame-monitor-workarea frame)))
+           (monitor-h (nth 3 (frame-monitor-workarea frame)))
+           (center (list (/ (- monitor-w frame-w) 2)
+                         (/ (- monitor-h frame-h) 2))))
+      (apply 'set-frame-position (flatten-list (list frame center))))))
+
+(defun my/set-initial-frame ()
+  (interactive)
+  (my/set-initial-frame-size)
+  (my/frame-recenter))
+
+(setq frame-resize-pixelwise t)
+(add-hook 'window-setup-hook #'my/set-initial-frame)
 
 (add-hook 'after-init-hook 'global-visual-line-mode)
 
