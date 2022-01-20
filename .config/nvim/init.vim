@@ -40,7 +40,7 @@ set autoindent
 set smarttab
 set expandtab
 set number
-set relativenumber
+" set relativenumber
 " Enable mouse/trackpad scrolling
 set mouse=a 
 " Wrap text on entire words, not characters
