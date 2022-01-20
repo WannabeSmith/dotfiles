@@ -1,4 +1,11 @@
+# Shortcut for neovim
 alias v=nvim
+
+# Use trash instead of rm
+# Depends on https://github.com/ali-rantakari/trash
+# https://ports.macports.org/port/trash/details/
+alias rm='echo "rm is disabled, use trash or /bin/rm instead."'
+alias trash='trash -F'
 
 # MacPorts bin & sbin
 export PATH="/opt/local/bin:$PATH"
