@@ -44,7 +44,7 @@ If FRAME is omitted or nil, use currently selected frame."
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type 'nil)
+(setq display-line-numbers-type nil)
 
 (setq evil-escape-key-sequence nil)
 
