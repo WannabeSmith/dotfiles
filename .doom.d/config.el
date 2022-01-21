@@ -269,7 +269,7 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (after! org
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w)"
+        '((sequence "IN-PROGRESS(p)" "TODO(t)" "WAITING(w)"
                     "IDEA(i)" "|" "DONE" "CANCELLED(c)"))))
 
 ;; Set other todo colors according to the nord theme (https://www.nordtheme.com/)
