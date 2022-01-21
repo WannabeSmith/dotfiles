@@ -326,7 +326,25 @@ Format environment and LatexMk on save
 (add-hook 'LaTeX-mode-hook 'my/latexmk-on-save)
 #+end_src
 
+Make AUCTeX ask for main tex file in multi-document structure
+#+begin_src elisp
+(setq-default TeX-master nil)
+#+end_src
 
+Prevent AUCTeX from inserting braces automatically
+#+begin_src elisp
+(setq TeX-electric-sub-and-superscript nil)
+#+end_src
+
+
+Disable git-gutter when writing latex. Git-gutter seems to slow things down, and isn't necessary for me when writing latex.
+Code obtained [[https://github.com/hlissner/doom-emacs/issues/1482][from here]].
+#+begin_src elisp
+(after! git-gutter
+  (setq git-gutter:disabled-modes '(latex-mode)))
+#+end_src
+
+Other
 #+begin_src elisp
 ;; Make default latex viewer pdf-tools
 ;; (setq +latex-viewers '(pdf-tools))
@@ -336,14 +354,8 @@ Format environment and LatexMk on save
 ;;       TeX-source-correlate-start-server t)
 
 ;; Update PDF buffers after successful LaTeX runs
-(add-hook 'TeX-after-compilation-finished-functions
-          #'TeX-revert-document-buffer)
-
-;; Make AUCTeX ask for main tex file in multi-document structure
-(setq-default TeX-master nil)
-
-;; Prevent AUCTeX from inserting braces automatically
-(setq TeX-electric-sub-and-superscript nil)
+;; (add-hook 'TeX-after-compilation-finished-functions
+;;           #'TeX-revert-document-buffer)
 
 ;; ;; Disable smartparens auto double-quoting in latex (https://emacs.stackexchange.com/questions/52233/disable-tex-modes-auto-tex-insert-quote-functionaliy)
 ;; ;; Uncommented because it was causing issues with org fancy priority. Might need to revisit.

@@ -231,6 +231,13 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (add-hook 'LaTeX-mode-hook 'my/latexmk-on-save)
 
+(setq-default TeX-master nil)
+
+(setq TeX-electric-sub-and-superscript nil)
+
+(after! git-gutter
+  (setq git-gutter:disabled-modes '(latex-mode)))
+
 ;; Make default latex viewer pdf-tools
 ;; (setq +latex-viewers '(pdf-tools))
 
@@ -239,14 +246,8 @@ If FRAME is omitted or nil, use currently selected frame."
 ;;       TeX-source-correlate-start-server t)
 
 ;; Update PDF buffers after successful LaTeX runs
-(add-hook 'TeX-after-compilation-finished-functions
-          #'TeX-revert-document-buffer)
-
-;; Make AUCTeX ask for main tex file in multi-document structure
-(setq-default TeX-master nil)
-
-;; Prevent AUCTeX from inserting braces automatically
-(setq TeX-electric-sub-and-superscript nil)
+;; (add-hook 'TeX-after-compilation-finished-functions
+;;           #'TeX-revert-document-buffer)
 
 ;; ;; Disable smartparens auto double-quoting in latex (https://emacs.stackexchange.com/questions/52233/disable-tex-modes-auto-tex-insert-quote-functionaliy)
 ;; ;; Uncommented because it was causing issues with org fancy priority. Might need to revisit.
