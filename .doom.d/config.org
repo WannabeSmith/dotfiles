@@ -48,6 +48,11 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq frame-resize-pixelwise t)
 (add-hook 'window-setup-hook #'my/set-initial-frame)
 #+end_src
+** Smooth scroll
+Specific to Yamamoto Mitsuharu's port https://bitbucket.org/mituharu/emacs-mac/src/master/README-mac
+#+begin_src elisp
+(setq mac-mouse-wheel-smooth-scroll t)
+#+end_src
 ** Visual line mode everywhere
 Use global-visual-line-mode by default so that jk does not go up/down based on logical lines. Taken from [[https://emacs.stackexchange.com/questions/33360/how-to-open-org-files-with-visual-line-mode-automatically-turned-on][stackexchange]]. The goal here is to get vim-like behaviour of `nnoremap j gj` and `nnoremap k gk` in emacs.
 #+begin_src elisp

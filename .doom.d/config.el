@@ -36,11 +36,13 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq frame-resize-pixelwise t)
 (add-hook 'window-setup-hook #'my/set-initial-frame)
 
+(setq mac-mouse-wheel-smooth-scroll t)
+
 (add-hook 'after-init-hook 'global-visual-line-mode)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-;; (setq display-line-numbers-type 'nil)
+(setq display-line-numbers-type 'nil)
 
 (setq evil-escape-key-sequence nil)
 
