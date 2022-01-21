@@ -62,7 +62,7 @@ Use global-visual-line-mode by default so that jk does not go up/down based on l
 #+begin_src elisp
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-;; (setq display-line-numbers-type 'nil)
+(setq display-line-numbers-type 'nil)
 #+end_src
 ** Prevent "jk" from exiting insert mode
 #+begin_src elisp
@@ -396,6 +396,21 @@ Use custom todo keywords and colours.
 
 (setq org-log-done 'time)
 #+end_src
+
+Turn off org-superstar-mode
+#+begin_src elisp
+(remove-hook 'org-mode-hook #'org-superstar-mode)
+#+end_src
+
+Turn off org's eye candy
+#+begin_src elisp
+;; (after! org
+;;   (setq org-fontify-quote-and-verse-blocks nil
+;;         org-fontify-whole-heading-line nil
+;;         org-hide-leading-stars nil
+;;         org-startup-indented nil))
+#+end_src
+
 * Terminals
 Use "C-c t" to open up vterm.
 #+begin_src elisp

@@ -284,6 +284,14 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (setq org-log-done 'time)
 
+(remove-hook 'org-mode-hook #'org-superstar-mode)
+
+;; (after! org
+;;   (setq org-fontify-quote-and-verse-blocks nil
+;;         org-fontify-whole-heading-line nil
+;;         org-hide-leading-stars nil
+;;         org-startup-indented nil))
+
 (global-set-key (kbd "C-c t") 'vterm)
 
 ;; Other shells are cool but I don't use them enough. Might uncomment later.
