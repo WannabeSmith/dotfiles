@@ -48,6 +48,10 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq frame-resize-pixelwise t)
 (add-hook 'window-setup-hook #'my/set-initial-frame)
 #+end_src
+** Window margins
+#+begin_src elisp
+(setq-default left-margin-width 1 right-margin-width 0)
+#+end_src
 ** Smooth scroll
 Specific to Yamamoto Mitsuharu's port https://bitbucket.org/mituharu/emacs-mac/src/master/README-mac
 #+begin_src elisp

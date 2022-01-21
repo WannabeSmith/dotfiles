@@ -36,6 +36,8 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq frame-resize-pixelwise t)
 (add-hook 'window-setup-hook #'my/set-initial-frame)
 
+(setq-default left-margin-width 1 right-margin-width 0)
+
 (setq mac-mouse-wheel-smooth-scroll t)
 
 (add-hook 'after-init-hook 'global-visual-line-mode)
