@@ -36,7 +36,7 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq frame-resize-pixelwise t)
 (add-hook 'window-setup-hook #'my/set-initial-frame)
 
-(setq-default left-margin-width 1 right-margin-width 0)
+(setq-default left-margin-width 2 right-margin-width 0)
 
 (setq mac-mouse-wheel-smooth-scroll t)
 
@@ -294,17 +294,6 @@ If FRAME is omitted or nil, use currently selected frame."
 ;;         org-fontify-whole-heading-line nil
 ;;         org-hide-leading-stars nil
 ;;         org-startup-indented nil))
-
-(global-set-key (kbd "C-c t") 'vterm)
-
-;; Other shells are cool but I don't use them enough. Might uncomment later.
-;; (defalias 'my/shells
-;;   (let ((map (make-sparse-keymap)))
-;;     (define-key map (kbd "s") 'shell)
-;;     (define-key map (kbd "e") 'eshell)
-;;     (define-key map (kbd "t") 'term)
-;;     (define-key map (kbd "v") 'vterm)
-;;     map) "Shell-related bindings")
 
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."

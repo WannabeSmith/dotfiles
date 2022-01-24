@@ -50,7 +50,7 @@ If FRAME is omitted or nil, use currently selected frame."
 #+end_src
 ** Window margins
 #+begin_src elisp
-(setq-default left-margin-width 1 right-margin-width 0)
+(setq-default left-margin-width 2 right-margin-width 0)
 #+end_src
 ** Smooth scroll
 Specific to Yamamoto Mitsuharu's port https://bitbucket.org/mituharu/emacs-mac/src/master/README-mac
@@ -427,20 +427,6 @@ Turn off org's eye candy
 ;;         org-startup-indented nil))
 #+end_src
 
-* Terminals
-Use "C-c t" to open up vterm.
-#+begin_src elisp
-(global-set-key (kbd "C-c t") 'vterm)
-
-;; Other shells are cool but I don't use them enough. Might uncomment later.
-;; (defalias 'my/shells
-;;   (let ((map (make-sparse-keymap)))
-;;     (define-key map (kbd "s") 'shell)
-;;     (define-key map (kbd "e") 'eshell)
-;;     (define-key map (kbd "t") 'term)
-;;     (define-key map (kbd "v") 'vterm)
-;;     map) "Shell-related bindings")
-#+end_src
 * Config management
 Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with <char> replaced by c, C, i, or p, respectively.
 #+begin_src elisp
