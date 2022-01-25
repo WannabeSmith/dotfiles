@@ -2,14 +2,11 @@
 alias v=nvim
 
 # Use trash instead of rm
-# Depends on https://github.com/ali-rantakari/trash
-# https://ports.macports.org/port/trash/details/
+# Depends on https://hasseg.org/trash/
 alias rm='echo "rm is disabled, use trash or /bin/rm instead."'
-alias trash='trash -F'
 
-# MacPorts bin & sbin
-export PATH="/opt/local/bin:$PATH"
-export PATH="/opt/local/sbin:$PATH"
+# add Homebrew bin
+export PATH="/usr/local/bin:$PATH"
 
 # Add doom to path
 export PATH="$HOME/.emacs.d/bin:$PATH"
