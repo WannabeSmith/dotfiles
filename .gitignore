@@ -12,3 +12,6 @@
 
 # Custom.el
 custom.el
+
+# Why do you do this to me macOS
+.DS_Store
