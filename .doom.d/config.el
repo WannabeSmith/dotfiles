@@ -36,6 +36,15 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq frame-resize-pixelwise t)
 (add-hook 'window-setup-hook #'my/set-initial-frame)
 
+;; Convert the emacs-e.svg to a png: `rsvg-convert -h 256 emacs-e.svg > emacs-e.png`
+(setq fancy-splash-image
+      (concat doom-private-dir "splash/" "emacs-e.png"))
+
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-footer)
+(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
+(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+
 (setq-default left-margin-width 2 right-margin-width 0)
 
 (setq mac-mouse-wheel-smooth-scroll t)
@@ -341,11 +350,6 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq doom-font (font-spec :family "Fira Mono" :size 15))
 (setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 15))
 
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-nord)
-
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Ian Waudby-Smith"
@@ -372,3 +376,8 @@ If FRAME is omitted or nil, use currently selected frame."
 ;; (require 'company)
 ;; (setq company-idle-delay 0.2
 ;;       company-minimum-prefix-length 4)
+
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+(setq doom-theme 'doom-nord)
