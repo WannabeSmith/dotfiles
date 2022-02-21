@@ -344,17 +344,22 @@ Make AUCTeX ask for main tex file in multi-document structure
 (setq-default TeX-master nil)
 #+end_src
 
-Prevent AUCTeX from inserting braces automatically
+Prevent AUCTeX from inserting braces automatically for sub/superscripts
 #+begin_src elisp
 (setq TeX-electric-sub-and-superscript nil)
 #+end_src
-
 
 Disable git-gutter when writing latex. Git-gutter seems to slow things down, and isn't necessary for me when writing latex.
 Code obtained [[https://github.com/hlissner/doom-emacs/issues/1482][from here]].
 #+begin_src elisp
 (after! git-gutter
   (setq git-gutter:disabled-modes '(latex-mode)))
+#+end_src
+
+Get rid of rainbow delimiters
+#+begin_src elisp
+(after! tex
+  (remove-hook 'TeX-update-style-hook #'rainbow-delimiters-mode))
 #+end_src
 
 Other

@@ -247,6 +247,9 @@ If FRAME is omitted or nil, use currently selected frame."
 (after! git-gutter
   (setq git-gutter:disabled-modes '(latex-mode)))
 
+(after! tex
+  (remove-hook 'TeX-update-style-hook #'rainbow-delimiters-mode))
+
 ;; Make default latex viewer pdf-tools
 ;; (setq +latex-viewers '(pdf-tools))
 
