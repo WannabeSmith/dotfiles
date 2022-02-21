@@ -10,8 +10,10 @@ export PATH="/usr/local/bin:$PATH"
 
 # Add doom to path
 export PATH="$HOME/.emacs.d/bin:$PATH"
-# Add emacs command to path for doom
-export PATH="/Applications/MacPorts/EmacsMac.app/Contents/MacOS:$PATH"
+
+# rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
