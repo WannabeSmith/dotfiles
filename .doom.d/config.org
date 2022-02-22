@@ -221,6 +221,7 @@ Jupyter bindings
 #+end_src
 
 *** R
+**** Vanilla R
 #+begin_src elisp
 (defun my/bind-ess-r-keys ()
   (defalias 'my/<localleader>
@@ -230,6 +231,11 @@ Jupyter bindings
       map)))
 
 (add-hook 'ess-r-mode-hook 'my/bind-ess-r-keys)
+#+end_src
+
+**** RMarkdown
+#+begin_src elisp
+;; TODO
 #+end_src
 ** Writing
 *** Spellcheck

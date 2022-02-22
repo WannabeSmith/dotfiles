@@ -157,6 +157,8 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (add-hook 'ess-r-mode-hook 'my/bind-ess-r-keys)
 
+;; TODO
+
 (global-set-key (kbd "C-c s") 'my/spelling)
 
 (defun my/bind-spell-fu-bindings ()
