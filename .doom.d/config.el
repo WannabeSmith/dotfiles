@@ -130,6 +130,8 @@ If FRAME is omitted or nil, use currently selected frame."
       (define-key map (kbd "r") #'lsp-workspace-restart)
       ;; Find definition
       (define-key map (kbd "f") #'lsp-find-definition)
+      ;; Look at documentation
+      (define-key map (kbd "d") #'lsp-ui-doc-show)
       map)))
 
 (add-hook 'python-mode-hook
@@ -230,6 +232,12 @@ If FRAME is omitted or nil, use currently selected frame."
     (pyvenv-activate (concat (projectile-project-root) (car matching-venvs)))))
 
 (add-hook 'python-mode-hook 'my/python-venv-auto-activate)
+
+(setq lsp-ui-doc-max-height 30)
+(setq lsp-ui-doc-max-width 90)
+
+(setq lsp-signature-auto-activate nil)
+(setq lsp-eldoc-render-all nil)
 
 (add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
 
