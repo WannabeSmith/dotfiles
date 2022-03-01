@@ -155,6 +155,10 @@ This code block contains generality for "C-c f" as a "files" binding but it's cu
     (define-key map (kbd "r") 'treemacs-remove-project-from-workspace)
     map) "Treemacs-related bindings")
 #+end_src
+** Lookup documentation
+#+begin_src elisp
+(bind-keys* ("C-c d" . +lookup/documentation))
+#+end_src
 * Major mode-specific custom keybindings
 Denote "C-c m" my/<localleader>, following Doom's naming of "SPC m".
 #+begin_src elisp
@@ -412,6 +416,14 @@ This directory allows syncing with beorg on iOS. Pretty cool!
 (setq
  org-directory
  "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
+#+end_src
+
+#+begin_src elisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)
+   (jupyter . t)))
 #+end_src
 
 Define a function for quickly opening up a file in the org directory

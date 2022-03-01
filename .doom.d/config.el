@@ -102,6 +102,8 @@ If FRAME is omitted or nil, use currently selected frame."
     (define-key map (kbd "r") 'treemacs-remove-project-from-workspace)
     map) "Treemacs-related bindings")
 
+(bind-keys* ("C-c d" . +lookup/documentation))
+
 (global-set-key (kbd "C-c m") 'my/<localleader>)
 
 (defun my/bind-python-keys ()
@@ -283,6 +285,12 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq
  org-directory
  "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)
+   (jupyter . t)))
 
 (defun my/open-org-directory ()
   (interactive) (ido-find-file-in-dir org-directory))

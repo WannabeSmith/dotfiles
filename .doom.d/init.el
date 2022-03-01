@@ -156,6 +156,7 @@
        ;;ocaml             ; an objective camel
        (org :editor evil
             +pretty
+            +jupyter
             +dragndrop)               ; organize your plain life in plain text
                                    ; May cause speed issues. Remove +pretty if so.
                                    ; https://github.com/hlissner/doom-emacs/issues/2802
