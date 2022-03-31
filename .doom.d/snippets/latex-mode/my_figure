@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: my_figure
+# key: my_figure
+# --
+\begin{figure}[${!htbp}]
+    \centering
+    \includegraphics[${width=\textwidth}]{${}}
+    \caption{${caption}}
+    \label{fig:${label}}
+\end{figure}

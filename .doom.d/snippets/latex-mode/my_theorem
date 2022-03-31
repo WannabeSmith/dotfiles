@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: my_theorem
+# key: my_theorem
+# --
+\begin{theorem}
+    \label{theorem:${label}}
+    ${}
+\end{theorem}

@@ -104,6 +104,8 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (bind-keys* ("C-c d" . +lookup/documentation))
 
+;; (setq doom-unreal-buffer-functions '(minibufferp))
+
 (global-set-key (kbd "C-c m") 'my/<localleader>)
 
 (defun my/bind-python-keys ()
@@ -161,6 +163,10 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (add-hook 'ess-r-mode-hook 'my/bind-ess-r-keys)
 
+(setq comint-scroll-to-bottom-on-input t)
+(setq comint-scroll-to-bottom-on-output t)
+(setq comint-move-point-for-output t)
+
 ;; TODO
 
 (global-set-key (kbd "C-c s") 'my/spelling)
@@ -173,6 +179,18 @@ If FRAME is omitted or nil, use currently selected frame."
       map)))
 
 (add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
+
+(global-set-key (kbd "C-c y") 'my/yasnippet)
+
+(defun my/bind-yasnippet-bindings ()
+  (defalias 'my/yasnippet
+    (let ((map (make-sparse-keymap)))
+      ;; Add word to dictionary
+      (define-key map (kbd "i") #'yas-insert-snippet)
+      (define-key map (kbd "n") #'yas-new-snippet)
+      map)))
+
+(add-hook 'yas-minor-mode-hook 'my/bind-yasnippet-bindings)
 
 (defun my/latexmk ()
   (interactive)
@@ -242,6 +260,14 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq lsp-eldoc-render-all nil)
 
 (add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
+
+(add-hook 'polymode-minor-mode-hook #'doom-mark-buffer-as-real-h)
+;; (add-to-list 'auto-mode-alist
+;;              '("\\.Rmd\\'" . (lambda ()
+;;                                ;; add major mode setting here, if needed, for example:
+;;                                ;; (text-mode)
+;;                                ;; (insert "OK")
+;;                                (doom-mark-buffer-as-real-h))))
 
 (defun my/latex-format-environment-on-save ()
   (add-hook 'after-save-hook #'LaTeX-fill-environment))

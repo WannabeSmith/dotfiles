@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: my_proposition
+# key: my_proposition
+# --
+\begin{proposition}
+    \label{proposition:${label}}
+    ${}
+\end{proposition}

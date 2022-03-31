@@ -159,6 +159,10 @@ This code block contains generality for "C-c f" as a "files" binding but it's cu
 #+begin_src elisp
 (bind-keys* ("C-c d" . +lookup/documentation))
 #+end_src
+** Turn off real/unreal buffers
+#+begin_src elisp
+;; (setq doom-unreal-buffer-functions '(minibufferp))
+#+end_src
 * Major mode-specific custom keybindings
 Denote "C-c m" my/<localleader>, following Doom's naming of "SPC m".
 #+begin_src elisp
@@ -239,6 +243,13 @@ Jupyter bindings
 (add-hook 'ess-r-mode-hook 'my/bind-ess-r-keys)
 #+end_src
 
+Want ess to automatically scroll down in console buffer https://stackoverflow.com/questions/2710442/in-ess-emacs-how-can-i-get-the-r-process-buffer-to-scroll-to-the-bottom-after-a
+#+begin_src elisp
+(setq comint-scroll-to-bottom-on-input t)
+(setq comint-scroll-to-bottom-on-output t)
+(setq comint-move-point-for-output t)
+#+end_src
+
 **** RMarkdown
 #+begin_src elisp
 ;; TODO
@@ -256,6 +267,20 @@ Jupyter bindings
       map)))
 
 (add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
+#+end_src
+*** Yasnippet
+#+begin_src elisp
+(global-set-key (kbd "C-c y") 'my/yasnippet)
+
+(defun my/bind-yasnippet-bindings ()
+  (defalias 'my/yasnippet
+    (let ((map (make-sparse-keymap)))
+      ;; Add word to dictionary
+      (define-key map (kbd "i") #'yas-insert-snippet)
+      (define-key map (kbd "n") #'yas-new-snippet)
+      map)))
+
+(add-hook 'yas-minor-mode-hook 'my/bind-yasnippet-bindings)
 #+end_src
 *** TeX
 #+begin_src elisp
@@ -348,6 +373,16 @@ Set size of lsp-doc-ui
 This allows sending code from a buffer straight to the REPL
 #+begin_src elisp
 (add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
+#+end_src
+** Polymode
+#+begin_src elisp
+(add-hook 'polymode-minor-mode-hook #'doom-mark-buffer-as-real-h)
+;; (add-to-list 'auto-mode-alist
+;;              '("\\.Rmd\\'" . (lambda ()
+;;                                ;; add major mode setting here, if needed, for example:
+;;                                ;; (text-mode)
+;;                                ;; (insert "OK")
+;;                                (doom-mark-buffer-as-real-h))))
 #+end_src
 * LaTeX
 Format environment and LatexMk on save
