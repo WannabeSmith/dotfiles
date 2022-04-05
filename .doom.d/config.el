@@ -187,7 +187,8 @@ If FRAME is omitted or nil, use currently selected frame."
     (let ((map (make-sparse-keymap)))
       ;; Add word to dictionary
       (define-key map (kbd "i") #'yas-insert-snippet)
-      (define-key map (kbd "n") #'yas-new-snippet)
+      ;; Disabling the yas-new-snippet shortcut for now since it's broken (bug in Doom Emacs (https://github.com/hlissner/doom-emacs/issues/4330))
+      ;; (define-key map (kbd "n") #'yas-new-snippet)
       map)))
 
 (add-hook 'yas-minor-mode-hook 'my/bind-yasnippet-bindings)

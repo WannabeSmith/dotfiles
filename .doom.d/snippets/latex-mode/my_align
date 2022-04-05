@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: my_align
+# key: my_align
+# --
+\begin{align}
+    ${}
+\end{align}
