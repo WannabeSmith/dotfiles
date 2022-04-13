@@ -106,6 +106,8 @@ If FRAME is omitted or nil, use currently selected frame."
 
 ;; (setq doom-unreal-buffer-functions '(minibufferp))
 
+(remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
+
 (global-set-key (kbd "C-c m") 'my/<localleader>)
 
 (defun my/bind-python-keys ()
@@ -262,7 +264,7 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
 
-(add-hook 'polymode-minor-mode-hook #'doom-mark-buffer-as-real-h)
+;; (add-hook 'polymode-minor-mode-hook #'doom-mark-buffer-as-real-h)
 ;; (add-to-list 'auto-mode-alist
 ;;              '("\\.Rmd\\'" . (lambda ()
 ;;                                ;; add major mode setting here, if needed, for example:
@@ -270,8 +272,19 @@ If FRAME is omitted or nil, use currently selected frame."
 ;;                                ;; (insert "OK")
 ;;                                (doom-mark-buffer-as-real-h))))
 
-(defun my/latex-format-environment-on-save ()
-  (add-hook 'after-save-hook #'LaTeX-fill-environment))
+(define-innermode poly-text-R-innermode
+  :indent-offset 2
+  :head-matcher (cons "^[ \t]*\\(```[ \t]*{?[[:alpha:]].*\n\\)" 1)
+  :tail-matcher (cons "^[ \t]*\\(```\\)[ \t]*$" 1)
+  :mode 'ess-r-mode
+  :head-mode 'host
+  :tail-mode 'host)
+(define-polymode poly-text-R-mode
+  :hostmode 'pm-host/text
+  :innermodes '(poly-text-R-innermode))
+
+;; (defun my/latex-format-environment-on-save ()
+;;   (add-hook 'after-save-hook #'LaTeX-fill-environment))
 
 (defun my/latexmk-on-save ()
   "Run LatexMk after saving .tex files"
@@ -288,6 +301,13 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (after! tex
   (remove-hook 'TeX-update-style-hook #'rainbow-delimiters-mode))
+
+;; (after! tex
+;;   (add-to-list 'company-backends 'company-files))
+(after! tex
+  (company-auctex-init)
+  (add-to-list 'company-backends 'company-files))
+(setq LaTeX-includegraphics-read-file 'LaTeX-includegraphics-read-file-relative)
 
 ;; Make default latex viewer pdf-tools
 ;; (setq +latex-viewers '(pdf-tools))
@@ -395,8 +415,8 @@ If FRAME is omitted or nil, use currently selected frame."
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "Fira Mono" :size 15))
-(setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 15))
+(setq doom-font (font-spec :family "Fira Mono" :size 14))
+(setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 14))
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.

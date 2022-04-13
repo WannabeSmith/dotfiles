@@ -381,20 +381,35 @@ This allows sending code from a buffer straight to the REPL
 #+end_src
 ** Polymode
 #+begin_src elisp
-(add-hook 'polymode-minor-mode-hook #'doom-mark-buffer-as-real-h)
+;; (add-hook 'polymode-minor-mode-hook #'doom-mark-buffer-as-real-h)
 ;; (add-to-list 'auto-mode-alist
 ;;              '("\\.Rmd\\'" . (lambda ()
 ;;                                ;; add major mode setting here, if needed, for example:
 ;;                                ;; (text-mode)
 ;;                                ;; (insert "OK")
 ;;                                (doom-mark-buffer-as-real-h))))
+
+#+end_src
+
+Disable markdown-mode in Rmd files. Using code from this temporary solution (https://github.com/polymode/polymode/issues/264)
+#+begin_src elisp
+(define-innermode poly-text-R-innermode
+  :indent-offset 2
+  :head-matcher (cons "^[ \t]*\\(```[ \t]*{?[[:alpha:]].*\n\\)" 1)
+  :tail-matcher (cons "^[ \t]*\\(```\\)[ \t]*$" 1)
+  :mode 'ess-r-mode
+  :head-mode 'host
+  :tail-mode 'host)
+(define-polymode poly-text-R-mode
+  :hostmode 'pm-host/text
+  :innermodes '(poly-text-R-innermode))
 #+end_src
 * LaTeX
 Format environment and LatexMk on save
 #+begin_src elisp
 
-(defun my/latex-format-environment-on-save ()
-  (add-hook 'after-save-hook #'LaTeX-fill-environment))
+;; (defun my/latex-format-environment-on-save ()
+;;   (add-hook 'after-save-hook #'LaTeX-fill-environment))
 
 (defun my/latexmk-on-save ()
   "Run LatexMk after saving .tex files"
@@ -424,6 +439,15 @@ Get rid of rainbow delimiters
 #+begin_src elisp
 (after! tex
   (remove-hook 'TeX-update-style-hook #'rainbow-delimiters-mode))
+#+end_src
+
+#+begin_src elisp
+;; (after! tex
+;;   (add-to-list 'company-backends 'company-files))
+(after! tex
+  (company-auctex-init)
+  (add-to-list 'company-backends 'company-files))
+(setq LaTeX-includegraphics-read-file 'LaTeX-includegraphics-read-file-relative)
 #+end_src
 
 Other
@@ -566,8 +590,8 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "Fira Mono" :size 15))
-(setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 15))
+(setq doom-font (font-spec :family "Fira Mono" :size 14))
+(setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 14))
 #+end_src
 * Misc
 #+begin_src elisp
