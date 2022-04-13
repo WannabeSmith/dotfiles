@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: my_equation
-# key: my_equation
+# key: equation
 # --
 \begin{equation}
     \label{eq:${label}}

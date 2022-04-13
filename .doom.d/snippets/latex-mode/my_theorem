@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: my_theorem
-# key: my_theorem
+# key: theorem
 # --
 \begin{theorem}
     \label{theorem:${label}}

@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: my_definition
-# key: my_definition
+# key: definition
 # --
 \begin{definition}
     \label{definition:${}}

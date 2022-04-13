@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: my_table
-# key: my_table
+# key: table
 # --
 \begin{table}[!htbp]
   \caption{${}}
