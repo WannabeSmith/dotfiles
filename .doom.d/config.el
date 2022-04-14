@@ -63,11 +63,6 @@ If FRAME is omitted or nil, use currently selected frame."
 ;; (advice-add 'evil-delete :around 'my/evil-delete-advice)
 ;; (advice-add 'evil-change :around 'my/evil-delete-advice)
 
-(bind-keys* ("C-h" . evil-window-left)
-            ("C-j" . evil-window-down)
-            ("C-k" . evil-window-up)
-            ("C-l" . evil-window-right))
-
 (bind-keys* ("C-c l" . evil-window-vsplit))
 (bind-keys* ("C-c j" . evil-window-split))
 
@@ -286,11 +281,9 @@ If FRAME is omitted or nil, use currently selected frame."
 ;; (defun my/latex-format-environment-on-save ()
 ;;   (add-hook 'after-save-hook #'LaTeX-fill-environment))
 
-(defun my/latexmk-on-save ()
-  "Run LatexMk after saving .tex files"
+;; Run LatexMk after saving .tex files"
+(after! tex
   (add-hook 'after-save-hook 'my/latexmk))
-
-(add-hook 'LaTeX-mode-hook 'my/latexmk-on-save)
 
 (setq-default TeX-master nil)
 
@@ -301,13 +294,6 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (after! tex
   (remove-hook 'TeX-update-style-hook #'rainbow-delimiters-mode))
-
-;; (after! tex
-;;   (add-to-list 'company-backends 'company-files))
-(after! tex
-  (company-auctex-init)
-  (add-to-list 'company-backends 'company-files))
-(setq LaTeX-includegraphics-read-file 'LaTeX-includegraphics-read-file-relative)
 
 ;; Make default latex viewer pdf-tools
 ;; (setq +latex-viewers '(pdf-tools))
@@ -418,6 +404,49 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq doom-font (font-spec :family "Fira Mono" :size 14))
 (setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 14))
 
+(after! company
+  (bind-keys* ("C-SPC" . company-complete)))
+
+(setq company-minimum-prefix-length 1)
+
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (company-mode)
+            (make-local-variable 'company-backends)
+            (setq company-backends
+                  '(company-files
+                    company-reftex-labels
+                    company-reftex-citations
+                    company-bibtex
+                    company-auctex-macros
+                    company-auctex-symbols
+                    company-auctex-environments
+                    ;; company-keywords
+                    company-latex-commands
+                    company-math-symbols-latex
+                    :with
+                    company-yasnippet))))
+
+(add-hook 'org-mode-hook
+          (lambda ()
+            (company-mode)
+            (make-local-variable 'company-backends)
+            (setq company-backends
+                        '(company-files
+                          company-capf
+                          :with
+                          company-yasnippet))))
+
+(add-hook 'python-mode-hook
+          (lambda ()
+            (company-mode)
+            (make-local-variable 'company-backends)
+            (setq company-backends
+                  '(company-files
+                    company-capf
+                    :with
+                    '(company-yasnippet company-dabbrev-code)))))
+
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Ian Waudby-Smith"
@@ -439,11 +468,6 @@ If FRAME is omitted or nil, use currently selected frame."
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
-
-;; Make autocomplete less clunky: https://github.com/hlissner/doom-emacs/issues/77
-;; (require 'company)
-;; (setq company-idle-delay 0.2
-;;       company-minimum-prefix-length 4)
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the

@@ -573,6 +573,61 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with
 (setq doom-font (font-spec :family "Fira Mono" :size 14))
 (setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 14))
 #+end_src
+* Autocomplete/company
+#+begin_src elisp
+(after! company
+  (bind-keys* ("C-SPC" . company-complete)))
+
+(setq company-minimum-prefix-length 1)
+
+#+end_src
+
+** LaTeX
+#+begin_src elisp
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (company-mode)
+            (make-local-variable 'company-backends)
+            (setq company-backends
+                  '(company-files
+                    company-reftex-labels
+                    company-reftex-citations
+                    company-bibtex
+                    company-auctex-macros
+                    company-auctex-symbols
+                    company-auctex-environments
+                    ;; company-keywords
+                    company-latex-commands
+                    company-math-symbols-latex
+                    :with
+                    company-yasnippet))))
+#+end_src
+
+** Org-mode
+#+begin_src elisp
+(add-hook 'org-mode-hook
+          (lambda ()
+            (company-mode)
+            (make-local-variable 'company-backends)
+            (setq company-backends
+                        '(company-files
+                          company-capf
+                          :with
+                          company-yasnippet))))
+#+end_src
+
+** Python
+#+begin_src elisp
+(add-hook 'python-mode-hook
+          (lambda ()
+            (company-mode)
+            (make-local-variable 'company-backends)
+            (setq company-backends
+                  '(company-files
+                    company-capf
+                    :with
+                    '(company-yasnippet company-dabbrev-code)))))
+#+end_src
 * Misc
 #+begin_src elisp
 
