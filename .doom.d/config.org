@@ -95,15 +95,6 @@ Found [[https://emacs.stackexchange.com/questions/23923/change-dd-command-in-evi
 ;; (advice-add 'evil-change :around 'my/evil-delete-advice)
 #+end_src
 ** Window management
-
-Use "C-hjkl" for moving left/down/up/right
-#+begin_src elisp
-(bind-keys* ("C-h" . evil-window-left)
-            ("C-j" . evil-window-down)
-            ("C-k" . evil-window-up)
-            ("C-l" . evil-window-right))
-#+end_src
-
 Use "C-c l" and "C-c j" for splitting windows vertically (right) and horizontally (down)
 #+begin_src elisp
 (bind-keys* ("C-c l" . evil-window-vsplit))
