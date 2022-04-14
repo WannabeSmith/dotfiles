@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: my_elisp_block
+# key: elisp
+# --
+#+begin_src elisp
+${}
+#+end_src

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: my_def_fn
+# key: def_fn
+# --
+def ${fn_name}(${args}):
+    pass
