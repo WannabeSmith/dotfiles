@@ -402,11 +402,9 @@ Format environment and LatexMk on save
 ;; (defun my/latex-format-environment-on-save ()
 ;;   (add-hook 'after-save-hook #'LaTeX-fill-environment))
 
-(defun my/latexmk-on-save ()
-  "Run LatexMk after saving .tex files"
+;; Run LatexMk after saving .tex files"
+(after! tex
   (add-hook 'after-save-hook 'my/latexmk))
-
-(add-hook 'LaTeX-mode-hook 'my/latexmk-on-save)
 #+end_src
 
 Make AUCTeX ask for main tex file in multi-document structure
@@ -430,15 +428,6 @@ Get rid of rainbow delimiters
 #+begin_src elisp
 (after! tex
   (remove-hook 'TeX-update-style-hook #'rainbow-delimiters-mode))
-#+end_src
-
-#+begin_src elisp
-;; (after! tex
-;;   (add-to-list 'company-backends 'company-files))
-(after! tex
-  (company-auctex-init)
-  (add-to-list 'company-backends 'company-files))
-(setq LaTeX-includegraphics-read-file 'LaTeX-includegraphics-read-file-relative)
 #+end_src
 
 Other
@@ -608,13 +597,6 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
-#+end_src
-** Autocomplete/company
-#+begin_src elisp
-;; Make autocomplete less clunky: https://github.com/hlissner/doom-emacs/issues/77
-;; (require 'company)
-;; (setq company-idle-delay 0.2
-;;       company-minimum-prefix-length 4)
 #+end_src
 
 
