@@ -5,6 +5,10 @@ Emacs config, requires [[https://github.com/hlissner/doom-emacs][Doom Emacs]].
 This config is written as an org file ([[./config.el][config.el]]) and auto-compiles to [[./config.el][config.el]] using the ":config literate" option in [[./init.el][init.el]].
 
 * General
+** Disable exit prompt
+#+begin_src elisp
+(setq confirm-kill-emacs nil)
+#+end_src
 ** Window size on startup
 Set initial frame size and position
 Largely based on https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/ and https://www.reddit.com/r/emacs/comments/9c0a4d/tip_setting_initial_frame_size_and_position/
@@ -149,10 +153,6 @@ This code block contains generality for "C-c f" as a "files" binding but it's cu
 ** Lookup documentation
 #+begin_src elisp
 (bind-keys* ("C-c d" . +lookup/documentation))
-#+end_src
-** Turn off real/unreal buffers
-#+begin_src elisp
-;; (setq doom-unreal-buffer-functions '(minibufferp))
 #+end_src
 ** Disable smartparens
 #+begin_src elisp
@@ -599,6 +599,7 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with
                     ;; company-keywords
                     company-latex-commands
                     company-math-symbols-latex
+                    ;; :with
                     company-yasnippet))))
 #+end_src
 
@@ -611,7 +612,7 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with
             (setq company-backends
                         '(company-files
                           company-capf
-                          :with
+                          ;; :with
                           company-yasnippet))))
 #+end_src
 

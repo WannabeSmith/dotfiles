@@ -1,3 +1,5 @@
+(setq confirm-kill-emacs nil)
+
 (defun my/set-initial-frame-size ()
   "Set the initial frame size to something reasonable. Works on multiple monitors"
   (interactive)
@@ -98,8 +100,6 @@ If FRAME is omitted or nil, use currently selected frame."
     map) "Treemacs-related bindings")
 
 (bind-keys* ("C-c d" . +lookup/documentation))
-
-;; (setq doom-unreal-buffer-functions '(minibufferp))
 
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 
@@ -424,6 +424,7 @@ If FRAME is omitted or nil, use currently selected frame."
                     ;; company-keywords
                     company-latex-commands
                     company-math-symbols-latex
+                    ;; :with
                     company-yasnippet))))
 
 (add-hook 'org-mode-hook
@@ -433,7 +434,7 @@ If FRAME is omitted or nil, use currently selected frame."
             (setq company-backends
                         '(company-files
                           company-capf
-                          :with
+                          ;; :with
                           company-yasnippet))))
 
 (add-hook 'python-mode-hook
