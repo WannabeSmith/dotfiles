@@ -599,7 +599,6 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with
                     ;; company-keywords
                     company-latex-commands
                     company-math-symbols-latex
-                    :with
                     company-yasnippet))))
 #+end_src
 

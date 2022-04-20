@@ -424,7 +424,6 @@ If FRAME is omitted or nil, use currently selected frame."
                     ;; company-keywords
                     company-latex-commands
                     company-math-symbols-latex
-                    :with
                     company-yasnippet))))
 
 (add-hook 'org-mode-hook
