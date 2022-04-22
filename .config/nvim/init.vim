@@ -66,9 +66,10 @@ let g:slime_python_ipython=1
 
 " ################### Vimtex ###################
 " vimtex<->Skim integration
-" let g:vimtex_view_method = "skim"
+let g:vimtex_view_method = "skim"
 let g:vimtex_view_general_viewer = '/Applications/Skim.app/Contents/SharedSupport/displayline'
 let g:vimtex_view_general_options = '-r @line @pdf @tex'
+let g:vimtex_compiler_progname = 'nvr'
 
 augroup vimtex_mac
     autocmd!
