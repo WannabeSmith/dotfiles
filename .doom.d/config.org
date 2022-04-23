@@ -176,7 +176,7 @@ This code block contains generality for "C-c f" as a "files" binding but it's cu
 ** Disable smartparens
 Might not be needed anymore since removing +smartparens in [[init.el][init.el]].
 #+begin_src elisp
-;; (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
+(remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 #+end_src
 * Major mode-specific custom keybindings
 Denote "C-c m" my/<localleader>, following Doom's naming of "SPC m".

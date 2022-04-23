@@ -106,7 +106,7 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (bind-keys* ("C-c d" . +lookup/documentation))
 
-;; (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
+(remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 
 (global-set-key (kbd "C-c m") 'my/<localleader>)
 
