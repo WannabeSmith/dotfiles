@@ -566,12 +566,26 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with
 #+end_src
 
 * Autocomplete/company
+Add autocomplete key of ctrl+space.
 #+begin_src elisp
 (after! company
   (bind-keys* ("C-SPC" . company-complete)))
 
-(setq company-minimum-prefix-length 1)
 
+#+end_src
+
+Show autocomplete after one character has been typed
+#+begin_src elisp
+(after! company
+  (setq company-minimum-prefix-length 1))
+#+end_src
+
+Always show a dropdown list (no inline completions). Taken from [[ https://emacs.stackexchange.com/questions/36619/show-tooltip-even-if-there-is-only-one-candidate-in-company-mode][here]].
+#+begin_src elisp
+(after! company
+  (setq company-frontends (nconc '(company-pseudo-tooltip-frontend)
+                                 (remove 'company-pseudo-tooltip-unless-just-one-frontend
+                                         (remove 'company-preview-if-just-one-frontend company-frontends)))))
 #+end_src
 
 ** LaTeX

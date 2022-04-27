@@ -386,7 +386,13 @@ If FRAME is omitted or nil, use currently selected frame."
 (after! company
   (bind-keys* ("C-SPC" . company-complete)))
 
-(setq company-minimum-prefix-length 1)
+(after! company
+  (setq company-minimum-prefix-length 1))
+
+(after! company
+  (setq company-frontends (nconc '(company-pseudo-tooltip-frontend)
+                                 (remove 'company-pseudo-tooltip-unless-just-one-frontend
+                                         (remove 'company-preview-if-just-one-frontend company-frontends)))))
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
