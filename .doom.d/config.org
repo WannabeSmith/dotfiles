@@ -299,20 +299,21 @@ Don't know if this will ever be possible.
 
 (add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
 #+end_src
+
 *** Yasnippet
 #+begin_src elisp
-;; (global-set-key (kbd "C-c y") 'my/yasnippet)
+(global-set-key (kbd "C-c y") 'my/yasnippet)
 
-;; (defun my/bind-yasnippet-bindings ()
-;;   (defalias 'my/yasnippet
-;;     (let ((map (make-sparse-keymap)))
-;;       ;; Add word to dictionary
-;;       (define-key map (kbd "i") #'yas-insert-snippet)
-;;       ;; Disabling the yas-new-snippet shortcut for now since it's broken (bug in Doom Emacs (https://github.com/hlissner/doom-emacs/issues/4330))
-;;       ;; (define-key map (kbd "n") #'yas-new-snippet)
-;;       map)))
+(defun my/bind-yasnippet-bindings ()
+  (defalias 'my/yasnippet
+    (let ((map (make-sparse-keymap)))
+      ;; Add word to dictionary
+      (define-key map (kbd "i") #'yas-insert-snippet)
+      ;; Disabling the yas-new-snippet shortcut for now since it's broken (bug in Doom Emacs (https://github.com/hlissner/doom-emacs/issues/4330))
+      ;; (define-key map (kbd "n") #'yas-new-snippet)
+      map)))
 
-;; (add-hook 'yas-minor-mode-hook 'my/bind-yasnippet-bindings)
+(add-hook 'yas-minor-mode-hook 'my/bind-yasnippet-bindings)
 #+end_src
 
 *** TeX
@@ -536,9 +537,37 @@ Set org-roam directory
  "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
 #+end_src
 
+Auto-update database immediately after saving
 #+begin_src elisp
 (setq org-roam-db-update-method 'immediate)
 #+end_src
+
+Change capture template so that timestamp is not in the filename
+#+begin_src elisp
+(setq org-roam-capture-templates '(("d" "default" plain #'org-roam-capture--get-point "%?" :file-name "${slug}" :head "#+title: ${title}\n" :unnarrowed t)))
+#+end_src
+
+*** Keybindings
+#+begin_src elisp
+(global-set-key (kbd "C-c n") 'my/notes)
+#+end_src
+
+#+begin_src elisp
+(defalias 'my/notes
+  (let ((map (make-sparse-keymap)))
+    ;; Open org-roam buffer
+    (define-key map (kbd "r") #'org-roam)
+    ;; Find file
+    (define-key map (kbd "f") #'org-roam-find-file)
+    ;; Capture
+    (define-key map (kbd "c") #'org-roam-capture)
+    ;; Insert link
+    (define-key map (kbd "i") #'org-roam-insert)
+    ;; Insert link immediate
+    (define-key map (kbd "i") #'org-roam-insert-immediate)
+    map))
+#+end_src
+
 * Config management
 Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with <char> replaced by c, C, i, or p, respectively.
 #+begin_src elisp

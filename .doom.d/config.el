@@ -191,18 +191,18 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
 
-;; (global-set-key (kbd "C-c y") 'my/yasnippet)
+(global-set-key (kbd "C-c y") 'my/yasnippet)
 
-;; (defun my/bind-yasnippet-bindings ()
-;;   (defalias 'my/yasnippet
-;;     (let ((map (make-sparse-keymap)))
-;;       ;; Add word to dictionary
-;;       (define-key map (kbd "i") #'yas-insert-snippet)
-;;       ;; Disabling the yas-new-snippet shortcut for now since it's broken (bug in Doom Emacs (https://github.com/hlissner/doom-emacs/issues/4330))
-;;       ;; (define-key map (kbd "n") #'yas-new-snippet)
-;;       map)))
+(defun my/bind-yasnippet-bindings ()
+  (defalias 'my/yasnippet
+    (let ((map (make-sparse-keymap)))
+      ;; Add word to dictionary
+      (define-key map (kbd "i") #'yas-insert-snippet)
+      ;; Disabling the yas-new-snippet shortcut for now since it's broken (bug in Doom Emacs (https://github.com/hlissner/doom-emacs/issues/4330))
+      ;; (define-key map (kbd "n") #'yas-new-snippet)
+      map)))
 
-;; (add-hook 'yas-minor-mode-hook 'my/bind-yasnippet-bindings)
+(add-hook 'yas-minor-mode-hook 'my/bind-yasnippet-bindings)
 
 (defun my/latexmk ()
   (interactive)
@@ -351,6 +351,24 @@ If FRAME is omitted or nil, use currently selected frame."
  "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
 
 (setq org-roam-db-update-method 'immediate)
+
+(setq org-roam-capture-templates '(("d" "default" plain #'org-roam-capture--get-point "%?" :file-name "${slug}" :head "#+title: ${title}\n" :unnarrowed t)))
+
+(global-set-key (kbd "C-c n") 'my/notes)
+
+(defalias 'my/notes
+  (let ((map (make-sparse-keymap)))
+    ;; Open org-roam buffer
+    (define-key map (kbd "r") #'org-roam)
+    ;; Find file
+    (define-key map (kbd "f") #'org-roam-find-file)
+    ;; Capture
+    (define-key map (kbd "c") #'org-roam-capture)
+    ;; Insert link
+    (define-key map (kbd "i") #'org-roam-insert)
+    ;; Insert link immediate
+    (define-key map (kbd "i") #'org-roam-insert-immediate)
+    map))
 
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."
