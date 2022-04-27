@@ -52,6 +52,15 @@ If FRAME is omitted or nil, use currently selected frame."
 ;; (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
 ;; (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
 
+(bind-keys* ("C-h" . evil-window-left)
+            ("C-j" . evil-window-down)
+            ("C-k" . evil-window-up)
+            ("C-l" . evil-window-right))
+
+(map! :map general-override-mode-map
+      :nvm "C-c SPC" #'doom/leader
+      :ei "C-c SPC" #'doom/leader)
+
 (setq-default left-margin-width 2 right-margin-width 0)
 
 (setq mac-mouse-wheel-smooth-scroll t)

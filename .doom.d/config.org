@@ -74,6 +74,21 @@ No longer need any of this stuff since disabling doom-dashboard in [[init.el][in
 ;; (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
 #+end_src
 
+** Navigation
+Use "C-hjkl" for moving left/down/up/right
+ #+begin_src elisp
+(bind-keys* ("C-h" . evil-window-left)
+            ("C-j" . evil-window-down)
+            ("C-k" . evil-window-up)
+            ("C-l" . evil-window-right))
+#+end_src
+
+#+begin_src elisp
+(map! :map general-override-mode-map
+      :nvm "C-c SPC" #'doom/leader
+      :ei "C-c SPC" #'doom/leader)
+#+end_src
+
 ** Window margins
 #+begin_src elisp
 (setq-default left-margin-width 2 right-margin-width 0)
