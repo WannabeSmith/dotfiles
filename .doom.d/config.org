@@ -511,6 +511,15 @@ Turn off org-superstar-mode
 (remove-hook 'org-mode-hook #'org-superstar-mode)
 #+end_src
 
+* Org-roam
+Set org-roam directory
+
+#+begin_src elisp
+(setq
+ org-roam-directory
+ "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
+#+end_src
+
 * Config management
 Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with <char> replaced by c, C, i, or p, respectively.
 #+begin_src elisp

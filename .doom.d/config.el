@@ -337,6 +337,10 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (remove-hook 'org-mode-hook #'org-superstar-mode)
 
+(setq
+ org-roam-directory
+ "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
+
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."
   (interactive)
