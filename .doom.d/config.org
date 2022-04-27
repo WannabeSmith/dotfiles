@@ -193,7 +193,7 @@ Might not be needed anymore since removing +smartparens in [[init.el][init.el]].
 #+begin_src elisp
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 #+end_src
-* Major mode-specific custom keybindings
+* Mode-specific custom keybindings
 Denote "C-c m" my/<localleader>, following Doom's naming of "SPC m".
 #+begin_src elisp
 (global-set-key (kbd "C-c m") 'my/<localleader>)
@@ -301,18 +301,18 @@ Don't know if this will ever be possible.
 #+end_src
 *** Yasnippet
 #+begin_src elisp
-(global-set-key (kbd "C-c y") 'my/yasnippet)
+;; (global-set-key (kbd "C-c y") 'my/yasnippet)
 
-(defun my/bind-yasnippet-bindings ()
-  (defalias 'my/yasnippet
-    (let ((map (make-sparse-keymap)))
-      ;; Add word to dictionary
-      (define-key map (kbd "i") #'yas-insert-snippet)
-      ;; Disabling the yas-new-snippet shortcut for now since it's broken (bug in Doom Emacs (https://github.com/hlissner/doom-emacs/issues/4330))
-      ;; (define-key map (kbd "n") #'yas-new-snippet)
-      map)))
+;; (defun my/bind-yasnippet-bindings ()
+;;   (defalias 'my/yasnippet
+;;     (let ((map (make-sparse-keymap)))
+;;       ;; Add word to dictionary
+;;       (define-key map (kbd "i") #'yas-insert-snippet)
+;;       ;; Disabling the yas-new-snippet shortcut for now since it's broken (bug in Doom Emacs (https://github.com/hlissner/doom-emacs/issues/4330))
+;;       ;; (define-key map (kbd "n") #'yas-new-snippet)
+;;       map)))
 
-(add-hook 'yas-minor-mode-hook 'my/bind-yasnippet-bindings)
+;; (add-hook 'yas-minor-mode-hook 'my/bind-yasnippet-bindings)
 #+end_src
 
 *** TeX
@@ -469,6 +469,7 @@ Get rid of rainbow delimiters
 #+end_src
 
 * Org-mode
+
 This directory allows syncing with beorg on iOS. Pretty cool!
 #+begin_src elisp
 (setq
@@ -526,7 +527,7 @@ Turn off org-superstar-mode
 (remove-hook 'org-mode-hook #'org-superstar-mode)
 #+end_src
 
-* Org-roam
+** Org-roam
 Set org-roam directory
 
 #+begin_src elisp
@@ -535,6 +536,9 @@ Set org-roam directory
  "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
 #+end_src
 
+#+begin_src elisp
+(setq org-roam-db-update-method 'immediate)
+#+end_src
 * Config management
 Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with <char> replaced by c, C, i, or p, respectively.
 #+begin_src elisp
