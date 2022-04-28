@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: my_left_square_bracket
+# key: left [
+# --
+\left [ $0 \right ]
