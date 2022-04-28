@@ -4,5 +4,5 @@
 # --
 \begin{equation}
     \label{eq:${label}}
-    ${}
+    $0
 \end{equation}
