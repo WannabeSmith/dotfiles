@@ -183,16 +183,26 @@ If FRAME is omitted or nil, use currently selected frame."
 ;; TODO
 
 (defun my/org-sort-todo-list ()
+  "Sort an org-mode todo-list from the heading of the list by priority and todo order."
   (interactive)
   (org-sort-entries nil ?p nil nil nil nil)
   (org-sort-entries nil ?o nil nil nil nil))
+
+
+(defun my/org-sort-todo-list-from-within ()
+  "Sort an org-mode todo-list from within the list by priority and todo order."
+  (interactive)
+  ;; Move up a heading
+  (outline-up-heading 1)
+  ;; Sort once at top of heading
+  (my/org-sort-todo-list))
 
 
 (defun my/bind-org-keys ()
   (defalias 'my/<localleader>
     (let ((map (make-sparse-keymap)))
       ;; Sort todo list by priority and by todo order
-      (define-key map (kbd "s") #'my/org-sort-todo-list)
+      (define-key map (kbd "s") #'my/org-sort-todo-list-from-within)
       map)))
 
 (add-hook 'org-mode-hook 'my/bind-org-keys)
