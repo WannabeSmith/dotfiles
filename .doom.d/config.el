@@ -180,52 +180,20 @@ If FRAME is omitted or nil, use currently selected frame."
 
 ;; TODO
 
-(global-set-key (kbd "C-c s") 'my/spelling)
+(defun my/org-sort-todo-list ()
+  (interactive)
+  (org-sort-entries nil ?p nil nil nil nil)
+  (org-sort-entries nil ?o nil nil nil nil))
 
-(defun my/bind-spell-fu-bindings ()
-  (defalias 'my/spelling
+
+(defun my/bind-org-keys ()
+  (defalias 'my/<localleader>
     (let ((map (make-sparse-keymap)))
-      ;; Add word to dictionary
-      (define-key map (kbd "a") #'spell-fu-word-add)
+      ;; Sort todo list by priority and by todo order
+      (define-key map (kbd "s") #'my/org-sort-todo-list)
       map)))
 
-(add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
-
-(global-set-key (kbd "C-c y") 'my/yasnippet)
-
-(defalias 'my/yasnippet
-    (let ((map (make-sparse-keymap)))
-      ;; Add word to dictionary
-      (define-key map (kbd "i") #'yas-insert-snippet)
-      (define-key map (kbd "f") #'+snippets/find)
-      ;; Disabling the yas-new-snippet shortcut for now since it's broken (bug in Doom Emacs (https://github.com/hlissner/doom-emacs/issues/4330))
-      ;; (define-key map (kbd "n") #'yas-new-snippet)
-      map))
-
-(defun my/latexmk ()
-  (interactive)
-  (TeX-command "LatexMk" #'TeX-master-file nil))
-
-;; (defun my/bibtex ()
-;;   (interactive)
-;;   (TeX-command "BibTeX" #'TeX-master-file nil))
-
-;; (defun my/latex-view ()
-;;     (interactive)
-;;   (TeX-command "View" #'TeX-master-file nil))
-
-;; (defun my/bind-latex-keys ()
-;;   (defalias 'my/<localleader>
-;;     (let ((map (make-sparse-keymap)))
-;;       ;; Compile
-;;       (define-key map (kbd "c") #'my/latexmk)
-;;       ;; Recompile BibTeX
-;;       (define-key map (kbd "b") #'my/bibtex)
-;;       ;; Word count
-;;       (define-key map (kbd "w") #'tex-count-words)
-;;       map)))
-
-;; (add-hook 'LaTeX-mode-hook 'my/bind-latex-keys)
+(add-hook 'org-mode-hook 'my/bind-org-keys)
 
 (defun my/bind-markdown-keys ()
   (defalias 'my/<localleader>
@@ -289,6 +257,31 @@ If FRAME is omitted or nil, use currently selected frame."
 (define-polymode poly-text-R-mode
   :hostmode 'pm-host/text
   :innermodes '(poly-text-R-innermode))
+
+(defun my/latexmk ()
+  (interactive)
+  (TeX-command "LatexMk" #'TeX-master-file nil))
+
+;; (defun my/bibtex ()
+;;   (interactive)
+;;   (TeX-command "BibTeX" #'TeX-master-file nil))
+
+;; (defun my/latex-view ()
+;;     (interactive)
+;;   (TeX-command "View" #'TeX-master-file nil))
+
+;; (defun my/bind-latex-keys ()
+;;   (defalias 'my/<localleader>
+;;     (let ((map (make-sparse-keymap)))
+;;       ;; Compile
+;;       (define-key map (kbd "c") #'my/latexmk)
+;;       ;; Recompile BibTeX
+;;       (define-key map (kbd "b") #'my/bibtex)
+;;       ;; Word count
+;;       (define-key map (kbd "w") #'tex-count-words)
+;;       map)))
+
+;; (add-hook 'LaTeX-mode-hook 'my/bind-latex-keys)
 
 ;; (defun my/latex-format-environment-on-save ()
 ;;   (add-hook 'after-save-hook #'LaTeX-fill-environment))
@@ -368,6 +361,28 @@ If FRAME is omitted or nil, use currently selected frame."
     (define-key map (kbd "i") #'org-roam-insert-immediate)
     map))
 
+(global-set-key (kbd "C-c s") 'my/spelling)
+
+(defun my/bind-spell-fu-bindings ()
+  (defalias 'my/spelling
+    (let ((map (make-sparse-keymap)))
+      ;; Add word to dictionary
+      (define-key map (kbd "a") #'spell-fu-word-add)
+      map)))
+
+(add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
+
+(global-set-key (kbd "C-c y") 'my/yasnippet)
+
+(defalias 'my/yasnippet
+    (let ((map (make-sparse-keymap)))
+      ;; Add word to dictionary
+      (define-key map (kbd "i") #'yas-insert-snippet)
+      (define-key map (kbd "f") #'+snippets/find)
+      ;; Disabling the yas-new-snippet shortcut for now since it's broken (bug in Doom Emacs (https://github.com/hlissner/doom-emacs/issues/4330))
+      ;; (define-key map (kbd "n") #'yas-new-snippet)
+      map))
+
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."
   (interactive)
@@ -424,6 +439,9 @@ If FRAME is omitted or nil, use currently selected frame."
   (setq company-frontends (nconc '(company-pseudo-tooltip-frontend)
                                  (remove 'company-pseudo-tooltip-unless-just-one-frontend
                                          (remove 'company-preview-if-just-one-frontend company-frontends)))))
+
+(after! company
+  (setq company-idle-delay 0.05))
 
 (add-hook 'LaTeX-mode-hook
           (lambda ()
