@@ -291,6 +291,7 @@ Don't know if this will ever be possible.
 #+end_src
 ** Writing
 *** Org
+Create a function "my/org-sort-todo-list-from-within" that can sort a todo list by priority and todo order from within the list.
 #+begin_src elisp
 (defun my/org-sort-todo-list ()
   "Sort an org-mode todo-list from the heading of the list by priority and todo order."
@@ -306,8 +307,10 @@ Don't know if this will ever be possible.
   (outline-up-heading 1)
   ;; Sort once at top of heading
   (my/org-sort-todo-list))
+#+end_src
 
-
+Bind org keys to org-mode.
+#+begin_src elisp
 (defun my/bind-org-keys ()
   (defalias 'my/<localleader>
     (let ((map (make-sparse-keymap)))
@@ -682,6 +685,13 @@ Make autocomplete show up faster
   (setq company-idle-delay 0.05))
 #+end_src
 
+** Emacs Lisp
+#+begin_src elisp
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (company-mode)))
+#+end_src
+
 ** LaTeX
 #+begin_src elisp
 (add-hook 'LaTeX-mode-hook
@@ -710,10 +720,11 @@ Make autocomplete show up faster
             (company-mode)
             (make-local-variable 'company-backends)
             (setq company-backends
-                        '(company-files
-                          company-capf
-                          ;; :with
-                          company-yasnippet))))
+                  '(company-capf
+                    company-files
+                    company-yasnippet
+                    company-dabbrev))))
+
 #+end_src
 
 ** Python

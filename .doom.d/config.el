@@ -197,7 +197,6 @@ If FRAME is omitted or nil, use currently selected frame."
   ;; Sort once at top of heading
   (my/org-sort-todo-list))
 
-
 (defun my/bind-org-keys ()
   (defalias 'my/<localleader>
     (let ((map (make-sparse-keymap)))
@@ -455,6 +454,10 @@ If FRAME is omitted or nil, use currently selected frame."
 (after! company
   (setq company-idle-delay 0.05))
 
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (company-mode)))
+
 (add-hook 'LaTeX-mode-hook
           (lambda ()
             (company-mode)
@@ -478,10 +481,10 @@ If FRAME is omitted or nil, use currently selected frame."
             (company-mode)
             (make-local-variable 'company-backends)
             (setq company-backends
-                        '(company-files
-                          company-capf
-                          ;; :with
-                          company-yasnippet))))
+                  '(company-capf
+                    company-files
+                    company-yasnippet
+                    company-dabbrev))))
 
 (add-hook 'python-mode-hook
           (lambda ()
