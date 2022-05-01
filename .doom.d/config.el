@@ -117,6 +117,8 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 
+(setq which-key-idle-delay 0.2)
+
 (global-set-key (kbd "C-c m") 'my/<localleader>)
 
 (defun my/bind-python-keys ()
@@ -483,8 +485,8 @@ If FRAME is omitted or nil, use currently selected frame."
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
-;; (setq user-full-name "Ian Waudby-Smith"
-;;       user-mail-address "iwaudbysmith@gmail.com")
+(setq user-full-name "Ian Waudby-Smith"
+      user-mail-address "iwaudbysmith@gmail.com")
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
