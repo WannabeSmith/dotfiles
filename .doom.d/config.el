@@ -1,7 +1,9 @@
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-zenburn)
+(require 'auto-dark)
+(setq auto-dark--allow-osascript t)
+(setq auto-dark--dark-theme 'doom-zenburn)
+(setq auto-dark--light-theme 'doom-earl-grey)
+
+(setq +modeline-height 25)
 
 (setq confirm-kill-emacs nil)
 
@@ -47,10 +49,10 @@ If FRAME is omitted or nil, use currently selected frame."
 ;; (setq fancy-splash-image
 ;;       (concat doom-private-dir "splash/" "emacs-e.png"))
 
-;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-footer)
-;; (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
-;; (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-footer)
+(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
+(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
 
 (bind-keys* ("C-h" . evil-window-left)
             ("C-j" . evil-window-down)
@@ -437,8 +439,8 @@ If FRAME is omitted or nil, use currently selected frame."
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "Fira Mono" :size 14))
-(setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 14))
+(setq doom-font (font-spec :family "Roboto Mono" :size 14))
+(setq doom-variable-pitch-font (font-spec :family "Roboto Mono" :size 14))
 
 (after! company
   (bind-keys* ("C-SPC" . company-complete)))

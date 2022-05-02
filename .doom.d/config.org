@@ -6,11 +6,17 @@ This config is written as an org file ([[./config.org][config.org]]) and auto-co
 
 * General
 ** Theme
+[[https://github.com/LionyxML/auto-dark-emacs][auto-dark-emacs]]
 #+begin_src elisp
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-zenburn)
+(require 'auto-dark)
+(setq auto-dark--allow-osascript t)
+(setq auto-dark--dark-theme 'doom-zenburn)
+(setq auto-dark--light-theme 'doom-earl-grey)
+#+end_src
+
+** Modeline
+#+begin_src elisp
+(setq +modeline-height 25)
 #+end_src
 
 ** Disable exit prompt
@@ -62,16 +68,15 @@ If FRAME is omitted or nil, use currently selected frame."
 #+end_src
 
 ** Splash screen
-No longer need any of this stuff since disabling doom-dashboard in [[init.el][init.el]]
 #+begin_src elisp
 ;; Convert the emacs-e.svg to a png: `rsvg-convert -h 256 emacs-e.svg > emacs-e.png`
 ;; (setq fancy-splash-image
 ;;       (concat doom-private-dir "splash/" "emacs-e.png"))
 
-;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-footer)
-;; (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
-;; (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-footer)
+(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
+(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
 #+end_src
 
 ** Navigation
@@ -652,8 +657,8 @@ Opening config.org, config.el, init.el, and packages.el uses "C-c e <char>" with
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "Fira Mono" :size 14))
-(setq doom-variable-pitch-font (font-spec :family "Fira Mono" :size 14))
+(setq doom-font (font-spec :family "Roboto Mono" :size 14))
+(setq doom-variable-pitch-font (font-spec :family "Roboto Mono" :size 14))
 #+end_src
 
 * Autocomplete/company
