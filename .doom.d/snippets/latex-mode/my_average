@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: my_average
+# key: average
+# --
+\frac{1}{${t}}\sum_{i=1}^${t} $0
