@@ -1,7 +1,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-nord)
+(setq doom-theme 'doom-zenburn)
 
 (setq confirm-kill-emacs nil)
 
@@ -444,7 +444,7 @@ If FRAME is omitted or nil, use currently selected frame."
   (bind-keys* ("C-SPC" . company-complete)))
 
 (after! company
-  (setq company-minimum-prefix-length 1))
+  (setq company-minimum-prefix-length 2))
 
 (after! company
   (setq company-frontends (nconc '(company-pseudo-tooltip-frontend)

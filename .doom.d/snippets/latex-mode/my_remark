@@ -2,7 +2,6 @@
 # name: my_remark
 # key: remark
 # --
-\begin{remark}
-    \label{remark:${}}
+\begin{remark}\label{remark:${}}
     $0
 \end{remark}
