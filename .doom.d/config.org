@@ -68,6 +68,8 @@ If FRAME is omitted or nil, use currently selected frame."
 #+end_src
 
 ** Splash screen
+Create a simple splash screen without any menu items. Just a big ascii DOOM.
+
 #+begin_src elisp
 ;; Convert the emacs-e.svg to a png: `rsvg-convert -h 256 emacs-e.svg > emacs-e.png`
 ;; (setq fancy-splash-image
@@ -196,7 +198,7 @@ This code block contains generality for "C-c f" as a "files" binding but it's cu
 ** Disable smartparens
 Might not be needed anymore since removing +smartparens in [[init.el][init.el]].
 #+begin_src elisp
-(remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
+;; (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 #+end_src
 ** Which-key
 #+begin_src elisp
@@ -701,8 +703,6 @@ Add autocomplete key of ctrl+space.
 #+begin_src elisp
 (after! company
   (bind-keys* ("C-SPC" . company-complete)))
-
-
 #+end_src
 
 Show autocomplete after one character has been typed
