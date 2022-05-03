@@ -11,7 +11,7 @@ This config is written as an org file ([[./config.org][config.org]]) and auto-co
 (require 'auto-dark)
 (setq auto-dark--allow-osascript t)
 (setq auto-dark--dark-theme 'doom-zenburn)
-(setq auto-dark--light-theme 'doom-earl-grey)
+(setq auto-dark--light-theme 'doom-one-light)
 #+end_src
 
 ** Modeline

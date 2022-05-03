@@ -1,7 +1,7 @@
 (require 'auto-dark)
 (setq auto-dark--allow-osascript t)
 (setq auto-dark--dark-theme 'doom-zenburn)
-(setq auto-dark--light-theme 'doom-earl-grey)
+(setq auto-dark--light-theme 'doom-one-light)
 
 (setq +modeline-height 25)
 
