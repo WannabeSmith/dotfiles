@@ -231,22 +231,49 @@ If FRAME is omitted or nil, use currently selected frame."
           '(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
 
 (defun my/venv_pattern ()
-  "User-customizable virtual environment pattern"
+  "Virtual environment pattern"
   "venv*")
 
+(defun my/venv_directories_to_search ()
+  "List of directories in which to search for `my/venv_pattern`"
+  (list (file-name-directory (buffer-file-name)) (projectile-project-root)))
+
+(defun my/get-matching-directory-files (directory regexp)
+  "Find all files in DIRECTORY that begin with REGEXP"
+  ;; Concatenate the directory to the filename to recover the full path
+  (seq-map (lambda ( file ) (file-name-concat directory file))
+           ;; Filter out all files that do not begin with REGEXP
+           (seq-filter
+            (lambda (x) (equal 0 (string-match-p regexp x)))
+            (directory-files directory))))
+
+(defun my/get-matching-directories-files (directories regexp)
+  "Find all files in all directories within DIRECTORIES that begin with REGEXP"
+  ;; remove duplicates
+  (seq-uniq
+   ;; flatten the list of lists
+   (flatten-tree
+    ;; Apply my/get-matching-directory-files to all the directories with regexp.
+    (seq-map '(lambda ( dir ) (my/get-matching-directory-files dir regexp)) directories))))
+
 (defun my/get-matching-project-root-files (regexp)
-  "Find all root directories/files that begin with `regexp`"
-  (seq-filter
-   (lambda (x) (equal 0 (string-match-p regexp x)))
-   (directory-files (projectile-project-root))))
+  "Find all root directories/files that begin with REGEXP"
+  (my/get-matching-directory-files (projectile-project-root) regexp))
 
 (defun my/python-venv-auto-activate ()
   "Activate the virtual environment satisfying the pattern given by the function, my/venv_pattern if it's a unique match, otherwise do nothing"
   (interactive)
-  (setq matching-venvs (my/get-matching-project-root-files (my/venv_pattern)))
-  ;; If there's a unique match, set the venv. Otherwise, do nothing
-  (when (equal (length matching-venvs) 1)
-    (pyvenv-activate (concat (projectile-project-root) (car matching-venvs)))))
+  (setq matching-venvs
+        (my/get-matching-directories-files
+         (my/venv_directories_to_search) (my/venv_pattern)))
+  ;; If we have found a uniquely matching virtual environment, activate it.
+  (if (equal (length matching-venvs) 1) ;; if
+      (pyvenv-activate (car matching-venvs))
+    ;; If there is no matching virtual environment, warn the user.
+    (if (equal (length matching-venvs) 0)
+        (display-warning :warning "No virtual environment found.")
+      ;; If there is more than one matching virtual environment, warn the user.
+      (display-warning :warning (concat "Found multiple venvs. Please select one manually using `pyvenv-activate`.")))))
 
 (add-hook 'python-mode-hook 'my/python-venv-auto-activate)
 
