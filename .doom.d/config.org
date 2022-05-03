@@ -94,7 +94,7 @@ Use "C-hjkl" for moving left/down/up/right
       :ei "C-c SPC" #'doom/leader)
 #+end_src
 
-** Window margins
+** Window margins/padding
 #+begin_src elisp
 (setq-default left-margin-width 2 right-margin-width 0)
 #+end_src
