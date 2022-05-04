@@ -84,7 +84,7 @@ Can be an integer to determine the exact padding."
    (vc-deleted     red)
 
    ;; custom categories
-   (org-block-bg             (doom-darken bg 0.02))
+   (org-block-bg             (doom-darken bg 0.03))
    (modeline-bg              `(,(doom-lighten (car bg-alt) 0.4) ,@(cdr base3)))
    (modeline-bg-alt          bg)
    (modeline-bg-inactive     `(,(doom-darken (car bg) 0.04) ,@(cdr base1)))
