@@ -43,7 +43,7 @@
        ;;indent-guides     ; highlighted indent columns
        ;;ligatures         ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
-       (modeline +light)          ; snazzy, Atom-inspired modeline, plus API
+       (modeline)          ; snazzy, Atom-inspired modeline, plus API
        ;;nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
@@ -156,7 +156,7 @@
        ;;ocaml             ; an objective camel
        (org :editor evil
             +roam
-            +pretty
+            ;; +pretty
             ;; +jupyter
             +dragndrop)               ; organize your plain life in plain text
                                    ; May cause speed issues. Remove +pretty if so.
