@@ -695,17 +695,17 @@ Change capture template so that timestamp is not in the filename
 
 (defalias 'my/open
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "c") #'my/emacs-config)
+    (define-key map (kbd "e") #'my/emacs-config)
     (define-key map (kbd "t") #'my/open-private-themes-directory)
     (define-key map (kbd "o") #'my/open-org-directory)
     (define-key map (kbd "g") #'my/open-gitprojects-directory)
     (define-key map (kbd "p") #'my/open-papers-directory)
-    (define-key map (kbd "u") #'my/open-cloud-unencrypted-directory)
+    (define-key map (kbd "c") #'my/open-cloud-unencrypted-directory)
     map) "Config-related bindings")
 
 (defalias 'my/emacs-config
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "o") #'my/goto-private-config-org-file)
+    (define-key map (kbd "c") #'my/goto-private-config-org-file)
     (define-key map (kbd "C") #'my/goto-private-config-file)
     (define-key map (kbd "i") #'my/goto-private-init-file)
     (define-key map (kbd "p") #'my/goto-private-packages-file)
