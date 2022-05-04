@@ -1,7 +1,7 @@
 (require 'auto-dark)
 (setq auto-dark--allow-osascript t)
 (setq auto-dark--dark-theme 'doom-zenburn)
-(setq auto-dark--light-theme 'doom-one-light)
+(setq auto-dark--light-theme 'my-github-light)
 
 (setq +modeline-height 25)
 
@@ -352,11 +352,6 @@ If FRAME is omitted or nil, use currently selected frame."
    (python . t)
    (jupyter . t)))
 
-(defun my/open-org-directory ()
-  (interactive) (ido-find-file-in-dir org-directory))
-
-(global-set-key (kbd "C-c o") 'my/open-org-directory)
-
 (custom-set-faces '(org-level-1 ((t (:inherit outline-1 :height 1.2)))))
 
 (require 'org-download)
@@ -425,6 +420,9 @@ If FRAME is omitted or nil, use currently selected frame."
       ;; (define-key map (kbd "n") #'yas-new-snippet)
       map))
 
+(setq documents-directory "~/Documents")
+(setq cloud-directory "~/Box Sync")
+
 (defun my/goto-private-config-org-file ()
   "Open your private config.org file."
   (interactive)
@@ -445,16 +443,49 @@ If FRAME is omitted or nil, use currently selected frame."
   (interactive)
   (find-file (expand-file-name "packages.el" doom-private-dir)))
 
-;; C-c c will contain all config-related stuff
-(global-set-key (kbd "C-c e") 'my/emacs-config)
+(defun my/open-private-themes-directory ()
+  (interactive)
+  (ido-find-file-in-dir (expand-file-name "themes" doom-private-dir)))
+
+(defun my/open-gitprojects-directory ()
+  (interactive)
+  (ido-find-file-in-dir (expand-file-name "GitProjects" documents-directory)))
+
+(defun my/open-papers-directory ()
+  (interactive)
+  (ido-find-file-in-dir (expand-file-name "GitProjects/papers" documents-directory)))
+
+(defun my/open-cloud-unencrypted-directory ()
+  (interactive)
+  (ido-find-file-in-dir (expand-file-name "unencrypted" cloud-directory)))
+
+(defun my/open-org-directory ()
+  (interactive) (ido-find-file-in-dir org-directory))
+
+;; C-c o will be reserved for opening files/directories
+(global-set-key (kbd "C-c o") 'my/open)
+;; (global-set-key (kbd "C-c e") 'my/emacs-config)
+
+(defalias 'my/open
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "c") #'my/emacs-config)
+    (define-key map (kbd "t") #'my/open-private-themes-directory)
+    (define-key map (kbd "o") #'my/open-org-directory)
+    (define-key map (kbd "g") #'my/open-gitprojects-directory)
+    (define-key map (kbd "p") #'my/open-papers-directory)
+    (define-key map (kbd "u") #'my/open-cloud-unencrypted-directory)
+    map) "Config-related bindings")
 
 (defalias 'my/emacs-config
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "c") #'my/goto-private-config-org-file)
+    (define-key map (kbd "o") #'my/goto-private-config-org-file)
     (define-key map (kbd "C") #'my/goto-private-config-file)
     (define-key map (kbd "i") #'my/goto-private-init-file)
     (define-key map (kbd "p") #'my/goto-private-packages-file)
     map) "Config-related bindings")
+
+(setq documents-directory "~/Documents")
+(setq cloud-directory "~/Box Sync")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
