@@ -156,7 +156,7 @@
        ;;ocaml             ; an objective camel
        (org :editor evil
             +roam
-            ;; +pretty
+            +pretty
             ;; +jupyter
             +dragndrop)               ; organize your plain life in plain text
                                    ; May cause speed issues. Remove +pretty if so.

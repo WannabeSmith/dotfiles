@@ -117,7 +117,7 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (bind-keys* ("C-c d" . +lookup/documentation))
 
-;; (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
+(remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
 
 (setq which-key-idle-delay 0.2)
 
@@ -326,9 +326,11 @@ If FRAME is omitted or nil, use currently selected frame."
 ;; (defun my/latex-format-environment-on-save ()
 ;;   (add-hook 'after-save-hook #'LaTeX-fill-environment))
 
-;; Run LatexMk after saving .tex files"
-(after! tex
-  (add-hook 'after-save-hook 'my/latexmk))
+;; Run LatexMk after saving .tex files
+(add-hook 'LaTeX-mode-hook (lambda ()
+                             (add-hook 'after-save-hook 'my/latexmk)))
+
+(setq +latex-viewers '(skim))
 
 (setq-default TeX-master nil)
 
