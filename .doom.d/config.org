@@ -377,7 +377,11 @@ The following functions are essentially helper functions for `my/python-venv-aut
 
 (defun my/venv_directories_to_search ()
   "List of directories in which to search for `my/venv_pattern`"
-  (list (file-name-directory (buffer-file-name)) (projectile-project-root)))
+  ;; Remove all nil elements
+  (seq-filter (lambda (element) element)
+              (list
+               (file-name-directory (buffer-file-name))
+               (projectile-project-root))))
 
 (defun my/get-matching-directory-files (directory regexp)
   "Find all files in DIRECTORY that begin with REGEXP"
@@ -418,8 +422,16 @@ Now that we have the above helper functions, we are ready to define my/python-ve
         (display-warning :warning "No virtual environment found.")
       ;; If there is more than one matching virtual environment, warn the user.
       (display-warning :warning (concat "Found multiple venvs. Please select one manually using `pyvenv-activate`.")))))
+#+end_src
 
-(add-hook 'python-mode-hook 'my/python-venv-auto-activate)
+Now that we've defined my/python-venv-auto-activate, let's run it whenever opening a .py file.
+Note that we do not use an "(add-hook 'python-mode-hook ...)" approach here because 'python-mode-hook gets run every time code is sent from the python file to the REPL.
+Found from sds's answer [[https://emacs.stackexchange.com/questions/12396/run-command-when-opening-a-file-of-a-specific-filetype][here]].
+#+begin_src elisp
+(add-hook 'find-file-hook
+          #'(lambda () (when (string= (file-name-extension buffer-file-name) "py")
+                        (my/python-venv-auto-activate))))
+;; (add-hook 'python-mode-hook #'my/python-venv-auto-activate)
 #+end_src
 
 *** Jupyter REPL
