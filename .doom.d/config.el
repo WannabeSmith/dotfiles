@@ -236,7 +236,11 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (defun my/venv_directories_to_search ()
   "List of directories in which to search for `my/venv_pattern`"
-  (list (file-name-directory (buffer-file-name)) (projectile-project-root)))
+  ;; Remove all nil elements
+  (seq-filter (lambda (element) element)
+              (list
+               (file-name-directory (buffer-file-name))
+               (projectile-project-root))))
 
 (defun my/get-matching-directory-files (directory regexp)
   "Find all files in DIRECTORY that begin with REGEXP"
@@ -275,7 +279,10 @@ If FRAME is omitted or nil, use currently selected frame."
       ;; If there is more than one matching virtual environment, warn the user.
       (display-warning :warning (concat "Found multiple venvs. Please select one manually using `pyvenv-activate`.")))))
 
-(add-hook 'python-mode-hook 'my/python-venv-auto-activate)
+(add-hook 'find-file-hook
+          #'(lambda () (when (string= (file-name-extension buffer-file-name) "py")
+                        (my/python-venv-auto-activate))))
+;; (add-hook 'python-mode-hook #'my/python-venv-auto-activate)
 
 (add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
 
@@ -447,6 +454,10 @@ If FRAME is omitted or nil, use currently selected frame."
   (interactive)
   (ido-find-file-in-dir (expand-file-name "themes" doom-private-dir)))
 
+(defun my/open-documents-directory ()
+  (interactive)
+  (ido-find-file-in-dir documents-directory))
+
 (defun my/open-gitprojects-directory ()
   (interactive)
   (ido-find-file-in-dir (expand-file-name "GitProjects" documents-directory)))
@@ -471,6 +482,7 @@ If FRAME is omitted or nil, use currently selected frame."
     (define-key map (kbd "e") #'my/emacs-config)
     (define-key map (kbd "t") #'my/open-private-themes-directory)
     (define-key map (kbd "o") #'my/open-org-directory)
+    (define-key map (kbd "d") #'my/open-documents-directory)
     (define-key map (kbd "g") #'my/open-gitprojects-directory)
     (define-key map (kbd "p") #'my/open-papers-directory)
     (define-key map (kbd "c") #'my/open-cloud-unencrypted-directory)

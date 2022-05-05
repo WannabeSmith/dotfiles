@@ -684,6 +684,10 @@ Change capture template so that timestamp is not in the filename
   (interactive)
   (ido-find-file-in-dir (expand-file-name "themes" doom-private-dir)))
 
+(defun my/open-documents-directory ()
+  (interactive)
+  (ido-find-file-in-dir documents-directory))
+
 (defun my/open-gitprojects-directory ()
   (interactive)
   (ido-find-file-in-dir (expand-file-name "GitProjects" documents-directory)))
@@ -710,6 +714,7 @@ Change capture template so that timestamp is not in the filename
     (define-key map (kbd "e") #'my/emacs-config)
     (define-key map (kbd "t") #'my/open-private-themes-directory)
     (define-key map (kbd "o") #'my/open-org-directory)
+    (define-key map (kbd "d") #'my/open-documents-directory)
     (define-key map (kbd "g") #'my/open-gitprojects-directory)
     (define-key map (kbd "p") #'my/open-papers-directory)
     (define-key map (kbd "c") #'my/open-cloud-unencrypted-directory)
