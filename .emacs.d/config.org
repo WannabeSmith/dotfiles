@@ -1,0 +1,243 @@
+* Startup
+#+begin_src elisp
+  (setq inhibit-startup-message t)
+
+  ;;(scroll-bar-mode -1)      ;; Disable visible scrollbar
+  (tool-bar-mode -1)          ;; Disable the toolbar
+  (tooltip-mode -1)           ;; Disable tooltips
+  (set-fringe-mode 15)        ;; Give some breathing room
+  (menu-bar-mode -1)          ;; Disable the menu bar
+#+end_src 
+
+Open [[~/.emacs.d/config.org]] on startup.
+#+begin_src elisp
+  (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
+#+end_src
+
+* General
+Fonts.
+#+begin_src elisp
+  (set-face-attribute 'default nil :family "Roboto Mono" :height 150)
+  (set-face-attribute 'fixed-pitch nil :family "Roboto Mono" :height 1.0)
+  (set-face-attribute 'variable-pitch nil :family "Roboto" :height 1.0)
+#+end_src
+
+Theme
+#+begin_src elisp
+  (load-theme 'modus-operandi)
+#+end_src
+
+#+begin_src elisp
+(setq mac-option-modifier 'meta)
+(setq mac-command-modifier 'super)
+#+end_src
+
+#+begin_src elisp
+  (bind-key "s-x" #'execute-extended-command)
+#+end_src
+
+#+begin_src elisp
+  (bind-key "s-v" #'evil-paste-after)
+#+end_src
+
+#+begin_src elisp
+;;(setq package-enable-at-startup nil)
+#+end_src
+
+#+begin_src elisp
+  (add-hook 'emacs-startup-hook #'global-display-line-numbers-mode)
+#+end_src
+
+#+begin_src elisp
+  ;; Turn off bell
+  (setq ring-bell-function 'ignore)
+
+
+
+  ;; Initialize package sources
+  (require 'package)
+
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
+
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents))
+
+  ;; Initialize use-package on non-Linux platforms
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+
+  ;;(straight-use-package 'use-package)
+
+  (use-package evil
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-undo-system 'undo-fu)
+    :config
+    (evil-mode 1)
+    ;;(evil-set-undo-system 'undo-redo)
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    ;;(evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    ;;(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal)
+
+    ;; (bind-key "<tab>" #'evil-toggle-fold)
+    )
+
+  (use-package evil-commentary
+    :config
+    (evil-commentary-mode))
+
+
+
+  ;; Vertico
+  (use-package vertico
+    :init
+    (vertico-mode)
+
+    ;; Different scroll margin
+    ;; (setq vertico-scroll-margin 0)
+
+    ;; Show more candidates
+    ;; (setq vertico-count 20)
+
+    ;; Grow and shrink the Vertico minibuffer
+    ;; (setq vertico-resize t)
+
+    ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+    ;; (setq vertico-cycle t)
+    )
+
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  (use-package savehist
+    :init
+    (savehist-mode)
+    )
+
+  ;; A few more useful configurations...
+  (use-package emacs
+    :init
+    ;; Add prompt indicator to `completing-read-multiple'.
+    ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+    (defun crm-indicator (args)
+      (cons (format "[CRM%s] %s"
+                    (replace-regexp-in-string
+                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                     crm-separator)
+                    (car args))
+            (cdr args)))
+    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+    ;; Do not allow the cursor in the minibuffer prompt
+    (setq minibuffer-prompt-properties
+          '(read-only t cursor-intangible t face minibuffer-prompt))
+    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+    ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+    ;; Vertico commands are hidden in normal buffers.
+    ;; (setq read-extended-command-predicate
+    ;;       #'command-completion-default-include-p)
+
+    ;; Enable recursive minibuffers
+    (setq enable-recursive-minibuffers t)
+    )
+
+
+
+
+  ;; Line-by-line scrolling
+  (setq scroll-step            1
+        scroll-conservatively  10000)
+
+
+
+  ;; which-key
+  (use-package which-key
+    :config
+    (which-key-mode))
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+     '(which-key vertico use-package ivy evil doom-modeline command-log-mode)))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+
+#+end_src
+
+
+* Snippets (yasnippet)
+#+begin_src elisp
+  (use-package yasnippet
+    :config
+    (setq yas-snippet-dirs
+	  '("~/.emacs.d/snippets"))
+
+    (global-set-key (kbd "C-c y") 'my/yasnippet)
+
+    (defalias 'my/yasnippet
+      (let ((map (make-sparse-keymap)))
+	;; Add word to dictionary
+	(define-key map (kbd "i") #'yas-insert-snippet)
+	(define-key map (kbd "n") #'yas-new-snippet)
+	map))
+    (yas-global-mode 1)
+    )
+#+end_src
+
+#+begin_src elisp
+  (use-package company
+    :config
+    (add-hook 'after-init-hook 'global-company-mode)
+    )
+#+end_src
+
+#+begin_src elisp
+  (use-package org
+    :config
+    (org-indent-mode))
+#+end_src
+
+#+begin_src elisp
+  (use-package undo-fu)
+  (use-package undo-fu-session
+    :config
+    (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
+  (global-undo-fu-session-mode)
+  (undo-fu-session-recover)
+#+end_src
+
+
+* To-config
+** DONE escape key
+** DONE org mode folding
+** TODO Make org-mode better looking (and work with [ ]-style list items)
+** TODO add magit
+** DONE yasnippet
+** TODO company
+** TODO AucTex 
+** TODO organize config.org
+** TODO make vertico do fuzzy completion
+** TODO add modeline of some kind
+** TODO use "enter" to make a TODO done.
+** TODO use "enter" to evaluate a code chunk.
+** DONE auto-commenting
+** TODO straight
+** DONE undo persist
+** DONE cmd+v needs to paste.
+** DONE line numbers
+
