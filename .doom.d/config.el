@@ -1,7 +1,7 @@
 (require 'auto-dark)
 (setq auto-dark--allow-osascript t)
-(setq auto-dark--dark-theme 'doom-zenburn)
-(setq auto-dark--light-theme 'my-github-light)
+(setq auto-dark--dark-theme 'modus-vivendi)
+(setq auto-dark--light-theme 'modus-operandi)
 
 (setq +modeline-height 25)
 
@@ -140,7 +140,8 @@ If FRAME is omitted or nil, use currently selected frame."
       (define-key map (kbd "j") #'my/jupyter)
       map)))
 
-(add-hook 'python-mode-hook 'my/bind-python-keys)
+(after! python
+  (add-hook 'python-mode-hook 'my/bind-python-keys))
 
 ;; (defun my/bind-python-lsp-keys ()
 ;;   (defalias 'my/lsp
@@ -167,7 +168,8 @@ If FRAME is omitted or nil, use currently selected frame."
       (define-key map (kbd "r") #'jupyter-repl-restart-kernel)
       map)))
 
-(add-hook 'python-mode-hook #'my/bind-python-jupyter-keys)
+(after! python
+  (add-hook 'python-mode-hook #'my/bind-python-jupyter-keys))
 
 (defun my/bind-ess-r-keys ()
   (defalias 'my/<localleader>
@@ -366,28 +368,32 @@ If FRAME is omitted or nil, use currently selected frame."
 
 (after! org
   (setq org-todo-keywords
-        '((sequence "IN-PROGRESS(p)" "TODO(t)" "WAITING(w)"
-                    "IDEA(i)" "|" "DONE" "CANCELLED(c)"))))
+        '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w)" "IDEA(i)"
+                    "|" "DONE" "CANCELLED(c)"))))
 
 ;; Set other todo colors according to the nord theme (https://www.nordtheme.com/)
-(setq org-todo-keyword-faces
-      '(("IN-PROGRESS" . "#88C0D0")
-        ("WAITING" . "#5E81AC")
-        ("IDEA" . "#EBCB8B")
-        ("CANCELED" . "#BF616A"))
-      )
+;; (setq org-todo-keyword-faces
+;;       '(("IN-PROGRESS" . "#88C0D0")
+;;         ("WAITING" . "#5E81AC")
+;;         ("IDEA" . "#EBCB8B")
+;;         ("CANCELED" . "#BF616A"))
+;;       )
 
 (setq org-log-done 'time)
 
 (remove-hook 'org-mode-hook #'org-superstar-mode)
 
-(setq
- org-roam-directory
- "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
+(after! org
+  (setq
+   org-roam-directory
+   "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org"))
 
-(setq org-roam-db-update-method 'immediate)
+(after! org
+    (setq org-roam-db-update-method 'immediate))
 
-(setq org-roam-capture-templates '(("d" "default" plain #'org-roam-capture--get-point "%?" :file-name "${slug}" :head "#+title: ${title}\n" :unnarrowed t)))
+(after! org
+  (setq org-roam-capture-templates
+        '(("d" "default" plain #'org-roam-capture--get-point "%?" :file-name "${slug}" :head "#+title: ${title}\n" :unnarrowed t))))
 
 (global-set-key (kbd "C-c n") 'my/notes)
 
@@ -560,15 +566,17 @@ If FRAME is omitted or nil, use currently selected frame."
                     company-yasnippet
                     company-dabbrev))))
 
-(add-hook 'python-mode-hook
+(after! python
+  (add-hook 'python-mode-hook
           (lambda ()
             (company-mode)
             (make-local-variable 'company-backends)
             (setq company-backends
                   '(company-files
                     company-capf
-                    :with
-                    '(company-yasnippet company-dabbrev-code)))))
+                    company-yasnippet
+                    company-dabbrev-code))
+            (setq lsp-completion-provider :none))))
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.

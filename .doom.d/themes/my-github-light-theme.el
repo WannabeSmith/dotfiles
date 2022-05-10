@@ -26,7 +26,7 @@ Can be an integer to determine the exact padding."
    ;; but can also be useful as a basis for subtle highlights (e.g. for hl-line
    ;; or region), especially when paired with the `doom-darken', `doom-lighten',
    ;; and `doom-blend' helper functions.
-   (bg-alt     '("#fafafa" "white"   "white"        ))
+   (bg-alt     '("#f0f0f0" "white"   "white"        ))
    (fg-alt     '("#2e353d" "#2e353d" "brightblack"  ))
 
    ;; These should represent a spectrum from bg to fg, where base0 is a starker
@@ -60,20 +60,20 @@ Can be an integer to determine the exact padding."
    (dark-cyan  (doom-lighten cyan 0.4))
 
    ;; face categories
-   (highlight      grey)
+   (highlight      light-blue)
    (vertical-bar   base3)
    (selection      base1)
    (builtin        blue)
    (comments       grey)
    (doc-comments   dark-blue)
    (constants      red)
-   (functions      blue)
+   (functions      violet)
    (keywords       red)
    (methods        blue)
    (operators      fg)
    (type           brown)
    (strings        dark-blue)
-   (variables      violet)
+   (variables      fg)
    (numbers        blue)
    (region         selection)
    (error          red)
@@ -100,7 +100,8 @@ Can be an integer to determine the exact padding."
         4))))
 
   ;;;; Base theme face overrides
-  (((font-lock-doc-face &override) :slant 'italic)
+  ((cursor :background light-blue)
+   ((font-lock-doc-face &override) :slant 'italic)
    ((line-number &override) :foreground base4)
    ((line-number-current-line &override) :foreground base8)
    (mode-line
