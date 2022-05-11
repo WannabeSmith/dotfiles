@@ -54,6 +54,11 @@ Use cmd+x for M-x.
   (global-set-key (kbd "s-x") #'execute-extended-command)
 #+end_src
 
+Close a buffer using cmd+w
+#+begin_src elisp
+  (global-set-key (kbd "s-w") #'kill-this-buffer)
+#+end_src
+
 Exit Emacs using cmd+q
 #+begin_src elisp
   (global-set-key (kbd "s-q") #'save-buffers-kill-terminal)
@@ -105,6 +110,13 @@ Denote “C-c m” my/<localleader>, following Doom’s naming of “SPC m”.
 
 The keybindings for various modes will be defined in their respective sections within [[config.org]].
 
+* Projectile
+#+begin_src elisp
+  (use-package projectile
+    :config
+    (projectile-mode +1)
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
+#+end_src
 * Evil (vim emulation in Emacs)
 #+begin_src elisp
     (use-package evil
