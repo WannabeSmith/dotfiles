@@ -39,7 +39,7 @@ Disable scrollbar, toolbar, tooltips, and menu bar.
 
 Fringe.
 #+begin_src elisp
-  (set-fringe-mode 15)        ;; Give some breathing room
+  (set-fringe-mode 15)
 #+end_src
 
 Fonts.
@@ -257,8 +257,87 @@ Create some global yasnippet-related keybindings.
 #+begin_src elisp
   (use-package company
     :config
-    (add-hook 'after-init-hook 'global-company-mode)
+    (global-company-mode)
     )
+#+end_src
+
+Make C-SPC the completion key
+#+begin_src elisp
+  (global-set-key (kbd "C-SPC") #'company-complete)
+#+end_src
+
+Show autocomplete after just 2 characters have been typed
+#+begin_src elisp
+  (setq company-minimum-prefix-length 2)
+#+end_src
+
+Always show a dropedown list (no inline completions). Taken from [[https://emacs.stackexchange.com/questions/36619/show-tooltip-even-if-there-is-only-one-candidate-in-company-mode][here]].
+#+begin_src elisp
+  (setq company-frontends
+        (nconc
+         '(company-pseudo-tooltip-frontend)
+         (remove
+          'company-pseudo-tooltip-unless-just-one-frontend
+          (remove
+           'company-preview-if-just-one-frontend company-frontends))))
+#+end_src
+
+Make autocomplete show up faster
+#+begin_src elisp
+  (setq company-idle-delay 0.05)
+#+end_src
+
+** YASnippet
+Add YASnippet to company-backends. Taken from [[https://www.reddit.com/r/emacs/comments/3r9fic/best_practicestip_for_companymode_andor_yasnippet/][reddit]].
+#+begin_src elisp
+  (defvar my/enable-yas t "Enable yasnippet for all backends.")
+
+  (defun my/backend-with-yas (backend)
+    (if (or (not my/enable-yas)
+            (and (listp backend)
+                 (member 'company-yasnippet backend)))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+
+  (setq company-backends (mapcar #'my/backend-with-yas company-backends))
+#+end_src
+
+** TODO LaTeX (auctex) 
+#+begin_src elisp
+  ;; (add-hook 'LaTeX-mode-hook
+  ;;           (lambda ()
+  ;;             (company-mode)
+  ;;             (make-local-variable 'company-backends)
+  ;;             (setq company-backends
+  ;;                   '(company-files
+  ;;                     company-reftex-labels
+  ;;                     company-reftex-citations
+  ;;                     company-bibtex
+  ;;                     company-auctex-macros
+  ;;                     company-auctex-symbols
+  ;;                     company-auctex-environments
+  ;;                     ;; company-keywords
+  ;;                     company-latex-commands
+  ;;                     company-math-symbols-latex
+  ;;                     ;; :with
+  ;;                     company-yasnippet))))
+#+end_src
+
+** TODO Python
+#+begin_src elisp
+  ;; (after! python
+  ;;         (add-hook 'python-mode-hook
+  ;;                   (lambda ()
+  ;;                     (company-mode)
+  ;;                     (make-local-variable 'company-backends)
+  ;;                     (setq company-backends
+  ;;                           '(company-files
+  ;;                             company-capf
+  ;;                             company-yasnippet
+  ;;                             company-dabbrev-code))
+  ;;                     (setq lsp-completion-provider :none))))
+
 #+end_src
 
 * Undo-redo (undo-fu)
