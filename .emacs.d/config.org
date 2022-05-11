@@ -1,80 +1,110 @@
-* Startup
+* Packages (straight.el)
+Taken from https://github.com/raxod502/straight.el
 #+begin_src elisp
-  (setq inhibit-startup-message t)
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
-  ;;(scroll-bar-mode -1)      ;; Disable visible scrollbar
-  (tool-bar-mode -1)          ;; Disable the toolbar
-  (tooltip-mode -1)           ;; Disable tooltips
-  (set-fringe-mode 15)        ;; Give some breathing room
-  (menu-bar-mode -1)          ;; Disable the menu bar
-#+end_src 
-
-Open [[~/.emacs.d/config.org]] on startup.
-#+begin_src elisp
-  (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
+  (setq package-enable-at-startup nil)
 #+end_src
 
-* General
+Integration with use-package
+#+begin_src elisp
+  (straight-use-package 'use-package)
+  (setq straight-use-package-by-default t)
+#+end_src
+
+* User interface
+Disable startup message
+#+begin_src elisp
+  (setq inhibit-startup-message t)
+#+end_src 
+
+Disable scrollbar, toolbar, tooltips, and menu bar.
+#+begin_src elisp
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)  
+  (tooltip-mode -1)   
+  (menu-bar-mode -1)  
+#+end_src
+
+Fringe.
+#+begin_src elisp
+  (set-fringe-mode 15)        ;; Give some breathing room
+#+end_src
+
 Fonts.
 #+begin_src elisp
-  (set-face-attribute 'default nil :family "Roboto Mono" :height 150)
+  (set-face-attribute 'default nil :family "Roboto Mono" :height 140)
   (set-face-attribute 'fixed-pitch nil :family "Roboto Mono" :height 1.0)
   (set-face-attribute 'variable-pitch nil :family "Roboto" :height 1.0)
 #+end_src
 
-Theme
+Theme.
 #+begin_src elisp
   (load-theme 'modus-operandi)
 #+end_src
 
+Global line numbers.
+#+begin_src elisp
+  ;; (add-hook 'emacs-startup-hook #'global-display-line-numbers-mode)
+#+end_src
+
+Turn off bell
+#+begin_src elisp
+  (setq ring-bell-function 'ignore)
+#+end_src
+
+* Global keybindings
+
+The following global keybindings are heavily macOS-focused.
+
+I'm using [[https://bitbucket.org/mituharu/emacs-mac/src/master/][Yamamoto Mitsuharu's Emacs port]] which uses "command" as the meta key. Here, I'm just mapping "option" to "meta" and "command" to "super". 
 #+begin_src elisp
 (setq mac-option-modifier 'meta)
 (setq mac-command-modifier 'super)
 #+end_src
 
+Use cmd+x for M-x.
 #+begin_src elisp
-  (bind-key "s-x" #'execute-extended-command)
+  (global-set-key (kbd "s-x") #'execute-extended-command)
 #+end_src
 
+Exit Emacs using cmd+q
 #+begin_src elisp
-  (bind-key "s-v" #'evil-paste-after)
+  (global-set-key (kbd "s-q") #'save-buffers-kill-terminal)
 #+end_src
 
+Paste from the clipboard using cmd+v.
 #+begin_src elisp
-;;(setq package-enable-at-startup nil)
+  (global-set-key (kbd "s-v") #'evil-paste-after)
 #+end_src
 
+Make <escape> key behave like escape and keyboard-quit.
 #+begin_src elisp
-  (add-hook 'emacs-startup-hook #'global-display-line-numbers-mode)
+  (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 #+end_src
 
+Line-by-line scrolling.
 #+begin_src elisp
-  ;; Turn off bell
-  (setq ring-bell-function 'ignore)
+  (setq scroll-step            1
+	scroll-conservatively  10000)
+#+end_src
 
-
-
-  ;; Initialize package sources
-  (require 'package)
-
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
-
-  (package-initialize)
-  (unless package-archive-contents
-    (package-refresh-contents))
-
-  ;; Initialize use-package on non-Linux platforms
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-
-  (require 'use-package)
-  (setq use-package-always-ensure t)
-
-  ;;(straight-use-package 'use-package)
-
+* Evil (vim emulation in Emacs)
+#+begin_src elisp
   (use-package evil
     :init
+    (setq evil-want-C-i-jump nil) ;; Disable C-i to jump forward to restore TAB functionality in Org mode.
     (setq evil-want-integration t)
     (setq evil-want-keybinding nil)
     (setq evil-want-C-u-scroll t)
@@ -88,16 +118,16 @@ Theme
 
     (evil-set-initial-state 'messages-buffer-mode 'normal)
     (evil-set-initial-state 'dashboard-mode 'normal)
-
-    ;; (bind-key "<tab>" #'evil-toggle-fold)
     )
 
   (use-package evil-commentary
     :config
     (evil-commentary-mode))
-
-
-
+#+end_src
+    
+* Vertico (vertical completion UI)
+A lot of the configuration that follows is taken directly from the [[https://github.com/minad/vertico][vertico.el README.org]].
+#+begin_src elisp
   ;; Vertico
   (use-package vertico
     :init
@@ -115,30 +145,34 @@ Theme
     ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
     ;; (setq vertico-cycle t)
     )
+#+end_src
 
-  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+Persist history over Emacs restarts. Vertico sorts by history position.
+#+begin_src elisp
   (use-package savehist
     :init
     (savehist-mode)
     )
+  #+end_src
 
-  ;; A few more useful configurations...
+A few more useful configurations...
+#+begin_src elisp
   (use-package emacs
     :init
     ;; Add prompt indicator to `completing-read-multiple'.
     ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
     (defun crm-indicator (args)
       (cons (format "[CRM%s] %s"
-                    (replace-regexp-in-string
-                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                     crm-separator)
-                    (car args))
-            (cdr args)))
+		    (replace-regexp-in-string
+		     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+		     crm-separator)
+		    (car args))
+	    (cdr args)))
     (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
     ;; Do not allow the cursor in the minibuffer prompt
     (setq minibuffer-prompt-properties
-          '(read-only t cursor-intangible t face minibuffer-prompt))
+	  '(read-only t cursor-intangible t face minibuffer-prompt))
     (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
     ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
@@ -149,55 +183,44 @@ Theme
     ;; Enable recursive minibuffers
     (setq enable-recursive-minibuffers t)
     )
+#+end_src
 
+* which-key
 
-
-
-  ;; Line-by-line scrolling
-  (setq scroll-step            1
-        scroll-conservatively  10000)
-
-
-
-  ;; which-key
+The which-key package makes discoverability of keybindings simple.
+#+begin_src elisp
   (use-package which-key
     :config
     (which-key-mode))
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(package-selected-packages
-     '(which-key vertico use-package ivy evil doom-modeline command-log-mode)))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
-
 #+end_src
 
 
-* Snippets (yasnippet)
+* Snippets (YASnippet)
+
 #+begin_src elisp
   (use-package yasnippet
-    :config
+    :init
     (setq yas-snippet-dirs
 	  '("~/.emacs.d/snippets"))
-
-    (global-set-key (kbd "C-c y") 'my/yasnippet)
-
-    (defalias 'my/yasnippet
-      (let ((map (make-sparse-keymap)))
-	;; Add word to dictionary
-	(define-key map (kbd "i") #'yas-insert-snippet)
-	(define-key map (kbd "n") #'yas-new-snippet)
-	map))
+    :config
     (yas-global-mode 1)
     )
 #+end_src
+
+** Keybindings
+Create some global yasnippet-related keybindings.
+#+begin_src elisp
+  (global-set-key (kbd "C-c y") 'my/yasnippet)
+
+  (defalias 'my/yasnippet
+    (let ((map (make-sparse-keymap)))
+      ;; Add word to dictionary
+      (define-key map (kbd "i") #'yas-insert-snippet)
+      (define-key map (kbd "n") #'yas-new-snippet)
+      map))
+#+end_src
+
+* Autocompletion (company)
 
 #+begin_src elisp
   (use-package company
@@ -206,11 +229,8 @@ Theme
     )
 #+end_src
 
-#+begin_src elisp
-  (use-package org
-    :config
-    (org-indent-mode))
-#+end_src
+
+* Undo-redo (undo-fu)
 
 #+begin_src elisp
   (use-package undo-fu)
@@ -221,22 +241,118 @@ Theme
   (undo-fu-session-recover)
 #+end_src
 
+* Org-mode
+
+#+begin_src elisp
+  (use-package org
+    :config
+    (setq org-startup-indented t) )
+
+#+end_src
+
+#+begin_src elisp
+  (use-package org-download
+    :config
+    ;; Enable org-download so that we can drag and drop screenshots into org.
+    (add-hook 'dired-mode-hook 'org-download-enable)
+    )
+#+end_src
+
+Sync with beorg on iOS.
+#+begin_src elisp
+    (setq
+     org-directory
+     "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
+#+end_src
+
+
+Org-babel languages to load
+** TODO install jupyter
+#+begin_src elisp
+  ;; (org-babel-do-load-languages
+  ;;  'org-babel-load-languages
+  ;;  '((emacs-lisp . t)
+  ;;    (python . t)
+  ;;    (jupyter . t)))
+#+end_src
+
+** Custom functions
+#+begin_src elisp
+(defun my/org-sort-todo-list ()
+  "Sort an org-mode todo-list from the heading of the list by priority and todo order."
+  (interactive)
+  (org-sort-entries nil ?p nil nil nil nil)
+  (org-sort-entries nil ?o nil nil nil nil))
+
+
+(defun my/org-sort-todo-list-from-within ()
+  "Sort an org-mode todo-list from within the list by priority and todo order."
+  (interactive)
+  ;; Move up a heading
+  (outline-up-heading 1)
+  ;; Sort once at top of heading
+  (my/org-sort-todo-list))
+#+end_src
+
+** Headings
+Make first-level org heading larger.
+#+begin_src elisp
+(custom-set-faces '(org-level-1 ((t (:inherit outline-1 :height 1.2)))))
+#+end_src
+
+** Todo keywords
+#+begin_src elisp
+  (setq org-todo-keywords
+        '((sequence "IN-PROGRESS(p)" "TODO(t)" "WAITING(w)" "IDEA(i)"
+                    "|" "DONE" "CANCELLED(c)")))
+  ;; Set other todo colors according to the nord theme (https://www.nordtheme.com/)
+  ;; (setq org-todo-keyword-faces
+  ;;       '(("IN-PROGRESS" . "#88C0D0")
+  ;;         ("WAITING" . "#5E81AC")
+  ;;         ("IDEA" . "#EBCB8B")
+  ;;         ("CANCELED" . "#BF616A"))
+  ;;       )
+
+  (setq org-log-done 'time)
+#+end_src
+
+* Configuration-related
+
+Disable custom.
+#+begin_src elisp
+(setq custom-file null-device)
+#+end_src
+
+Open [[~/.emacs.d/config.org]] on startup.
+#+begin_src elisp
+  (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
+#+end_src
+
 
 * To-config
+** IN-PROGRESS make vertico do fuzzy completion
+** TODO [#A] add magit
+** TODO [#A] company
+** TODO [#A] AucTex 
+** TODO [#B] git-sync snippets
+** TODO [#B] Add keybindings and other settings from doom config
+** TODO [#B] Make org work with [ ]-style list items
+** TODO [#C] add CMD+W for closing buffer.
+** TODO [#C] add modeline of some kind
+** TODO [#C] use "enter" to make a TODO done.
+** TODO [#C] use "enter" to evaluate a code chunk.
+** DONE organize config.org
+CLOSED: [2022-05-11 Wed 14:41]
+** DONE straight
+CLOSED: [2022-05-11 Wed 14:42]
 ** DONE escape key
+CLOSED: [2022-05-11 Wed 00:46]
 ** DONE org mode folding
-** TODO Make org-mode better looking (and work with [ ]-style list items)
-** TODO add magit
+CLOSED: [2022-05-11 Wed 00:46]
+** DONE Make org-mode better looking
+CLOSED: [2022-05-11 Wed 12:33]
 ** DONE yasnippet
-** TODO company
-** TODO AucTex 
-** TODO organize config.org
-** TODO make vertico do fuzzy completion
-** TODO add modeline of some kind
-** TODO use "enter" to make a TODO done.
-** TODO use "enter" to evaluate a code chunk.
 ** DONE auto-commenting
-** TODO straight
 ** DONE undo persist
 ** DONE cmd+v needs to paste.
 ** DONE line numbers
