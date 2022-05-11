@@ -1,4 +1,4 @@
-* Packages (straight.el)
+* Package management (straight.el)
 Taken from https://github.com/raxod502/straight.el
 #+begin_src elisp
   (defvar bootstrap-version)
@@ -64,7 +64,7 @@ Turn off bell
   (setq ring-bell-function 'ignore)
 #+end_src
 
-* Global keybindings
+* General global keybindings
 
 The following global keybindings are heavily macOS-focused.
 
@@ -102,27 +102,49 @@ Line-by-line scrolling.
 
 * Evil (vim emulation in Emacs)
 #+begin_src elisp
+      (use-package evil
+        :init
+        (setq evil-want-C-i-jump nil) ;; Disable C-i to jump forward to restore TAB functionality in Org mode.
+        (setq evil-want-integration t)
+        (setq evil-want-keybinding nil)
+        (setq evil-want-C-u-scroll t)
+        (setq evil-undo-system 'undo-fu)
+        :config
+        (evil-mode 1)
+        ;;(evil-set-undo-system 'undo-redo)
+        ;; Use visual line motions even outside of visual-line-mode buffers
+        ;;(evil-global-set-key 'motion "j" 'evil-next-visual-line)
+        ;;(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+        (evil-set-initial-state 'messages-buffer-mode 'normal)
+        (evil-set-initial-state 'dashboard-mode 'normal)
+        )
+
+#+end_src
+
+
+** Commenting in evil mode (evil-commentary)
+#+begin_src elisp
+      (use-package evil-commentary
+        :config
+        (evil-commentary-mode))
+#+end_src
+
+** Additional evil niceties (evil-collection)
+#+begin_src elisp
   (use-package evil
+    :ensure t
     :init
-    (setq evil-want-C-i-jump nil) ;; Disable C-i to jump forward to restore TAB functionality in Org mode.
-    (setq evil-want-integration t)
+    (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
     (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-undo-system 'undo-fu)
     :config
-    (evil-mode 1)
-    ;;(evil-set-undo-system 'undo-redo)
-    ;; Use visual line motions even outside of visual-line-mode buffers
-    ;;(evil-global-set-key 'motion "j" 'evil-next-visual-line)
-    ;;(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+    (evil-mode 1))
 
-    (evil-set-initial-state 'messages-buffer-mode 'normal)
-    (evil-set-initial-state 'dashboard-mode 'normal)
-    )
-
-  (use-package evil-commentary
+  (use-package evil-collection
+    :after evil
+    :ensure t
     :config
-    (evil-commentary-mode))
+    (evil-collection-init))
 #+end_src
     
 * Vertico (vertical completion UI)
@@ -185,16 +207,26 @@ A few more useful configurations...
     )
 #+end_src
 
-* which-key
+** Orderless
+Use the `orderless' completion style.
+#+begin_src elisp
+(use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+#+end_src
 
+* which-key
 The which-key package makes discoverability of keybindings simple.
 #+begin_src elisp
   (use-package which-key
     :config
     (which-key-mode))
 #+end_src
-
-
 * Snippets (YASnippet)
 
 #+begin_src elisp
@@ -229,7 +261,6 @@ Create some global yasnippet-related keybindings.
     )
 #+end_src
 
-
 * Undo-redo (undo-fu)
 
 #+begin_src elisp
@@ -241,7 +272,7 @@ Create some global yasnippet-related keybindings.
   (undo-fu-session-recover)
 #+end_src
 
-* Org-mode
+* org-mode
 
 #+begin_src elisp
   (use-package org
@@ -316,6 +347,12 @@ Make first-level org heading larger.
   (setq org-log-done 'time)
 #+end_src
 
+* git (Magit)
+
+#+begin_src elisp
+  (use-package magit)
+#+end_src
+
 * Configuration-related
 
 Disable custom.
@@ -328,9 +365,7 @@ Open [[~/.emacs.d/config.org]] on startup.
   (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
 #+end_src
 
-
 * To-config
-** IN-PROGRESS make vertico do fuzzy completion
 ** TODO [#A] add magit
 ** TODO [#A] company
 ** TODO [#A] AucTex 
@@ -341,6 +376,8 @@ Open [[~/.emacs.d/config.org]] on startup.
 ** TODO [#C] add modeline of some kind
 ** TODO [#C] use "enter" to make a TODO done.
 ** TODO [#C] use "enter" to evaluate a code chunk.
+** DONE make vertico do fuzzy completion
+CLOSED: [2022-05-11 Wed 14:48]
 ** DONE organize config.org
 CLOSED: [2022-05-11 Wed 14:41]
 ** DONE straight
