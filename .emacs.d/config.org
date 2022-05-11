@@ -449,6 +449,50 @@ Open [[~/.emacs.d/config.org]] on startup.
   (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
 #+end_src
 
+* Window size on startup
+
+Set initial frame size and position of the Emacs window.
+The following code is largely based on https://christiantietze.de/posts/2021/06/emacs-center-window-on-current-monitor/ and https://www.reddit.com/r/emacs/comments/9c0a4d/tip_setting_initial_frame_size_and_position/
+#+begin_src elisp
+(defun my/set-initial-frame-size ()
+  "Set the initial frame size to something reasonable. Works on multiple monitors"
+  (interactive)
+  (let* ((base-factor 0.93)
+         (monitor-w (nth 2 (frame-monitor-workarea (selected-frame))))
+         (monitor-h (nth 3 (frame-monitor-workarea (selected-frame))))
+         (a-width (* monitor-w base-factor))
+         (a-height (* monitor-h base-factor)))
+    (set-frame-size (selected-frame)
+                    (truncate a-width)
+                    (truncate a-height) t)))
+
+(defun my/frame-recenter (&optional frame)
+  "Center FRAME on the screen.
+FRAME can be a frame name, a terminal name, or a frame.
+If FRAME is omitted or nil, use currently selected frame."
+  (interactive)
+  (unless (eq 'maximised (frame-parameter nil 'fullscreen))
+    (let* ((frame (or (and (boundp 'frame)
+                           frame)
+                      (selected-frame)))
+           (frame-w (frame-pixel-width frame))
+           (frame-h (frame-pixel-height frame))
+           ;; frame-monitor-workarea returns (x y width height) for the monitor
+           (monitor-w (nth 2 (frame-monitor-workarea frame)))
+           (monitor-h (nth 3 (frame-monitor-workarea frame)))
+           (center (list (/ (- monitor-w frame-w) 2)
+                         (/ (- monitor-h frame-h) 2))))
+      (apply 'set-frame-position (flatten-list (list frame center))))))
+
+(defun my/set-initial-frame ()
+  (interactive)
+  (my/set-initial-frame-size)
+  (my/frame-recenter))
+
+(setq frame-resize-pixelwise t)
+(add-hook 'window-setup-hook #'my/set-initial-frame)
+#+end_src
+
 * To-config
 ** TODO [#A] company
 ** TODO [#A] AucTex 
