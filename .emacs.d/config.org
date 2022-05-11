@@ -703,37 +703,25 @@ Change capture template so that the timestamp is not in the filename.
 
 * Frequently accessed files and folders
 #+begin_src elisp
-(setq documents-directory "~/Documents")
-(setq cloud-directory "~/Box Sync")
+  (setq documents-directory "~/Documents")
+  (setq cloud-directory "~/Box Sync")
+  (setq dotemacs-directory "~/.emacs.d")
 #+end_src
 
 #+begin_src elisp
-  (setq documents-directory "~/Documents")
-  (setq cloud-directory "~/Box Sync")
-
-  (defun my/goto-private-config-org-file ()
-    "Open your private config.org file."
+  (defun my/open-config-org-file ()
+    "Open my config.org file."
     (interactive)
-    (find-file (expand-file-name "config.org" doom-private-dir)))
+    (find-file (expand-file-name "config.org" dotemacs-directory)))
 
-  (defun my/goto-private-config-file ()
-    "Open your private config.el file."
+  (defun my/open-init-file ()
+    "Open my init.el file."
     (interactive)
-    (find-file (expand-file-name "config.el" doom-private-dir)))
+    (find-file (expand-file-name "init.el" dotemacs-directory)))
 
-  (defun my/goto-private-init-file ()
-    "Open your private init.el file."
+  (defun my/open-themes-directory ()
     (interactive)
-    (find-file (expand-file-name "init.el" doom-private-dir)))
-
-  (defun my/goto-private-packages-file ()
-    "Open your private packages.el file."
-    (interactive)
-    (find-file (expand-file-name "packages.el" doom-private-dir)))
-
-  (defun my/open-private-themes-directory ()
-    (interactive)
-    (ido-find-file-in-dir (expand-file-name "themes" doom-private-dir)))
+    (ido-find-file-in-dir (expand-file-name "themes" dotemacs-directory)))
 
   (defun my/open-documents-directory ()
     (interactive)
@@ -758,12 +746,11 @@ Change capture template so that the timestamp is not in the filename.
 "C-c o" will be reserved for opening files/directories
 #+begin_src elisp
   (global-set-key (kbd "C-c o") 'my/open)
-  ;; (global-set-key (kbd "C-c e") 'my/emacs-config)
 
   (defalias 'my/open
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "e") #'my/emacs-config)
-      (define-key map (kbd "t") #'my/open-private-themes-directory)
+      (define-key map (kbd "t") #'my/open-themes-directory)
       (define-key map (kbd "o") #'my/open-org-directory)
       (define-key map (kbd "d") #'my/open-documents-directory)
       (define-key map (kbd "g") #'my/open-gitprojects-directory)
@@ -773,13 +760,10 @@ Change capture template so that the timestamp is not in the filename.
 
   (defalias 'my/emacs-config
     (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "c") #'my/goto-private-config-org-file)
-      (define-key map (kbd "C") #'my/goto-private-config-file)
-      (define-key map (kbd "i") #'my/goto-private-init-file)
-      (define-key map (kbd "p") #'my/goto-private-packages-file)
+      (define-key map (kbd "c") #'my/open-config-org-file)
+      (define-key map (kbd "i") #'my/open-init-file)
       map) "Config-related bindings")
 #+end_src
-
 
 * git (Magit)
 
@@ -797,11 +781,6 @@ Enter insert mode when firing up a magit commit.
 Disable custom.
 #+begin_src elisp
 (setq custom-file null-device)
-#+end_src
-
-Open [[~/.emacs.d/config.org]] on startup.
-#+begin_src elisp
-  (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
 #+end_src
 
 * Window size on startup
@@ -850,8 +829,9 @@ If FRAME is omitted or nil, use currently selected frame."
 
 * To-config
 ** TODO [#A] AucTex
+** TODO [#A] Install packages from doom config.
+** TODO [#B] MacOS extensions (opening finder/iterm from emacs)
 ** TODO [#B] Flycheck
-** TODO [#B] Add keybindings and other settings from doom config
 ** TODO [#B] Make org work with [ ]-style list items
 ** TODO [#B] git-gutter
 ** TODO [#B] Making everything use (with-eval-after-load ...) or perhaps use the use-package syntactic sugar.
@@ -865,6 +845,8 @@ If FRAME is omitted or nil, use currently selected frame."
 CLOSED: [2022-05-11 Wed 16:35]
 ** DONE [#A] add magit
 CLOSED: [2022-05-11 Wed 15:03]
+** DONE [#B] Add keybindings and other settings from doom config
+CLOSED: [2022-05-11 Wed 17:38]
 ** DONE [#B] git-sync snippets
 CLOSED: [2022-05-11 Wed 16:35]
 ** DONE make vertico do fuzzy completion
