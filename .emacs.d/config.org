@@ -353,6 +353,11 @@ Make first-level org heading larger.
   (use-package magit)
 #+end_src
 
+Enter insert mode when firing up a magit commit.
+#+begin_src elisp
+(add-hook 'git-commit-mode-hook 'evil-insert-state)
+#+end_src
+
 * Configuration-related
 
 Disable custom.
