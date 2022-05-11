@@ -41,7 +41,7 @@ Turn off bell
 
 * General global keybindings
 
-The following global keybindings are heavily macOS-focused.
+The following global keybindings are heavily macOS- and vim-focused.
 
 I'm using [[https://bitbucket.org/mituharu/emacs-mac/src/master/][Yamamoto Mitsuharu's Emacs port]] which uses "command" as the meta key. Here, I'm just mapping "option" to 'meta and "command" to 'super. 
 #+begin_src elisp
@@ -75,25 +75,58 @@ Line-by-line scrolling.
 	scroll-conservatively  10000)
 #+end_src
 
+** TODO Use `C-hjkl' for moving to different windows.
+Perhaps disable behaviour of C-w so that we can do "C-w h/j/k/l" in insert mode?
+#+begin_src elisp
+  ;; (bind-keys* ("C-h" . evil-window-left)
+  ;;             ("C-j" . evil-window-down)
+  ;;             ("C-k" . evil-window-up)
+  ;;             ("C-l" . evil-window-right))
+#+end_src
+
+Use “C-c l” and “C-c j” for splitting windows vertically (right) and horizontally (down)
+#+begin_src elisp
+(global-set-key (kbd "C-c l") #'evil-window-vsplit)
+(global-set-key (kbd "C-c j") #'evil-window-split)
+#+end_src
+
+Switch to the new window after splitting
+#+begin_src elisp
+(setq evil-split-window-below t
+      evil-vsplit-window-right t)
+#+end_src
+
+* Mode-specific custom keybindings
+
+Denote “C-c m” my/<localleader>, following Doom’s naming of “SPC m”.
+#+begin_src elisp
+(global-set-key (kbd "C-c m") 'my/<localleader>)
+#+end_src
+
+The keybindings for various modes will be defined in their respective sections within [[config.org]].
+
 * Evil (vim emulation in Emacs)
 #+begin_src elisp
-      (use-package evil
-        :init
-        (setq evil-want-C-i-jump nil) ;; Disable C-i to jump forward to restore TAB functionality in Org mode.
-        (setq evil-want-integration t)
-        (setq evil-want-keybinding nil)
-        (setq evil-want-C-u-scroll t)
-        (setq evil-undo-system 'undo-fu)
-        :config
-        (evil-mode 1)
-        ;;(evil-set-undo-system 'undo-redo)
-        ;; Use visual line motions even outside of visual-line-mode buffers
-        ;;(evil-global-set-key 'motion "j" 'evil-next-visual-line)
-        ;;(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+    (use-package evil
+      :init
+      (setq evil-want-C-i-jump nil) ;; Disable C-i to jump forward to restore TAB functionality in Org mode.
+      (setq evil-want-integration t)
+      (setq evil-want-keybinding nil)
+      (setq evil-want-C-u-scroll t)
+      (setq evil-undo-system 'undo-fu)
+      :config
+      (evil-mode 1)
+      ;; Use global-visual-line-mode by default so that jk does not go up/down based on logical lines.
+      ;; The goal here is to get vim-like behaviour of “nnoremap j gj” and “nnoremap k gk” in emacs.
+      (global-visual-line-mode)
+      ;;(evil-set-undo-system 'undo-redo)
+      ;; Use visual line motions even outside of visual-line-mode buffers
+      ;;(evil-global-set-key 'motion "j" 'evil-next-visual-line)
+      ;;(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-        (evil-set-initial-state 'messages-buffer-mode 'normal)
-        (evil-set-initial-state 'dashboard-mode 'normal)
-        )
+      (evil-set-initial-state 'messages-buffer-mode 'normal)
+      (evil-set-initial-state 'dashboard-mode 'normal)
+      )
 
 #+end_src
 
@@ -202,6 +235,12 @@ The which-key package makes discoverability of keybindings simple.
     :config
     (which-key-mode))
 #+end_src
+
+Open the which-key buffer more quickly.
+#+begin_src elisp
+(setq which-key-idle-delay 0.2)
+#+end_src
+
 * Snippets (YASnippet)
 
 #+begin_src elisp
@@ -316,7 +355,6 @@ Add YASnippet to company-backends. Taken from [[https://www.reddit.com/r/emacs/c
 #+end_src
 
 * Undo-redo (undo-fu)
-
 #+begin_src elisp
   (use-package undo-fu)
   (use-package undo-fu-session
@@ -326,8 +364,190 @@ Add YASnippet to company-backends. Taken from [[https://www.reddit.com/r/emacs/c
   (undo-fu-session-recover)
 #+end_src
 
-* org-mode
+* Coding
+** Python
 
+#+begin_src elisp
+(use-package jupyter)
+#+end_src
+
+Allow running code from a .py buffer straight to the Jupyter REPL.
+#+begin_src elisp
+  (add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
+#+end_src
+
+*** Virtual environment interaction
+Pattern for virtual environments. In particular, we will always assume that virtual environments are within a folder satisfying the regex "venv*", for example "venv" or "venv_project1", and so on.
+#+begin_src elisp
+  (defun my/venv_pattern ()
+    "Virtual environment pattern"
+    "venv*")
+#+end_src
+
+Make LSP ignore virtual environments that satisfy the pattern "venv*".
+#+begin_src elisp
+  (defun my/python-lsp-ignore-venv ()
+    (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
+  (add-hook 'python-mode-hook
+            '(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
+#+end_src
+
+***** Automatic virtual environment loading
+We want to create a function `my/python-venv-auto-activate` that searches for any virtual environments with pattern “venv*” in a particular list of directories; if there’s a unique match, activate it; otherwise, warn the user that there’s no/multiple virtual environments.
+
+The following functions are essentially helper functions for `my/python-venv-auto-activate` which will itself be defined in the next code block.
+#+begin_src elisp
+  (defun my/venv_pattern ()
+    "Virtual environment pattern"
+    "venv*")
+
+  (defun my/venv_directories_to_search ()
+    "List of directories in which to search for `my/venv_pattern`"
+    ;; Remove all nil elements
+    (seq-filter (lambda (element) element)
+                (list
+                 (file-name-directory (buffer-file-name))
+                 (projectile-project-root))))
+
+  (defun my/get-matching-directory-files (directory regexp)
+    "Find all files in DIRECTORY that begin with REGEXP"
+    ;; Concatenate the directory to the filename to recover the full path
+    (seq-map (lambda ( file ) (file-name-concat directory file))
+             ;; Filter out all files that do not begin with REGEXP
+             (seq-filter
+              (lambda (x) (equal 0 (string-match-p regexp x)))
+              (directory-files directory))))
+
+  (defun my/get-matching-directories-files (directories regexp)
+    "Find all files in all directories within DIRECTORIES that begin with REGEXP"
+    ;; remove duplicates
+    (seq-uniq
+     ;; flatten the list of lists
+     (flatten-tree
+      ;; Apply my/get-matching-directory-files to all the directories with regexp.
+      (seq-map '(lambda ( dir ) (my/get-matching-directory-files dir regexp)) directories))))
+
+  (defun my/get-matching-project-root-files (regexp)
+    "Find all root directories/files that begin with REGEXP"
+    (my/get-matching-directory-files (projectile-project-root) regexp))
+#+end_src
+
+Now that we have the above helper functions, we are ready to define my/python-venv-auto-activate.
+#+begin_src elisp
+(defun my/python-venv-auto-activate ()
+  "Activate the virtual environment satisfying the pattern given by the function, my/venv_pattern if it's a unique match, otherwise do nothing"
+  (interactive)
+  (setq matching-venvs
+        (my/get-matching-directories-files
+         (my/venv_directories_to_search) (my/venv_pattern)))
+  ;; If we have found a uniquely matching virtual environment, activate it.
+  (if (equal (length matching-venvs) 1) ;; if
+      (pyvenv-activate (car matching-venvs))
+    ;; If there is no matching virtual environment, warn the user.
+    (if (equal (length matching-venvs) 0)
+        (display-warning :warning "No virtual environment found.")
+      ;; If there is more than one matching virtual environment, warn the user.
+      (display-warning :warning (concat "Found multiple venvs. Please select one manually using `pyvenv-activate`.")))))
+#+end_src
+
+Now that we’ve defined my/python-venv-auto-activate, let’s run it whenever opening a .py file. Note that we do not use an “(add-hook ‘python-mode-hook …)” approach here because ‘python-mode-hook gets run every time code is sent from the python file to the REPL. Found from sds’s answer [[https://emacs.stackexchange.com/questions/12396/run-command-when-opening-a-file-of-a-specific-filetype][here]].
+#+begin_src elisp
+(add-hook 'find-file-hook
+          #'(lambda () (when (string= (file-name-extension buffer-file-name) "py")
+                        (my/python-venv-auto-activate))))
+#+end_src
+
+*** python-mode-specific keybindings
+#+begin_src elisp
+  (defun my/bind-python-keys ()
+    (defalias 'my/<localleader>
+      (let ((map (make-sparse-keymap)))
+        ;; REPL
+        (define-key map (kbd "R") #'run-python)
+        ;; Restart python
+        (define-key map (kbd "r") #'pyvenv-restart-python)
+        ;; Virtual environment
+        (define-key map (kbd "v") #'pyvenv-activate)
+        ;; Format
+        (define-key map (kbd "f") #'+format/buffer) ;; TODO: Need to get a replacement for this!!
+        ;; Jupyter-related bindings
+        (define-key map (kbd "j") #'my/jupyter)
+        map)))
+
+
+  (add-hook 'python-mode-hook 'my/bind-python-keys)
+#+end_src
+
+Jupyter bindings
+#+begin_src elisp
+  (defun my/bind-python-jupyter-keys ()
+    (defalias 'my/jupyter
+      (let ((map (make-sparse-keymap)))
+        ;; Run jupyter REPL associated with current buffer
+        (define-key map (kbd "R") #'jupyter-repl-associate-buffer)
+        ;; Restart jupyter REPL
+        (define-key map (kbd "r") #'jupyter-repl-restart-kernel)
+        map)))
+
+  (add-hook 'python-mode-hook #'my/bind-python-jupyter-keys)
+#+end_src
+
+** R (ess)
+*** ess-r-mode-specific keybindings
+#+begin_src elisp
+(defun my/bind-ess-r-keys ()
+  (defalias 'my/<localleader>
+    (let ((map (make-sparse-keymap)))
+      ;; REPL
+      (define-key map (kbd "R") #'run-ess-r)
+      map)))
+
+(add-hook 'ess-r-mode-hook 'my/bind-ess-r-keys)
+#+end_src
+
+I want ess to automatically scroll down in console buffer. Taken from [[https://stackoverflow.com/questions/2710442/in-ess-emacs-how-can-i-get-the-r-process-buffer-to-scroll-to-the-bottom-after-a][here]].
+#+begin_src elisp
+(setq comint-scroll-to-bottom-on-input t)
+(setq comint-scroll-to-bottom-on-output t)
+(setq comint-move-point-for-output t)
+#+end_src
+
+* Writing
+** TODO LaTeX
+#+begin_src elisp
+  (defun my/latexmk ()
+    (interactive)
+    (TeX-command "LatexMk" #'TeX-master-file nil))
+#+end_src
+
+Run LatexMk on save.
+I think there might be a better way to do this...
+#+begin_src elisp
+  (add-hook 'LaTeX-mode-hook (lambda ()
+                               (add-hook 'after-save-hook 'my/latexmk)))
+#+end_src
+
+Make AUCTeX ask for main tex file in multi-document structure.
+#+begin_src elisp
+  (setq-default TeX-master nil)
+#+end_src
+
+
+Prevent AUCTeX from inserting braces automatically for sub/superscripts.
+#+begin_src elisp
+  (setq TeX-electric-sub-and-superscript nil)
+#+end_src
+
+Disable git-gutter when writing latex. Git-gutter seems to slow things down, and isn’t necessary for me when writing latex. Code obtained from [[https://github.com/hlissner/doom-emacs/issues/1482][here]].
+#+begin_src elisp
+  (setq git-gutter:disabled-modes '(latex-mode))
+#+end_src
+
+#+begin_src elisp
+(with-eval-after-load 'tex (remove-hook 'TeX-update-style-hook #'rainbow-delimiters-mode))
+#+end_src
+
+** Org-mode
 #+begin_src elisp
   (use-package org
     :config
@@ -350,9 +570,8 @@ Sync with beorg on iOS.
      "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
 #+end_src
 
-
 Org-babel languages to load
-** TODO install jupyter
+*** TODO install jupyter
 #+begin_src elisp
   ;; (org-babel-do-load-languages
   ;;  'org-babel-load-languages
@@ -361,7 +580,7 @@ Org-babel languages to load
   ;;    (jupyter . t)))
 #+end_src
 
-** Custom functions
+*** Custom functions
 #+begin_src elisp
 (defun my/org-sort-todo-list ()
   "Sort an org-mode todo-list from the heading of the list by priority and todo order."
@@ -378,14 +597,25 @@ Org-babel languages to load
   ;; Sort once at top of heading
   (my/org-sort-todo-list))
 #+end_src
+*** org-mode-specific keybindings
+#+begin_src elisp
+  (defun my/bind-org-keys ()
+    (defalias 'my/<localleader>
+      (let ((map (make-sparse-keymap)))
+        ;; Sort todo list by priority and by todo order
+        (define-key map (kbd "s") #'my/org-sort-todo-list-from-within)
+        map)))
 
-** Headings
+  (add-hook 'org-mode-hook 'my/bind-org-keys)
+#+end_src
+
+*** Headings
 Make first-level org heading larger.
 #+begin_src elisp
 (custom-set-faces '(org-level-1 ((t (:inherit outline-1 :height 1.2)))))
 #+end_src
 
-** Todo keywords
+*** Todo keywords
 #+begin_src elisp
   (setq org-todo-keywords
         '((sequence "IN-PROGRESS(p)" "TODO(t)" "WAITING(w)" "IDEA(i)"
@@ -400,6 +630,156 @@ Make first-level org heading larger.
 
   (setq org-log-done 'time)
 #+end_src
+
+** Org-roam
+Set org-roam directory.
+#+begin_src elisp
+  (setq
+     org-roam-directory
+     "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
+#+end_src
+
+Auto-update database immediately after saving.
+#+begin_src elisp
+  (setq org-roam-db-update-method 'immediate)
+#+end_src
+
+Change capture template so that the timestamp is not in the filename.
+#+begin_src elisp
+  (setq org-roam-capture-templates
+        '(("d" "default" plain #'org-roam-capture--get-point "%?" :file-name "${slug}" :head "#+title: ${title}\n" :unnarrowed t)))
+#+end_src
+
+*** Org-roam-specific keybindings
+#+begin_src elisp
+(global-set-key (kbd "C-c n") 'my/notes)
+#+end_src
+
+#+begin_src elisp
+(defalias 'my/notes
+  (let ((map (make-sparse-keymap)))
+    ;; Open org-roam buffer
+    (define-key map (kbd "r") #'org-roam)
+    ;; Find file
+    (define-key map (kbd "f") #'org-roam-find-file)
+    ;; Capture
+    (define-key map (kbd "c") #'org-roam-capture)
+    ;; Insert link
+    (define-key map (kbd "i") #'org-roam-insert)
+    ;; Insert link immediate
+    (define-key map (kbd "i") #'org-roam-insert-immediate)
+    map))
+#+end_src
+
+** Markdown
+*** markdown-mode-specific keybindings
+#+begin_src elisp
+  (defun my/bind-markdown-keys ()
+    (defalias 'my/<localleader>
+      (let ((map (make-sparse-keymap)))
+        ;; Format markdown table
+        (define-key map (kbd "f") #'markdown-table-align)
+        ;; Refresh toc
+        (define-key map (kbd "r") #'markdown-toc-refresh-toc)
+        map)))
+
+  (add-hook 'markdown-mode-hook 'my/bind-markdown-keys)
+#+end_src
+
+
+** Spellcheck (spell-fu)
+#+begin_src elisp
+  (global-set-key (kbd "C-c s") 'my/spelling)
+
+  (defun my/bind-spell-fu-bindings ()
+    (defalias 'my/spelling
+      (let ((map (make-sparse-keymap)))
+        ;; Add word to dictionary
+        (define-key map (kbd "a") #'spell-fu-word-add)
+        map)))
+
+  (add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
+#+end_src
+
+* Frequently accessed files and folders
+#+begin_src elisp
+(setq documents-directory "~/Documents")
+(setq cloud-directory "~/Box Sync")
+#+end_src
+
+#+begin_src elisp
+  (setq documents-directory "~/Documents")
+  (setq cloud-directory "~/Box Sync")
+
+  (defun my/goto-private-config-org-file ()
+    "Open your private config.org file."
+    (interactive)
+    (find-file (expand-file-name "config.org" doom-private-dir)))
+
+  (defun my/goto-private-config-file ()
+    "Open your private config.el file."
+    (interactive)
+    (find-file (expand-file-name "config.el" doom-private-dir)))
+
+  (defun my/goto-private-init-file ()
+    "Open your private init.el file."
+    (interactive)
+    (find-file (expand-file-name "init.el" doom-private-dir)))
+
+  (defun my/goto-private-packages-file ()
+    "Open your private packages.el file."
+    (interactive)
+    (find-file (expand-file-name "packages.el" doom-private-dir)))
+
+  (defun my/open-private-themes-directory ()
+    (interactive)
+    (ido-find-file-in-dir (expand-file-name "themes" doom-private-dir)))
+
+  (defun my/open-documents-directory ()
+    (interactive)
+    (ido-find-file-in-dir documents-directory))
+
+  (defun my/open-gitprojects-directory ()
+    (interactive)
+    (ido-find-file-in-dir (expand-file-name "GitProjects" documents-directory)))
+
+  (defun my/open-papers-directory ()
+    (interactive)
+    (ido-find-file-in-dir (expand-file-name "GitProjects/papers" documents-directory)))
+
+  (defun my/open-cloud-unencrypted-directory ()
+    (interactive)
+    (ido-find-file-in-dir (expand-file-name "unencrypted" cloud-directory)))
+
+  (defun my/open-org-directory ()
+    (interactive) (ido-find-file-in-dir org-directory))
+#+end_src
+
+"C-c o" will be reserved for opening files/directories
+#+begin_src elisp
+  (global-set-key (kbd "C-c o") 'my/open)
+  ;; (global-set-key (kbd "C-c e") 'my/emacs-config)
+
+  (defalias 'my/open
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "e") #'my/emacs-config)
+      (define-key map (kbd "t") #'my/open-private-themes-directory)
+      (define-key map (kbd "o") #'my/open-org-directory)
+      (define-key map (kbd "d") #'my/open-documents-directory)
+      (define-key map (kbd "g") #'my/open-gitprojects-directory)
+      (define-key map (kbd "p") #'my/open-papers-directory)
+      (define-key map (kbd "c") #'my/open-cloud-unencrypted-directory)
+      map) "Config-related bindings")
+
+  (defalias 'my/emacs-config
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "c") #'my/goto-private-config-org-file)
+      (define-key map (kbd "C") #'my/goto-private-config-file)
+      (define-key map (kbd "i") #'my/goto-private-init-file)
+      (define-key map (kbd "p") #'my/goto-private-packages-file)
+      map) "Config-related bindings")
+#+end_src
+
 
 * git (Magit)
 
@@ -469,18 +849,24 @@ If FRAME is omitted or nil, use currently selected frame."
 #+end_src
 
 * To-config
-** TODO [#A] company
-** TODO [#A] AucTex 
+** TODO [#A] AucTex
 ** TODO [#B] Flycheck
-** TODO [#B] git-sync snippets
 ** TODO [#B] Add keybindings and other settings from doom config
 ** TODO [#B] Make org work with [ ]-style list items
+** TODO [#B] git-gutter
+** TODO [#B] Making everything use (with-eval-after-load ...) or perhaps use the use-package syntactic sugar.
+** TODO [#C] find a better way to run latexmk on save
 ** TODO [#C] add CMD+W for closing buffer.
 ** TODO [#C] add modeline of some kind
 ** TODO [#C] use "enter" to make a TODO done.
 ** TODO [#C] use "enter" to evaluate a code chunk.
+** TODO [#C] make lsp-ignore venv use my/venv_pattern rather than something hardcoded. 
+** DONE [#A] company
+CLOSED: [2022-05-11 Wed 16:35]
 ** DONE [#A] add magit
 CLOSED: [2022-05-11 Wed 15:03]
+** DONE [#B] git-sync snippets
+CLOSED: [2022-05-11 Wed 16:35]
 ** DONE make vertico do fuzzy completion
 CLOSED: [2022-05-11 Wed 14:48]
 ** DONE organize config.org
