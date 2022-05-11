@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: my_enumerate_alph
+# key: enumerate_alph
+# --
+
+\begin{enumerate}[label = (\alph*)]
+    \item $0
+\end{enumerate}

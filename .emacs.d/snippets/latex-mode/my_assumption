@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: my_assumption
+# key: assumption
+# --
+\begin{assumption}
+    \label{assumption:${}}
+    ${}
+\end{assumption}

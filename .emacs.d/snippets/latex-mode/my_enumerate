@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: my_enumerate
+# key: enumerate
+# --
+
+\begin{enumerate}
+    \item ${}
+\end{enumerate}

@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: my_table
+# key: table
+# --
+\begin{table}[!htbp]
+  \caption{${}}
+  \label{table:${}}
+  \centering
+  \begin{tabular}{|c|c|}
+    \hline
+    ${1} & ${2} \\\\
+    \hline
+  \end{tabular}
+\end{table}
