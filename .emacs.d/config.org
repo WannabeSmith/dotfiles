@@ -68,7 +68,7 @@ Turn off bell
 
 The following global keybindings are heavily macOS-focused.
 
-I'm using [[https://bitbucket.org/mituharu/emacs-mac/src/master/][Yamamoto Mitsuharu's Emacs port]] which uses "command" as the meta key. Here, I'm just mapping "option" to "meta" and "command" to "super". 
+I'm using [[https://bitbucket.org/mituharu/emacs-mac/src/master/][Yamamoto Mitsuharu's Emacs port]] which uses "command" as the meta key. Here, I'm just mapping "option" to 'meta and "command" to 'super. 
 #+begin_src elisp
 (setq mac-option-modifier 'meta)
 (setq mac-command-modifier 'super)
@@ -366,9 +366,9 @@ Open [[~/.emacs.d/config.org]] on startup.
 #+end_src
 
 * To-config
-** TODO [#A] add magit
 ** TODO [#A] company
 ** TODO [#A] AucTex 
+** TODO [#B] Flycheck
 ** TODO [#B] git-sync snippets
 ** TODO [#B] Add keybindings and other settings from doom config
 ** TODO [#B] Make org work with [ ]-style list items
@@ -376,6 +376,8 @@ Open [[~/.emacs.d/config.org]] on startup.
 ** TODO [#C] add modeline of some kind
 ** TODO [#C] use "enter" to make a TODO done.
 ** TODO [#C] use "enter" to evaluate a code chunk.
+** DONE [#A] add magit
+CLOSED: [2022-05-11 Wed 15:03]
 ** DONE make vertico do fuzzy completion
 CLOSED: [2022-05-11 Wed 14:48]
 ** DONE organize config.org
