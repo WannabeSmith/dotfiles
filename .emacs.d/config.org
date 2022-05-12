@@ -945,5 +945,5 @@ CLOSED: [2022-05-11 Wed 12:33]
 * Open config on startup.
 
 #+begin_src elisp
-(switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
+  (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
 #+end_src
