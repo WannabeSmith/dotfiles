@@ -431,13 +431,7 @@ I want ess to automatically scroll down in console buffer. Taken from [[https://
 #+end_src
 
 * Writing
-** TODO LaTeX
-
-#+begin_src elisp
-#+end_src
-
-#+RESULTS:
-
+** LaTeX
 Install and configure AUCTeX.
 #+begin_src elisp
     (use-package latex
@@ -519,7 +513,6 @@ Sync with beorg on iOS.
 #+end_src
 
 Org-babel languages to load
-*** TODO install jupyter
 #+begin_src elisp
   ;; (org-babel-do-load-languages
   ;;  'org-babel-load-languages
@@ -884,7 +877,7 @@ If FRAME is omitted or nil, use currently selected frame."
 *** TODO [#B] Flycheck
 *** TODO [#B] Make org work with [ ]-style list items
 *** TODO [#B] git-gutter
-*** TODO [#B] Making everything use (with-eval-after-load ...) or perhaps use the use-package syntactic sugar.
+*** TODO [#C] Making everything use (with-eval-after-load ...) or perhaps use the use-package syntactic sugar.
 *** TODO [#C] Create some good buffer-switching keybindings DOOM-style
 Might not be necessary? C-6 is pretty good for last buffer. Prev/next buffer might need some work..
 *** TODO [#C] put mode-specific keybindings under :config
