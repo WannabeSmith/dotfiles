@@ -1,0 +1,3 @@
+# dotfiles
+
+Mostly [[./.emacs.d/config.org]].
