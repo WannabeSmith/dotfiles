@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: my_restatable_theorem
-# key: restatable_theorem
-# --
-
-\begin{restatable}[${}]{theorem}{${name}}\label{theorem:${name}}
-  $0
-\end{restatable}

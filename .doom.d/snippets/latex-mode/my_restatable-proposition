@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: my_restatable-proposition
-# key: restatable_proposition
-# --
-
-\begin{restatable}[${}]{proposition}{${name}}\label{proposition:${name}}
-  $0
-\end{restatable}
