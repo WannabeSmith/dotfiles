@@ -138,7 +138,7 @@ The keybindings for various modes will be defined in their respective sections w
   (use-package projectile
     :config
     (projectile-mode +1)
-    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 #+end_src
 
 * Evil (vim emulation in Emacs)
