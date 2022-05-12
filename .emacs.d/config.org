@@ -117,37 +117,35 @@ The keybindings for various modes will be defined in their respective sections w
     (projectile-mode +1)
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
 #+end_src
+
 * Evil (vim emulation in Emacs)
 #+begin_src elisp
-    (use-package evil
-      :init
-      (setq evil-want-C-i-jump nil) ;; Disable C-i to jump forward to restore TAB functionality in Org mode.
-      (setq evil-want-integration t)
-      (setq evil-want-keybinding nil)
-      (setq evil-want-C-u-scroll t)
-      (setq evil-undo-system 'undo-fu)
-      :config
-      (evil-mode 1)
-      ;; Use global-visual-line-mode by default so that jk does not go up/down based on logical lines.
-      ;; The goal here is to get vim-like behaviour of “nnoremap j gj” and “nnoremap k gk” in emacs.
-      (global-visual-line-mode)
-      ;;(evil-set-undo-system 'undo-redo)
-      ;; Use visual line motions even outside of visual-line-mode buffers
-      ;;(evil-global-set-key 'motion "j" 'evil-next-visual-line)
-      ;;(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  (use-package evil
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-undo-system 'undo-fu)
+    :config
+    (evil-mode 1)
+    ;; Use global-visual-line-mode by default so that jk does not go up/down based on logical lines.
+    ;; The goal here is to get vim-like behaviour of “nnoremap j gj” and “nnoremap k gk” in emacs.
+    (global-visual-line-mode)
+    ;;(evil-set-undo-system 'undo-redo)
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    ;;(evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    ;;(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-      (evil-set-initial-state 'messages-buffer-mode 'normal)
-      (evil-set-initial-state 'dashboard-mode 'normal)
-      )
-
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal)
+    )
 #+end_src
-
 
 ** Commenting in evil mode (evil-commentary)
 #+begin_src elisp
-      (use-package evil-commentary
-        :config
-        (evil-commentary-mode))
+  (use-package evil-commentary
+    :config
+    (evil-commentary-mode))
 #+end_src
 
 ** Additional evil niceties (evil-collection)
@@ -278,109 +276,12 @@ Create some global yasnippet-related keybindings.
       map))
 #+end_src
 
-* Autocompletion (company)
-
-#+begin_src elisp
-  (use-package company
-    :config
-    (global-company-mode)
-    )
-#+end_src
-
-Make C-SPC the completion key
-#+begin_src elisp
-  (global-set-key (kbd "C-SPC") #'company-complete)
-#+end_src
-
-Show autocomplete after just 2 characters have been typed
-#+begin_src elisp
-  (setq company-minimum-prefix-length 2)
-#+end_src
-
-Always show a dropedown list (no inline completions). Taken from [[https://emacs.stackexchange.com/questions/36619/show-tooltip-even-if-there-is-only-one-candidate-in-company-mode][here]].
-#+begin_src elisp
-  (setq company-frontends
-        (nconc
-         '(company-pseudo-tooltip-frontend)
-         (remove
-          'company-pseudo-tooltip-unless-just-one-frontend
-          (remove
-           'company-preview-if-just-one-frontend company-frontends))))
-#+end_src
-
-Make autocomplete show up faster
-#+begin_src elisp
-  (setq company-idle-delay 0.05)
-#+end_src
-
-** YASnippet
-Add YASnippet to company-backends. Taken from [[https://www.reddit.com/r/emacs/comments/3r9fic/best_practicestip_for_companymode_andor_yasnippet/][reddit]].
-#+begin_src elisp
-  (defvar my/enable-yas t "Enable yasnippet for all backends.")
-
-  (defun my/backend-with-yas (backend)
-    (if (or (not my/enable-yas)
-            (and (listp backend)
-                 (member 'company-yasnippet backend)))
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
-
-  (setq company-backends (mapcar #'my/backend-with-yas company-backends))
-#+end_src
-
-** TODO LaTeX (auctex) 
-#+begin_src elisp
-  ;; (add-hook 'LaTeX-mode-hook
-  ;;           (lambda ()
-  ;;             (company-mode)
-  ;;             (make-local-variable 'company-backends)
-  ;;             (setq company-backends
-  ;;                   '(company-files
-  ;;                     company-reftex-labels
-  ;;                     company-reftex-citations
-  ;;                     company-bibtex
-  ;;                     company-auctex-macros
-  ;;                     company-auctex-symbols
-  ;;                     company-auctex-environments
-  ;;                     ;; company-keywords
-  ;;                     company-latex-commands
-  ;;                     company-math-symbols-latex
-  ;;                     ;; :with
-  ;;                     company-yasnippet))))
-#+end_src
-
-** TODO Python
-#+begin_src elisp
-  ;; (after! python
-  ;;         (add-hook 'python-mode-hook
-  ;;                   (lambda ()
-  ;;                     (company-mode)
-  ;;                     (make-local-variable 'company-backends)
-  ;;                     (setq company-backends
-  ;;                           '(company-files
-  ;;                             company-capf
-  ;;                             company-yasnippet
-  ;;                             company-dabbrev-code))
-  ;;                     (setq lsp-completion-provider :none))))
-
-#+end_src
-
-* Undo-redo (undo-fu)
-#+begin_src elisp
-  (use-package undo-fu)
-  (use-package undo-fu-session
-    :config
-    (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
-  (global-undo-fu-session-mode)
-  (undo-fu-session-recover)
-#+end_src
-
 * Coding
 ** Python
 
 #+begin_src elisp
-(use-package jupyter)
+  (use-package jupyter
+    :defer t)
 #+end_src
 
 Allow running code from a .py buffer straight to the Jupyter REPL.
@@ -526,28 +427,55 @@ I want ess to automatically scroll down in console buffer. Taken from [[https://
 
 * Writing
 ** TODO LaTeX
+
 #+begin_src elisp
-  (defun my/latexmk ()
-    (interactive)
-    (TeX-command "LatexMk" #'TeX-master-file nil))
+#+end_src
+
+#+RESULTS:
+
+Install and configure AUCTeX.
+#+begin_src elisp
+    (use-package latex
+      :straight auctex
+      :config
+      ;; Set up forward/backward search with [[https://skim-app.sourceforge.io][Skim.app]].
+      (setq TeX-view-program-list '(("Skim_displayline" "/Applications/Skim.app/Contents/SharedSupport/displayline -g -b %n %o %b")))
+      ;; Use Skim_displayline by default for opening pdfs.
+      (setq TeX-view-program-selection '((output-dvi "open")
+                                         (output-pdf "Skim_displayline")
+                                         (output-html "open")))
+      ;; Use synctex to correlate TeX and PDF.
+      (setq TeX-source-correlate-method 'synctex)
+      ;; Always start the emacs server for inverse search.
+      (setq TeX-source-correlate-start-server t)
+      ;; Start correlate mode.
+      (TeX-source-correlate-mode)
+
+      ;; Use PDF mode by default.
+      (setq-default TeX-PDF-mode t)
+      ;; Make emacs aware of multi-file projects.
+      (setq-default TeX-master nil)
+
+      ;;Prevent AUCTeX from inserting braces automatically for sub/superscripts.
+      (setq TeX-electric-sub-and-superscript nil)
+
+      :defer t
+      )
+#+end_src
+
+Install math and auctex additions to company-mode.
+#+begin_src elisp
+  (use-package company-math
+    :defer t)
+  (use-package company-auctex
+    :defer t)
 #+end_src
 
 Run LatexMk on save.
-I think there might be a better way to do this...
+Temporarily disabled due to [[https://github.com/tom-tan/auctex-latexmk/pull/40][a bug in auctex-latexmk]].
 #+begin_src elisp
-  (add-hook 'LaTeX-mode-hook (lambda ()
-                               (add-hook 'after-save-hook 'my/latexmk)))
-#+end_src
-
-Make AUCTeX ask for main tex file in multi-document structure.
-#+begin_src elisp
-  (setq-default TeX-master nil)
-#+end_src
-
-
-Prevent AUCTeX from inserting braces automatically for sub/superscripts.
-#+begin_src elisp
-  (setq TeX-electric-sub-and-superscript nil)
+  ;; (add-hook 'LaTeX-mode-hook (lambda ()
+  ;;                              (add-hook 'after-save-hook 'my/latexmk)))
 #+end_src
 
 Disable git-gutter when writing latex. Git-gutter seems to slow things down, and isn’t necessary for me when writing latex. Code obtained from [[https://github.com/hlissner/doom-emacs/issues/1482][here]].
@@ -555,13 +483,15 @@ Disable git-gutter when writing latex. Git-gutter seems to slow things down, and
   (setq git-gutter:disabled-modes '(latex-mode))
 #+end_src
 
+Remove rainbow delimiters. Maybe add this back?
 #+begin_src elisp
-(with-eval-after-load 'tex (remove-hook 'TeX-update-style-hook #'rainbow-delimiters-mode))
+  ;; (with-eval-after-load 'tex (remove-hook 'TeX-update-style-hook #'rainbow-delimiters-mode))
 #+end_src
 
 ** Org-mode
 #+begin_src elisp
   (use-package org
+    :defer t
     :config
     (setq org-startup-indented t) )
 
@@ -572,6 +502,7 @@ Disable git-gutter when writing latex. Git-gutter seems to slow things down, and
     :config
     ;; Enable org-download so that we can drag and drop screenshots into org.
     (add-hook 'dired-mode-hook 'org-download-enable)
+    :defer t
     )
 #+end_src
 
@@ -609,6 +540,7 @@ Org-babel languages to load
   ;; Sort once at top of heading
   (my/org-sort-todo-list))
 #+end_src
+
 *** org-mode-specific keybindings
 #+begin_src elisp
   (defun my/bind-org-keys ()
@@ -644,16 +576,17 @@ Make first-level org heading larger.
 #+end_src
 
 ** Org-roam
-Set org-roam directory.
 #+begin_src elisp
-  (setq
+  (use-package org-roam
+    :config
+    ;; Set org-roam directory.
+    (setq
      org-roam-directory
      "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org")
-#+end_src
 
-Auto-update database immediately after saving.
-#+begin_src elisp
-  (setq org-roam-db-update-method 'immediate)
+    ;; Auto-update database immediately after saving.
+    (setq org-roam-db-update-method 'immediate)
+    )
 #+end_src
 
 Change capture template so that the timestamp is not in the filename.
@@ -777,10 +710,111 @@ Change capture template so that the timestamp is not in the filename.
       map) "Config-related bindings")
 #+end_src
 
+* Autocompletion (company)
+
+#+begin_src elisp
+  (use-package company
+    :config
+    (global-company-mode)
+    )
+#+end_src
+
+Make C-SPC the completion key
+#+begin_src elisp
+  (global-set-key (kbd "C-SPC") #'company-complete)
+#+end_src
+
+Show autocomplete after just 2 characters have been typed
+#+begin_src elisp
+  (setq company-minimum-prefix-length 2)
+#+end_src
+
+Always show a dropedown list (no inline completions). Taken from [[https://emacs.stackexchange.com/questions/36619/show-tooltip-even-if-there-is-only-one-candidate-in-company-mode][here]].
+#+begin_src elisp
+  (setq company-frontends
+        (nconc
+         '(company-pseudo-tooltip-frontend)
+         (remove
+          'company-pseudo-tooltip-unless-just-one-frontend
+          (remove
+           'company-preview-if-just-one-frontend company-frontends))))
+#+end_src
+
+Make autocomplete show up faster
+#+begin_src elisp
+  (setq company-idle-delay 0.05)
+#+end_src
+
+** YASnippet
+Add YASnippet to company-backends. Taken from [[https://www.reddit.com/r/emacs/comments/3r9fic/best_practicestip_for_companymode_andor_yasnippet/][reddit]].
+#+begin_src elisp
+  (defvar my/enable-yas t "Enable yasnippet for all backends.")
+
+  (defun my/backend-with-yas (backend)
+    (if (or (not my/enable-yas)
+            (and (listp backend)
+                 (member 'company-yasnippet backend)))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+
+  (setq company-backends (mapcar #'my/backend-with-yas company-backends))
+#+end_src
+
+** TODO LaTeX (auctex) 
+
+
+#+begin_src elisp
+  (add-hook 'LaTeX-mode-hook
+            (lambda ()
+              (company-mode)
+              (make-local-variable 'company-backends)
+              (setq company-backends
+                    '(company-files
+                      company-reftex-labels
+                      company-reftex-citations
+                      company-bibtex
+                      company-auctex-macros
+                      company-auctex-symbols
+                      company-auctex-environments
+                      ;; company-keywords
+                      company-latex-commands
+                      company-math-symbols-latex
+                      ;; :with
+                      company-yasnippet))))
+#+end_src
+
+** TODO Python
+#+begin_src elisp
+  ;; (after! python
+  ;;         (add-hook 'python-mode-hook
+  ;;                   (lambda ()
+  ;;                     (company-mode)
+  ;;                     (make-local-variable 'company-backends)
+  ;;                     (setq company-backends
+  ;;                           '(company-files
+  ;;                             company-capf
+  ;;                             company-yasnippet
+  ;;                             company-dabbrev-code))
+  ;;                     (setq lsp-completion-provider :none))))
+
+#+end_src
+
+* Undo-redo (undo-fu)
+#+begin_src elisp
+  (use-package undo-fu)
+  (use-package undo-fu-session
+    :config
+    (setq undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
+  (global-undo-fu-session-mode)
+  (undo-fu-session-recover)
+#+end_src
+
 * git (Magit)
 
 #+begin_src elisp
-  (use-package magit)
+  (use-package magit
+    :defer t)
 #+end_src
 
 Enter insert mode when firing up a magit commit.
@@ -839,43 +873,58 @@ If FRAME is omitted or nil, use currently selected frame."
 (add-hook 'window-setup-hook #'my/set-initial-frame)
 #+end_src
 
-* To-config
-** TODO [#A] AucTex
-** TODO [#A] Install packages from doom config.
-** TODO [#B] MacOS extensions (opening finder/iterm from emacs)
-** TODO [#B] Flycheck
-** TODO [#B] Make org work with [ ]-style list items
-** TODO [#B] git-gutter
-** TODO [#B] Making everything use (with-eval-after-load ...) or perhaps use the use-package syntactic sugar.
-** TODO [#C] find a better way to run latexmk on save
-** TODO [#C] add CMD+W for closing buffer.
-** TODO [#C] add modeline of some kind
-** TODO [#C] use "enter" to make a TODO done.
-** TODO [#C] use "enter" to evaluate a code chunk.
-** TODO [#C] make lsp-ignore venv use my/venv_pattern rather than something hardcoded. 
-** DONE [#A] company
-CLOSED: [2022-05-11 Wed 16:35]
-** DONE [#A] add magit
-CLOSED: [2022-05-11 Wed 15:03]
-** DONE [#B] Add keybindings and other settings from doom config
-CLOSED: [2022-05-11 Wed 17:38]
-** DONE [#B] git-sync snippets
-CLOSED: [2022-05-11 Wed 16:35]
-** DONE make vertico do fuzzy completion
-CLOSED: [2022-05-11 Wed 14:48]
-** DONE organize config.org
-CLOSED: [2022-05-11 Wed 14:41]
-** DONE straight
-CLOSED: [2022-05-11 Wed 14:42]
-** DONE escape key
-CLOSED: [2022-05-11 Wed 00:46]
-** DONE org mode folding
-CLOSED: [2022-05-11 Wed 00:46]
-** DONE Make org-mode better looking
-CLOSED: [2022-05-11 Wed 12:33]
-** DONE yasnippet
-** DONE auto-commenting
-** DONE undo persist
-** DONE cmd+v needs to paste.
-** DONE line numbers
+* Config-related
+** To-config
+*** TODO [#A] Make files go to last spot visited
+*** TODO [#B] MacOS extensions (opening finder/iterm from emacs)
+*** TODO [#B] Flycheck
+*** TODO [#B] Make org work with [ ]-style list items
+*** TODO [#B] git-gutter
+*** TODO [#B] Making everything use (with-eval-after-load ...) or perhaps use the use-package syntactic sugar.
+*** TODO [#C] Create some good buffer-switching keybindings DOOM-style
+Might not be necessary? C-6 is pretty good for last buffer. Prev/next buffer might need some work..
+*** TODO [#C] put mode-specific keybindings under :config
+*** TODO [#C] find a better way to run latexmk on save
+*** TODO [#C] add CMD+W for closing buffer.
+*** TODO [#C] add modeline of some kind
+*** TODO [#C] use "enter" to make a TODO done.
+*** TODO [#C] use "enter" to evaluate a code chunk.
+*** TODO [#C] make lsp-ignore venv use my/venv_pattern rather than something hardcoded. 
 
+*** WAITING [#A] Set up LatexMk once [[https://github.com/tom-tan/auctex-latexmk/pull/40][the tex-buf bug]] gets fixed upstream.
+*** DONE [#A] Install packages from doom config.
+CLOSED: [2022-05-12 Thu 10:59]
+Mostly there. Marking this done anyways. Add stuff as needed.
+*** DONE [#A] AucTex
+CLOSED: [2022-05-12 Thu 10:44]
+*** DONE [#A] company
+CLOSED: [2022-05-11 Wed 16:35]
+*** DONE [#A] add magit
+CLOSED: [2022-05-11 Wed 15:03]
+*** DONE [#B] Add keybindings and other settings from doom config
+CLOSED: [2022-05-11 Wed 17:38]
+*** DONE [#B] git-sync snippets
+CLOSED: [2022-05-11 Wed 16:35]
+*** DONE make vertico do fuzzy completion
+CLOSED: [2022-05-11 Wed 14:48]
+*** DONE organize config.org
+CLOSED: [2022-05-11 Wed 14:41]
+*** DONE straight
+CLOSED: [2022-05-11 Wed 14:42]
+*** DONE escape key
+CLOSED: [2022-05-11 Wed 00:46]
+*** DONE org mode folding
+CLOSED: [2022-05-11 Wed 00:46]
+*** DONE Make org-mode better looking
+CLOSED: [2022-05-11 Wed 12:33]
+*** DONE yasnippet
+*** DONE auto-commenting
+*** DONE undo persist
+*** DONE cmd+v needs to paste.
+*** DONE line numbers
+
+* Open config on startup.
+
+#+begin_src elisp
+(switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
+#+end_src
