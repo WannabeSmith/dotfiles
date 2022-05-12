@@ -830,6 +830,9 @@ Add YASnippet to company-backends. Taken from [[https://www.reddit.com/r/emacs/c
 
 #+begin_src elisp
   (use-package magit
+    :config
+    ;; Show fine differences for the current diff hunk only.
+    (setq magit-diff-refine-hunk t)
     :defer t)
 #+end_src
 
