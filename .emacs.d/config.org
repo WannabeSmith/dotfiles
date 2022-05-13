@@ -18,9 +18,9 @@ Fringe.
 
 Fonts.
 #+begin_src elisp
-  (set-face-attribute 'default nil :family "Roboto Mono" :height 140)
-  (set-face-attribute 'fixed-pitch nil :family "Roboto Mono" :height 1.0)
-  (set-face-attribute 'variable-pitch nil :family "Roboto" :height 1.0)
+  (set-face-attribute 'default nil :family "Monaco" :height 140)
+  (set-face-attribute 'fixed-pitch nil :family "Monaco" :height 140)
+  (set-face-attribute 'variable-pitch nil :family "Times" :height 1.0)
 #+end_src
 
 Load modus themes.
@@ -85,7 +85,6 @@ Turn off bell
 #+begin_src elisp
   (setq ring-bell-function 'ignore)
 #+end_src
-
 * General global options and keybindings
 
 The following global keybindings are heavily macOS- and vim-focused.
@@ -931,60 +930,6 @@ If FRAME is omitted or nil, use currently selected frame."
 (setq frame-resize-pixelwise t)
 (add-hook 'window-setup-hook #'my/set-initial-frame)
 #+end_src
-
-* Config-related
-** To-config
-*** TODO [#B] MacOS extensions (opening finder/iterm from emacs)
-*** TODO [#B] Flycheck
-*** TODO [#B] install org-roam properly https://github.com/org-roam/org-roam
-*** TODO [#B] Add auto-compile functionality to latex
-*** TODO [#B] Make org work with [ ]-style list items
-*** TODO [#B] git-gutter
-*** TODO [#C] Making everything use (with-eval-after-load ...) or perhaps use the use-package syntactic sugar.
-*** TODO [#C] Create some good buffer-switching keybindings DOOM-style
-Might not be necessary? C-6 is pretty good for last buffer. Prev/next buffer might need some work..
-*** TODO [#C] put mode-specific keybindings under :config
-*** TODO [#C] find a better way to run latexmk on save
-*** TODO [#C] add CMD+W for closing buffer.
-*** TODO [#C] add modeline of some kind
-*** TODO [#C] use "enter" to make a TODO done.
-*** TODO [#C] use "enter" to evaluate a code chunk.
-*** TODO [#C] make lsp-ignore venv use my/venv_pattern rather than something hardcoded. 
-*** WAITING [#A] Set up LatexMk once [[https://github.com/tom-tan/auctex-latexmk/pull/40][the tex-buf bug]] gets fixed upstream.
-*** DONE [#A] reftex completion
-CLOSED: [2022-05-12 Thu 20:41]
-*** DONE [#A] Make files go to last spot visited
-CLOSED: [2022-05-12 Thu 11:17]
-*** DONE [#A] Install packages from doom config.
-CLOSED: [2022-05-12 Thu 10:59]
-Mostly there. Marking this done anyways. Add stuff as needed.
-*** DONE [#A] AucTex
-CLOSED: [2022-05-12 Thu 10:44]
-*** DONE [#A] company
-CLOSED: [2022-05-11 Wed 16:35]
-*** DONE [#A] add magit
-CLOSED: [2022-05-11 Wed 15:03]
-*** DONE [#B] Add keybindings and other settings from doom config
-CLOSED: [2022-05-11 Wed 17:38]
-*** DONE [#B] git-sync snippets
-CLOSED: [2022-05-11 Wed 16:35]
-*** DONE make vertico do fuzzy completion
-CLOSED: [2022-05-11 Wed 14:48]
-*** DONE organize config.org
-CLOSED: [2022-05-11 Wed 14:41]
-*** DONE straight
-CLOSED: [2022-05-11 Wed 14:42]
-*** DONE escape key
-CLOSED: [2022-05-11 Wed 00:46]
-*** DONE org mode folding
-CLOSED: [2022-05-11 Wed 00:46]
-*** DONE Make org-mode better looking
-CLOSED: [2022-05-11 Wed 12:33]
-*** DONE yasnippet
-*** DONE auto-commenting
-*** DONE undo persist
-*** DONE cmd+v needs to paste.
-*** DONE line numbers
 
 * Open config on startup.
 
