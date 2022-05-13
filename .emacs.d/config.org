@@ -46,10 +46,9 @@ Use doom-themes.
     (doom-themes-org-config))
 #+end_src
 
-
 Global line numbers.
 #+begin_src elisp
-  ;; (add-hook 'emacs-startup-hook #'global-display-line-numbers-mode)
+  (add-hook 'emacs-startup-hook #'global-display-line-numbers-mode)
 #+end_src
 
 Turn off bell
@@ -452,39 +451,47 @@ I want ess to automatically scroll down in console buffer. Taken from [[https://
 ** LaTeX
 Install and configure AUCTeX.
 #+begin_src elisp
-    (use-package latex
-      :straight auctex
-      :config
-      ;; Set up forward/backward search with [[https://skim-app.sourceforge.io][Skim.app]].
-      (setq TeX-view-program-list '(("Skim_displayline" "/Applications/Skim.app/Contents/SharedSupport/displayline -g -b %n %o %b")))
-      ;; Use Skim_displayline by default for opening pdfs.
-      (setq TeX-view-program-selection '((output-dvi "open")
-                                         (output-pdf "Skim_displayline")
-                                         (output-html "open")))
-      ;; Use synctex to correlate TeX and PDF.
-      (setq TeX-source-correlate-method 'synctex)
-      ;; Always start the emacs server for inverse search.
-      (setq TeX-source-correlate-start-server t)
-      ;; Start correlate mode.
-      (TeX-source-correlate-mode)
+  (use-package latex
+    :straight auctex
+    :config
+    ;; Set up forward/backward search with [[https://skim-app.sourceforge.io][Skim.app]].
+    (setq TeX-view-program-list '(("Skim_displayline" "/Applications/Skim.app/Contents/SharedSupport/displayline -g -b %n %o %b")))
+    ;; Use Skim_displayline by default for opening pdfs.
+    (setq TeX-view-program-selection '((output-dvi "open")
+                                       (output-pdf "Skim_displayline")
+                                       (output-html "open")))
+    ;; Use synctex to correlate TeX and PDF.
+    (setq TeX-source-correlate-method 'synctex)
+    ;; Always start the emacs server for inverse search.
+    (setq TeX-source-correlate-start-server t)
+    ;; Start correlate mode.
+    (TeX-source-correlate-mode)
 
-      ;; Use PDF mode by default.
-      (setq-default TeX-PDF-mode t)
-      ;; Make emacs aware of multi-file projects.
-      (setq-default TeX-master nil)
+    ;; Use PDF mode by default.
+    (setq-default TeX-PDF-mode t)
+    ;; Make emacs aware of multi-file projects.
+    (setq-default TeX-master nil)
 
-      ;;Prevent AUCTeX from inserting braces automatically for sub/superscripts.
-      (setq TeX-electric-sub-and-superscript nil)
+    ;;Prevent AUCTeX from inserting braces automatically for sub/superscripts.
+    (setq TeX-electric-sub-and-superscript nil)
 
-      :defer t
-      )
+    ;; Set up reftex-auctex interface
+    ;; (https://www.gnu.org/software/emacs/manual/html_node/reftex/AUCTeX_002dRefTeX-Interface.html)
+    (setq reftex-plug-into-AUCTeX t)
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+    :defer t
+    )
 #+end_src
+
+#+RESULTS:
 
 Install math and auctex additions to company-mode.
 #+begin_src elisp
   (use-package company-math
     :defer t)
   (use-package company-auctex
+    :defer t)
+  (use-package company-reftex
     :defer t)
 #+end_src
 
@@ -896,6 +903,7 @@ If FRAME is omitted or nil, use currently selected frame."
 ** To-config
 *** TODO [#B] MacOS extensions (opening finder/iterm from emacs)
 *** TODO [#B] Flycheck
+*** TODO [#B] Add auto-compile functionality to latex
 *** TODO [#B] Make org work with [ ]-style list items
 *** TODO [#B] git-gutter
 *** TODO [#C] Making everything use (with-eval-after-load ...) or perhaps use the use-package syntactic sugar.
@@ -909,6 +917,8 @@ Might not be necessary? C-6 is pretty good for last buffer. Prev/next buffer mig
 *** TODO [#C] use "enter" to evaluate a code chunk.
 *** TODO [#C] make lsp-ignore venv use my/venv_pattern rather than something hardcoded. 
 *** WAITING [#A] Set up LatexMk once [[https://github.com/tom-tan/auctex-latexmk/pull/40][the tex-buf bug]] gets fixed upstream.
+*** DONE [#A] reftex completion
+CLOSED: [2022-05-12 Thu 20:41]
 *** DONE [#A] Make files go to last spot visited
 CLOSED: [2022-05-12 Thu 11:17]
 *** DONE [#A] Install packages from doom config.
