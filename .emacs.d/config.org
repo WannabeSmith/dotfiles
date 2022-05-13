@@ -159,7 +159,7 @@ Save place so that when a file is reopened, the cursor returns to the place it w
   (defalias 'my/buffers
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "l") #'evil-switch-to-windows-last-buffer)
-      (define-key map (kbd "k") #'kill-buffer)
+      (define-key map (kbd "k") #'kill-this-buffer)
       (define-key map (kbd "s") #'switch-to-buffer)
       map))
 #+end_src
