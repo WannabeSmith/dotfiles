@@ -9,7 +9,6 @@ Disable scrollbar, toolbar, tooltips, and menu bar.
   (scroll-bar-mode -1)
   (tool-bar-mode -1)  
   (tooltip-mode -1)   
-  (menu-bar-mode -1)  
 #+end_src
 
 Fringe.
@@ -24,6 +23,11 @@ Fonts.
   (set-face-attribute 'variable-pitch nil :family "Roboto" :height 1.0)
 #+end_src
 
+Load modus themes.
+#+begin_src elisp
+(load-theme 'modus-operandi)
+#+end_src
+
 Use doom-modeline.
 #+begin_src elisp
 (use-package doom-modeline
@@ -33,41 +37,42 @@ Use doom-modeline.
 
 Use doom-themes.
 #+begin_src elisp
-  (use-package doom-themes
-    :ensure t
-    :config
-    ;; Global settings (defaults)
-    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; (use-package doom-themes
+  ;;   :ensure t
+  ;;   :config
+  ;;   ;; Global settings (defaults)
+  ;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+  ;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;;   (load-theme 'doom-one-light t)
 
-    ;; Enable flashing mode-line on errors
-    ;; (doom-themes-visual-bell-config)
-    (doom-themes-org-config))
+  ;;   ;; Enable flashing mode-line on errors
+  ;;   ;; (doom-themes-visual-bell-config)
+  ;;   (doom-themes-org-config))
 #+end_src
 
 Automatically switch between light and dark modes on macOS. Taken from [[https://notes.arne.me/automatic-darkmode-for-emacs/][here]].
 #+begin_src elisp
-  (setq last-dark-mode-state 'unknown)
+  ;; (setq last-dark-mode-state 'unknown)
 
-  (defun check-and-set-dark-mode ()
-    "Automatically set the theme to match if macOS is in dark mode."
-    (let ((dark-mode-enabled (system-dark-mode-enabled-p)))
-      (if (not (eq dark-mode-enabled last-dark-mode-state))
-          (progn
-            (setq last-dark-mode-state dark-mode-enabled)
-            (if dark-mode-enabled
-              (load-theme 'modus-vivendi       t)
-              (load-theme 'modus-operandi t))))))
+  ;; (defun check-and-set-dark-mode ()
+  ;;   "Automatically set the theme to match if macOS is in dark mode."
+  ;;   (let ((dark-mode-enabled (system-dark-mode-enabled-p)))
+  ;;     (if (not (eq dark-mode-enabled last-dark-mode-state))
+  ;;         (progn
+  ;;           (setq last-dark-mode-state dark-mode-enabled)
+  ;;           (if dark-mode-enabled
+  ;;             (load-theme 'modus-vivendi       t)
+  ;;             (load-theme 'modus-operandi t))))))
 
-  (defun system-dark-mode-enabled-p ()
-    "Check if dark mode is currently enabled on macOS."
-    (if (string= system-type "darwin")
-        (string=
-         (shell-command-to-string "printf %s \"$( osascript -e \'tell application \"System Events\" to tell appearance preferences to return dark mode\' )\"")
-         "true")
-        nil))
+  ;; (defun system-dark-mode-enabled-p ()
+  ;;   "Check if dark mode is currently enabled on macOS."
+  ;;   (if (string= system-type "darwin")
+  ;;       (string=
+  ;;        (shell-command-to-string "printf %s \"$( osascript -e \'tell application \"System Events\" to tell appearance preferences to return dark mode\' )\"")
+  ;;        "true")
+  ;;       nil))
 
-  (check-and-set-dark-mode)
+  ;; (check-and-set-dark-mode)
   ;; (run-with-timer 0 5 'check-and-set-dark-mode)
 #+end_src
 
@@ -146,6 +151,17 @@ Switch to the new window after splitting
 Save place so that when a file is reopened, the cursor returns to the place it was when the file was last open.
 #+begin_src elisp
 (save-place-mode)
+#+end_src
+
+** Buffer management
+#+begin_src elisp
+  (global-set-key (kbd "C-c b") 'my/buffers)
+  (defalias 'my/buffers
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "l") #'evil-switch-to-windows-last-buffer)
+      (define-key map (kbd "k") #'kill-buffer)
+      (define-key map (kbd "s") #'switch-to-buffer)
+      map))
 #+end_src
 
 * Mode-specific custom keybindings
@@ -928,6 +944,7 @@ If FRAME is omitted or nil, use currently selected frame."
 ** To-config
 *** TODO [#B] MacOS extensions (opening finder/iterm from emacs)
 *** TODO [#B] Flycheck
+*** TODO [#B] install org-roam properly https://github.com/org-roam/org-roam
 *** TODO [#B] Add auto-compile functionality to latex
 *** TODO [#B] Make org work with [ ]-style list items
 *** TODO [#B] git-gutter
