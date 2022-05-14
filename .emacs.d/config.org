@@ -707,19 +707,44 @@ Change capture template so that the timestamp is not in the filename.
   (add-hook 'markdown-mode-hook 'my/bind-markdown-keys)
 #+end_src
 
+** Spellcheck
 
-** Spellcheck (spell-fu)
 #+begin_src elisp
-  (global-set-key (kbd "C-c s") 'my/spelling)
+  (defun my/save-word ()
+    (interactive)
+    (let ((current-location (point))
+          (word (flyspell-get-word)))
+      (when (consp word)    
+        (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+#+end_src
 
-  (defun my/bind-spell-fu-bindings ()
-    (defalias 'my/spelling
-      (let ((map (make-sparse-keymap)))
-        ;; Add word to dictionary
-        (define-key map (kbd "a") #'spell-fu-word-add)
-        map)))
+Install spell-fu
+#+begin_src elisp
+  (use-package spell-fu
+    :config
+    (global-spell-fu-mode)
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (setq spell-fu-faces-exclude
+                      '(org-block-begin-line
+                        org-block-end-line
+                        org-meta-line
+                        org-link
+                        org-code
+                        org-block)))))
+#+end_src
 
-  (add-hook 'spell-fu-mode-hook 'my/bind-spell-fu-bindings)
+#+begin_src elisp
+  ;; (global-set-key (kbd "C-c s") 'my/spelling)
+
+  ;; (defun my/bind-spelling-bindings ()
+  ;;   (defalias 'my/spelling
+  ;;     (let ((map (make-sparse-keymap)))
+  ;;       ;; Add word to dictionary
+  ;;       (define-key map (kbd "a") #'my/save-word)
+  ;;       map)))
+
+  ;; (add-hook 'flycheck-mode-hook 'my/bind-spelling-bindings)
 #+end_src
 
 * Frequently accessed files and folders
