@@ -18,8 +18,8 @@ Fringe.
 
 Fonts.
 #+begin_src elisp
-  (set-face-attribute 'default nil :family "Roboto Mono" :height 140)
-  (set-face-attribute 'fixed-pitch nil :family "Roboto Mono" :height 140)
+  (set-face-attribute 'default nil :family "Roboto Mono" :height 145)
+  (set-face-attribute 'fixed-pitch nil :family "Roboto Mono" :height 145)
   (set-face-attribute 'variable-pitch nil :family "Times" :height 1.0)
 #+end_src
 
@@ -543,12 +543,20 @@ Create a command to save and compile the current tex document.
     )
 #+end_src
 
+#+begin_src elisp
+  (defun my/latex-bibtex ()
+    (interactive)
+    (TeX-command "BibTeX" 'TeX-master-file)
+    )
+#+end_src
+
 Bind latex-specific bindings.
 #+begin_src elisp
   (defun my/bind-latex-keys ()
     (defalias 'my/<localleader>
       (let ((map (make-sparse-keymap)))
-        (define-key map (kbd "c") #'my/latex-save-and-compile)
+        (define-key LaTeX-mode-map (kbd "c") #'my/latex-save-and-compile)
+        (define-key LaTeX-mode-map (kbd "b") #'my/latex-bibtex)
         map)))
 
   (add-hook 'LaTeX-mode-hook #'my/bind-latex-keys)
