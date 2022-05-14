@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: localleader-sparse-keymap
+# key: localleader-sparse-keymap
+# --
+(defun my/bind-${something}-keys ()
+  (defalias 'my/<localleader>
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "${s}") #'${my/function})
+      map)))
+
+(add-hook '${some-hook} #'my/bind-${something}-keys)
