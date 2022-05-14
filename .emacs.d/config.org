@@ -715,7 +715,7 @@ Change capture template so that the timestamp is not in the filename.
   (add-hook 'markdown-mode-hook 'my/bind-markdown-keys)
 #+end_src
 
-** Spellcheck
+** Spellcheck (spell-fu)
 
 #+begin_src elisp
   (defun my/save-word ()
@@ -730,7 +730,19 @@ Install spell-fu
 #+begin_src elisp
   (use-package spell-fu
     :config
+    ;; Enable spell-fu globally.
     (global-spell-fu-mode)
+
+    ;; Always enable my personal dictionary.
+    ;; This requires aspell to be installed on the system and for the file "~/.aspell.en.pws" to exist.
+    (add-hook 'spell-fu-mode-hook
+              (lambda ()
+                (spell-fu-dictionary-add
+                 (spell-fu-get-personal-dictionary
+                  "iws"
+                  "~/.aspell.en.pws"))))
+
+    ;; Org-specific spell-fu settings.
     (add-hook 'org-mode-hook
               (lambda ()
                 (setq spell-fu-faces-exclude
@@ -743,16 +755,16 @@ Install spell-fu
 #+end_src
 
 #+begin_src elisp
-  ;; (global-set-key (kbd "C-c s") 'my/spelling)
+  (global-set-key (kbd "C-c s") 'my/spelling)
 
-  ;; (defun my/bind-spelling-bindings ()
-  ;;   (defalias 'my/spelling
-  ;;     (let ((map (make-sparse-keymap)))
-  ;;       ;; Add word to dictionary
-  ;;       (define-key map (kbd "a") #'my/save-word)
-  ;;       map)))
+  (defun my/bind-spelling-bindings ()
+    (defalias 'my/spelling
+      (let ((map (make-sparse-keymap)))
+        ;; Add word to dictionary
+        (define-key map (kbd "a") #'spell-fu-word-add)
+        map)))
 
-  ;; (add-hook 'flycheck-mode-hook 'my/bind-spelling-bindings)
+  (add-hook 'spell-fu-mode-hook 'my/bind-spelling-bindings)
 #+end_src
 
 * Frequently accessed files and folders
