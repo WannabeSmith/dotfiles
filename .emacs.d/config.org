@@ -115,6 +115,10 @@ Paste from the clipboard using cmd+v.
   (global-set-key (kbd "s-v") #'evil-paste-after)
 #+end_src
 
+#+begin_src elisp
+  (global-set-key (kbd "s-/") #'evilnc-comment-or-uncomment-lines)
+#+end_src
+
 Make <escape> key behave like escape and keyboard-quit.
 #+begin_src elisp
   (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
@@ -188,27 +192,28 @@ The keybindings for various modes will be defined in their respective sections w
     (setq evil-want-keybinding nil)
     (setq evil-want-C-u-scroll t)
     (setq evil-undo-system 'undo-fu)
+    (setq evil-respect-visual-line-mode t)
     :config
     (evil-mode 1)
     ;; Use global-visual-line-mode by default so that jk does not go up/down based on logical lines.
     ;; The goal here is to get vim-like behaviour of “nnoremap j gj” and “nnoremap k gk” in emacs.
     (global-visual-line-mode)
     ;;(evil-set-undo-system 'undo-redo)
-    ;; Use visual line motions even outside of visual-line-mode buffers
-    ;;(evil-global-set-key 'motion "j" 'evil-next-visual-line)
-    ;;(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+    ;; (define-key evil-motion-state-map [remap evil-next-line] #'evil-next-visual-line)
+    ;; (define-key evil-motion-state-map [remap evil-previous-line] #'evil-previous-visual-line)
 
     (evil-set-initial-state 'messages-buffer-mode 'normal)
     (evil-set-initial-state 'dashboard-mode 'normal)
     )
 #+end_src
 
-** Commenting in evil mode (evil-commentary)
+** Commenting in evil mode (evil-nerd-commenter)
 #+begin_src elisp
-  (use-package evil-commentary
-    :config
-    (evil-commentary-mode))
+  (use-package evil-nerd-commenter
+    :ensure t)
 #+end_src
+
+#+RESULTS:
 
 ** Additional evil niceties (evil-collection)
 #+begin_src elisp
@@ -718,21 +723,19 @@ Change capture template so that the timestamp is not in the filename.
 ** Spellcheck (spell-fu)
 
 #+begin_src elisp
-  (defun my/save-word ()
-    (interactive)
-    (let ((current-location (point))
-          (word (flyspell-get-word)))
-      (when (consp word)    
-        (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+  ;; (defun my/save-word ()
+  ;;   (interactive)
+  ;;   (let ((current-location (point))
+  ;;         (word (flyspell-get-word)))
+  ;;     (when (consp word)    
+  ;;       (flyspell-do-correct 'save nil (car word) current-location (cadr word) (caddr word) current-location))))
+
 #+end_src
 
 Install spell-fu
 #+begin_src elisp
   (use-package spell-fu
     :config
-    ;; Enable spell-fu globally.
-    (global-spell-fu-mode)
-
     ;; Always enable my personal dictionary.
     ;; This requires aspell to be installed on the system and for the file "~/.aspell.en.pws" to exist.
     (add-hook 'spell-fu-mode-hook
@@ -741,6 +744,9 @@ Install spell-fu
                  (spell-fu-get-personal-dictionary
                   "iws"
                   "~/.aspell.en.pws"))))
+
+    ;; Enable spell-fu globally.
+    ;; (global-spell-fu-mode)
 
     ;; Org-specific settings.
     (add-hook 'org-mode-hook
@@ -751,16 +757,18 @@ Install spell-fu
                         org-meta-line
                         org-link
                         org-code
-                        org-block))))
+                        org-block))
+                (spell-fu-mode)))
 
     ;; LaTeX-specific settings.
     (add-hook 'LaTeX-mode-hook
               (lambda ()
                 (setq spell-fu-faces-exclude
-                      '(font-latex-math-face))))
+                      '(font-latex-math-face))
+                (spell-fu-mode)))
     )
 #+end_src
-
+ 
 #+begin_src elisp
   (global-set-key (kbd "C-c s") 'my/spelling)
 
