@@ -296,13 +296,11 @@ Use the `orderless' completion style.
 The which-key package makes discoverability of keybindings simple.
 #+begin_src elisp
   (use-package which-key
+    :init
+    ;; Open the which-key buffer more quickly.
+    (setq which-key-idle-delay 0.2)
     :config
     (which-key-mode))
-#+end_src
-
-Open the which-key buffer more quickly.
-#+begin_src elisp
-(setq which-key-idle-delay 0.2)
 #+end_src
 
 * Snippets (YASnippet)
@@ -552,14 +550,22 @@ Create a command to save and compile the current tex document.
 
 Bind latex-specific bindings.
 #+begin_src elisp
-  (defun my/bind-latex-keys ()
-    (defalias 'my/<localleader>
-      (let ((map (make-sparse-keymap)))
-        (define-key LaTeX-mode-map (kbd "c") #'my/latex-save-and-compile)
-        (define-key LaTeX-mode-map (kbd "b") #'my/latex-bibtex)
-        map)))
+  ;; (defun my/bind-latex-keys ()
+  ;;   (defalias 'my/<localleader>
+  ;;     (let ((map (make-sparse-keymap)))
+  ;;       (define-key map (kbd "c") #'my/latex-save-and-compile)
+  ;;       (define-key LaTeX-mode-map (kbd "b") #'my/latex-bibtex)
+  ;;       map)))
 
-  (add-hook 'LaTeX-mode-hook #'my/bind-latex-keys)
+  ;; (define-key LaTeX-mode-map (kbd "C-c m b") #'my/latex-bibtex)
+
+  ;; (add-hook 'LaTeX-mode-hook #'my/bind-latex-keys)
+
+
+  (with-eval-after-load 'latex
+    (define-key LaTeX-mode-map (kbd "C-c m c") #'my/latex-save-and-compile)
+    (define-key LaTeX-mode-map (kbd "C-c m b") #'my/latex-bibtex)
+    )
 #+end_src
 
 
@@ -627,14 +633,8 @@ Org-babel languages to load
 
 *** org-mode-specific keybindings
 #+begin_src elisp
-  (defun my/bind-org-keys ()
-    (defalias 'my/<localleader>
-      (let ((map (make-sparse-keymap)))
-        ;; Sort todo list by priority and by todo order
-        (define-key map (kbd "s") #'my/org-sort-todo-list-from-within)
-        map)))
-
-  (add-hook 'org-mode-hook 'my/bind-org-keys)
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-c m s") #'org-sort-todo-list-from-within))
 #+end_src
 
 *** Headings
@@ -792,6 +792,11 @@ Install spell-fu
     (interactive)
     (find-file (expand-file-name "init.el" dotemacs-directory)))
 
+  (defun my/open-snippets-directory ()
+    "Open my snippets directory."
+    (interactive)
+    (ido-find-file-in-dir (expand-file-name "snippets" dotemacs-directory)))
+
   (defun my/open-themes-directory ()
     (interactive)
     (ido-find-file-in-dir (expand-file-name "themes" dotemacs-directory)))
@@ -835,6 +840,7 @@ Install spell-fu
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "c") #'my/open-config-org-file)
       (define-key map (kbd "i") #'my/open-init-file)
+      (define-key map (kbd "s") #'my/open-snippets-directory)
       map) "Config-related bindings")
 #+end_src
 
