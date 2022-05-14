@@ -742,7 +742,7 @@ Install spell-fu
                   "iws"
                   "~/.aspell.en.pws"))))
 
-    ;; Org-specific spell-fu settings.
+    ;; Org-specific settings.
     (add-hook 'org-mode-hook
               (lambda ()
                 (setq spell-fu-faces-exclude
@@ -751,7 +751,14 @@ Install spell-fu
                         org-meta-line
                         org-link
                         org-code
-                        org-block)))))
+                        org-block))))
+
+    ;; LaTeX-specific settings.
+    (add-hook 'LaTeX-mode-hook
+              (lambda ()
+                (setq spell-fu-faces-exclude
+                      '(font-latex-math-face))))
+    )
 #+end_src
 
 #+begin_src elisp
