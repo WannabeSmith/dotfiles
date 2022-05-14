@@ -639,7 +639,7 @@ Org-babel languages to load
 *** org-mode-specific keybindings
 #+begin_src elisp
   (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "C-c m s") #'org-sort-todo-list-from-within))
+    (define-key org-mode-map (kbd "C-c m s") #'my/org-sort-todo-list-from-within))
 #+end_src
 
 *** Headings
