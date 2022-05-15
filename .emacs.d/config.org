@@ -383,6 +383,11 @@ Create some global yasnippet-related keybindings.
 ** Python
 
 #+begin_src elisp
+  (use-package pyvenv
+    :defer t)
+#+end_src
+
+#+begin_src elisp
   (use-package jupyter
     :defer t)
 #+end_src
@@ -450,27 +455,27 @@ The following functions are essentially helper functions for `my/python-venv-aut
 
 Now that we have the above helper functions, we are ready to define my/python-venv-auto-activate.
 #+begin_src elisp
-(defun my/python-venv-auto-activate ()
-  "Activate the virtual environment satisfying the pattern given by the function, my/venv_pattern if it's a unique match, otherwise do nothing"
-  (interactive)
-  (setq matching-venvs
-        (my/get-matching-directories-files
-         (my/venv_directories_to_search) (my/venv_pattern)))
-  ;; If we have found a uniquely matching virtual environment, activate it.
-  (if (equal (length matching-venvs) 1) ;; if
-      (pyvenv-activate (car matching-venvs))
-    ;; If there is no matching virtual environment, warn the user.
-    (if (equal (length matching-venvs) 0)
-        (display-warning :warning "No virtual environment found.")
-      ;; If there is more than one matching virtual environment, warn the user.
-      (display-warning :warning (concat "Found multiple venvs. Please select one manually using `pyvenv-activate`.")))))
+  (defun my/python-venv-auto-activate ()
+    "Activate the virtual environment satisfying the pattern given by the function, my/venv_pattern if it's a unique match, otherwise do nothing"
+    (interactive)
+    (setq matching-venvs
+          (my/get-matching-directories-files
+           (my/venv_directories_to_search) (my/venv_pattern)))
+    ;; If we have found a uniquely matching virtual environment, activate it.
+    (if (equal (length matching-venvs) 1) ;; if
+        (pyvenv-activate (car matching-venvs))
+      ;; If there is no matching virtual environment, warn the user.
+      (if (equal (length matching-venvs) 0)
+          (display-warning :warning "No virtual environment found.")
+        ;; If there is more than one matching virtual environment, warn the user.
+        (display-warning :warning (concat "Found multiple venvs. Please select one manually using `pyvenv-activate`.")))))
 #+end_src
 
 Now that we’ve defined my/python-venv-auto-activate, let’s run it whenever opening a .py file. Note that we do not use an “(add-hook ‘python-mode-hook …)” approach here because ‘python-mode-hook gets run every time code is sent from the python file to the REPL. Found from sds’s answer [[https://emacs.stackexchange.com/questions/12396/run-command-when-opening-a-file-of-a-specific-filetype][here]].
 #+begin_src elisp
-(add-hook 'find-file-hook
-          #'(lambda () (when (string= (file-name-extension buffer-file-name) "py")
-                        (my/python-venv-auto-activate))))
+  (add-hook 'find-file-hook
+            #'(lambda () (when (string= (file-name-extension buffer-file-name) "py")
+                          (my/python-venv-auto-activate))))
 #+end_src
 
 *** python-mode-specific keybindings
