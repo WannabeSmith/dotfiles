@@ -1,4 +1,10 @@
 * User interface
+
+Set the scratch message to be blank
+#+begin_src elisp
+(setq initial-scratch-message "")
+#+end_src
+
 Disable startup message
 #+begin_src elisp
   (setq inhibit-startup-message t)
@@ -88,7 +94,7 @@ Turn off bell
 
 * General global options and keybindings
 
-The following global keybindings are heavily macOS- and vim-focused.
+The following global options keybindings are heavily macOS- and vim-focused.
 
 I'm using [[https://bitbucket.org/mituharu/emacs-mac/src/master/][Yamamoto Mitsuharu's Emacs port]] which uses "command" as the meta key. Here, I'm just mapping "option" to 'meta and "command" to 'super. 
 #+begin_src elisp
@@ -165,10 +171,21 @@ Save place so that when a file is reopened, the cursor returns to the place it w
 #+end_src
 
 ** Tab management
+
+Create a tab with the scratch buffer.
+#+begin_src elisp
+  (defun my/tab-new-scratch ()
+    (interactive)
+    (tab-new)
+    (switch-to-buffer "*scratch*")
+    )
+#+end_src
+
+
 #+begin_src elisp
   (global-set-key (kbd "C-<tab>") #'tab-next)
   (global-set-key (kbd "C-S-<tab>") #'tab-previous)
-  (global-set-key (kbd "s-t") #'tab-new)
+  (global-set-key (kbd "s-t") #'my/tab-new-scratch)
   (global-set-key (kbd "s-w") #'tab-close)
 #+end_src
 
