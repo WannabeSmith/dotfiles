@@ -640,7 +640,7 @@ Remove rainbow delimiters. Maybe add this back?
   (use-package org
     :defer t
     :config
-    (setq org-startup-indented t) )
+    (setq org-startup-indented t))
 
 #+end_src
 
@@ -658,6 +658,11 @@ Sync with beorg on iOS.
     (setq
      org-directory
      "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
+#+end_src
+
+Set org agenda files.
+#+begin_src elisp
+(setq org-agenda-files (list org-directory))
 #+end_src
 
 Org-babel languages to load
