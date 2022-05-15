@@ -85,6 +85,7 @@ Turn off bell
 #+begin_src elisp
   (setq ring-bell-function 'ignore)
 #+end_src
+
 * General global options and keybindings
 
 The following global keybindings are heavily macOS- and vim-focused.
@@ -100,11 +101,6 @@ Use cmd+x for M-x.
   (global-set-key (kbd "s-x") #'execute-extended-command)
 #+end_src
 
-Close a buffer using cmd+w
-#+begin_src elisp
-  (global-set-key (kbd "s-w") #'kill-this-buffer)
-#+end_src
-
 Exit Emacs using cmd+q
 #+begin_src elisp
   (global-set-key (kbd "s-q") #'save-buffers-kill-terminal)
@@ -115,6 +111,7 @@ Paste from the clipboard using cmd+v.
   (global-set-key (kbd "s-v") #'evil-paste-after)
 #+end_src
 
+Use cmd+/ for commenting.
 #+begin_src elisp
   (global-set-key (kbd "s-/") #'evilnc-comment-or-uncomment-lines)
 #+end_src
@@ -165,6 +162,14 @@ Save place so that when a file is reopened, the cursor returns to the place it w
       (define-key map (kbd "k") #'kill-this-buffer)
       (define-key map (kbd "s") #'switch-to-buffer)
       map))
+#+end_src
+
+** Tab management
+#+begin_src elisp
+  (global-set-key (kbd "C-<tab>") #'tab-next)
+  (global-set-key (kbd "C-S-<tab>") #'tab-previous)
+  (global-set-key (kbd "s-t") #'tab-new)
+  (global-set-key (kbd "s-w") #'tab-close)
 #+end_src
 
 * Mode-specific custom keybindings
@@ -620,26 +625,34 @@ Org-babel languages to load
 
 *** Custom functions
 #+begin_src elisp
-(defun my/org-sort-todo-list ()
-  "Sort an org-mode todo-list from the heading of the list by priority and todo order."
-  (interactive)
-  (org-sort-entries nil ?p nil nil nil nil)
-  (org-sort-entries nil ?o nil nil nil nil))
+      (defun my/org-sort-todo-list ()
+        "Sort an org-mode todo-list from the heading of the list by priority and todo order."
+        (interactive)
+        (org-sort-entries nil ?p nil nil nil nil)
+        (org-sort-entries nil ?o nil nil nil nil))
 
 
-(defun my/org-sort-todo-list-from-within ()
-  "Sort an org-mode todo-list from within the list by priority and todo order."
-  (interactive)
-  ;; Move up a heading
-  (outline-up-heading 1)
-  ;; Sort once at top of heading
-  (my/org-sort-todo-list))
+      (defun my/org-sort-todo-list-from-within ()
+        "Sort an org-mode todo-list from within the list by priority and todo order."
+        (interactive)
+        ;; Move up a heading
+        (outline-up-heading 1)
+        ;; Sort once at top of heading
+        (my/org-sort-todo-list))
+
+      (defun my/org-sort-todo-list-from-within-and-save ()
+        "Run my/org-sort-todo-list-from-within and save."
+        (interactive)
+        (my/org-sort-todo-list-from-within)
+        (save-buffer)
+  )
+  
 #+end_src
 
 *** org-mode-specific keybindings
 #+begin_src elisp
   (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "C-c m s") #'my/org-sort-todo-list-from-within))
+    (define-key org-mode-map (kbd "C-c m s") #'my/org-sort-todo-list-from-within-and-save))
 #+end_src
 
 *** Headings
