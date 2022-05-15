@@ -172,7 +172,7 @@ Save place so that when a file is reopened, the cursor returns to the place it w
 
 ** Tab management
 
-Create a tab with the scratch buffer.
+Create a new tab with the scratch buffer.
 #+begin_src elisp
   (defun my/tab-new-scratch ()
     (interactive)
@@ -187,6 +187,17 @@ Create a tab with the scratch buffer.
   (global-set-key (kbd "C-S-<tab>") #'tab-previous)
   (global-set-key (kbd "s-t") #'my/tab-new-scratch)
   (global-set-key (kbd "s-w") #'tab-close)
+#+end_src
+
+** Frame management
+
+Create a new frame with the scratch buffer.
+#+begin_src elisp
+  (defun my/frame-new-scratch ()
+    (interactive)
+    (make-frame)
+    (switch-to-buffer "*scratch*")
+    )
 #+end_src
 
 * Mode-specific custom keybindings
