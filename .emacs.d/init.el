@@ -26,6 +26,8 @@
 ;; Make use-package use straight as the package manager
 (setq straight-use-package-by-default t)
 
+;; Set straight-recipe-repositories
+(setq straight-recipe-repositories '(melpa gnu-elpa-mirror el-get emacsmirror-mirror))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load ~/.emacs.d/config.org
