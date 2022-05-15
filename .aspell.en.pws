@@ -1,5 +1,6 @@
-personal_ws-1.1 en 13 
+personal_ws-1.1 en 17 
 asympcs
+asymptotics
 boundedness
 gaussians
 iid
@@ -7,8 +8,11 @@ invariance
 lyapunov
 nonasymptotic
 nonasymptotically
+nonnegative
 nonparametric
 optimality
 quantile
 semiparametric
 semiparametrics
+supermartingale
+supermartingales
