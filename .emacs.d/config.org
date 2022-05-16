@@ -181,7 +181,7 @@ Create a new tab with the scratch buffer.
     )
 #+end_src
 
-
+The following global keybindings deliver similar functionality to what one would see in a web browser or most IDEs. In particular, cmd+t should create a new tab, ctrl+tab/ctr+shift+tab should cycle forwards/backwards through those tabs, and cmd+w should close the tab.
 #+begin_src elisp
   (global-set-key (kbd "C-<tab>") #'tab-next)
   (global-set-key (kbd "C-S-<tab>") #'tab-previous)
