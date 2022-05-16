@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: my-general-local-leader-keybindings
+# key: general-local-leader-keybindings
+# --
+
+  (my-local-leader-def
+    :keymaps '${mode}-mode-map
+    "${key}" #'${function}
+    "${prefix_key}" '(:ignore t :which-key "my/${prefix}")
+    "${prefix_key} ${key}" #'${function}
+    )

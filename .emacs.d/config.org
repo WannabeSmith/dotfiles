@@ -645,22 +645,13 @@ Create a command to save and compile the current tex document.
 
 Bind latex-specific bindings.
 #+begin_src elisp
-  ;; (defun my/bind-latex-keys ()
-  ;;   (defalias 'my/<localleader>
-  ;;     (let ((map (make-sparse-keymap)))
-  ;;       (define-key map (kbd "c") #'my/latex-save-and-compile)
-  ;;       (define-key LaTeX-mode-map (kbd "b") #'my/latex-bibtex)
-  ;;       map)))
 
-  ;; (define-key LaTeX-mode-map (kbd "C-c m b") #'my/latex-bibtex)
-
-  ;; (add-hook 'LaTeX-mode-hook #'my/bind-latex-keys)
-
-
-  (with-eval-after-load 'latex
-    (define-key LaTeX-mode-map (kbd "C-c m c") #'my/latex-save-and-compile)
-    (define-key LaTeX-mode-map (kbd "C-c m b") #'my/latex-bibtex)
+  (my-local-leader-def
+    :keymaps 'LaTeX-mode-map
+    "c" #'my/latex-save-and-compile
+    "b" #'my/latex-bibtex
     )
+
 #+end_src
 
 
