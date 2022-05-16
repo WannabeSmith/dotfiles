@@ -3,9 +3,8 @@
 # key: general-local-leader-keybindings
 # --
 
-  (my-local-leader-def
-    :keymaps '${mode}-mode-map
-    "${key}" #'${function}
-    "${prefix_key}" '(:ignore t :which-key "my/${prefix}")
-    "${prefix_key} ${key}" #'${function}
-    )
+(my-local-leader-def
+  :keymaps '${mode}-mode-map
+  "" '(:ignore t :which-key "my/${mode}")
+  "${key}" #'${function}
+  )

@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: localleader-keybindings
-# key: localleader-keybindings
-# --
-(with-eval-after-load '${file}
-  (define-key ${mode}-mode-map (kbd "C-c m ${key}") #'${function}))

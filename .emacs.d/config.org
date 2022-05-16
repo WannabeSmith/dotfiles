@@ -206,13 +206,12 @@ Denote “C-c m” my/<localleader>, following Doom’s naming of “SPC m”.
 
 #+begin_src elisp
   (use-package general
-    :ensure t)
+    :ensure t
+    :config
+    (defconst my-local-leader "C-c m"))
 
   (general-create-definer my-local-leader-def
-    ;; :prefix my-local-leader
-    :prefix "C-c m")
-
-  
+    :prefix my-local-leader)
 
 #+end_src
 
@@ -247,7 +246,12 @@ The keybindings for various modes will be defined in their respective sections w
     (evil-set-initial-state 'messages-buffer-mode 'normal)
     (evil-set-initial-state 'dashboard-mode 'normal)
     )
+
+  
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Commenting in evil mode (evil-nerd-commenter)
 #+begin_src elisp
@@ -260,11 +264,12 @@ The keybindings for various modes will be defined in their respective sections w
 
 ** Additional evil niceties (evil-collection)
 #+begin_src elisp
-  (use-package evil-collection
-    :after evil
-    :ensure t
-    :config
-    (evil-collection-init))
+    (use-package evil-collection
+      :after evil
+      :ensure t
+      :config
+      (evil-collection-init)
+  )
 #+end_src
 
 ** Evil-org-mode integration
@@ -542,6 +547,7 @@ Create a python formatter using [[https://github.com/psf/black][black]].
 #+begin_src elisp
   (my-local-leader-def
     :keymaps 'python-mode-map
+    "" '(:ignore t :which-key "my/python")
     "R" #'run-python
     "r" #'pyvenv-restart-python
     "v" #'pyvenv-activate
@@ -553,7 +559,7 @@ Create a python formatter using [[https://github.com/psf/black][black]].
 
 
 ** R (ess)
-*** ess-r-mode-specific keybindings
+*** TODO ess-r-mode-specific keybindings
 #+begin_src elisp
 (defun my/bind-ess-r-keys ()
   (defalias 'my/<localleader>
@@ -648,9 +654,11 @@ Bind latex-specific bindings.
 
   (my-local-leader-def
     :keymaps 'LaTeX-mode-map
+    "" '(:ignore t :which-key "my/LaTeX")
     "c" #'my/latex-save-and-compile
     "b" #'my/latex-bibtex
     )
+
 
 #+end_src
 
@@ -732,8 +740,14 @@ Org-babel languages to load
 
 *** org-mode-specific keybindings
 #+begin_src elisp
-  (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "C-c m s") #'my/org-sort-todo-list-from-within-and-save))
+
+  (my-local-leader-def
+  :keymaps 'org-mode-map
+  "" '(:ignore t :which-key "my/org")
+  "s" #'my/org-sort-todo-list-from-within-and-save
+  )
+
+
 #+end_src
 
 *** Headings
