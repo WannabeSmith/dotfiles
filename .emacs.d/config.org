@@ -203,8 +203,17 @@ Create a new frame with the scratch buffer.
 * Mode-specific custom keybindings
 
 Denote “C-c m” my/<localleader>, following Doom’s naming of “SPC m”.
+
 #+begin_src elisp
-(global-set-key (kbd "C-c m") 'my/<localleader>)
+  (use-package general
+    :ensure t)
+
+  (general-create-definer my-local-leader-def
+    ;; :prefix my-local-leader
+    :prefix "C-c m")
+
+  
+
 #+end_src
 
 The keybindings for various modes will be defined in their respective sections within [[config.org]].
@@ -531,38 +540,17 @@ Create a python formatter using [[https://github.com/psf/black][black]].
 
 *** python-mode-specific keybindings
 #+begin_src elisp
-  (defun my/bind-python-keys ()
-    (defalias 'my/<localleader>
-      (let ((map (make-sparse-keymap)))
-        ;; REPL
-        (define-key map (kbd "R") #'run-python)
-        ;; Restart python
-        (define-key map (kbd "r") #'pyvenv-restart-python)
-        ;; Virtual environment
-        (define-key map (kbd "v") #'pyvenv-activate)
-        ;; Format (using the above reformatter-define)
-        (define-key map (kbd "f") #'python-black-format-buffer)
-        ;; Jupyter-related bindings
-        (define-key map (kbd "j") #'my/jupyter)
-        map)))
-
-
-  (add-hook 'python-mode-hook 'my/bind-python-keys)
+  (my-local-leader-def
+    :keymaps 'python-mode-map
+    "R" #'run-python
+    "r" #'pyvenv-restart-python
+    "v" #'pyvenv-activate
+    "f" #'python-black-format-buffer
+    "j" '(:ignore t :which-key "my/jupyter")
+    "j R" #'jupyter-repl-associate-buffer
+    )
 #+end_src
 
-Jupyter bindings
-#+begin_src elisp
-  (defun my/bind-python-jupyter-keys ()
-    (defalias 'my/jupyter
-      (let ((map (make-sparse-keymap)))
-        ;; Run jupyter REPL associated with current buffer
-        (define-key map (kbd "R") #'jupyter-repl-associate-buffer)
-        ;; Restart jupyter REPL
-        (define-key map (kbd "r") #'jupyter-repl-restart-kernel)
-        map)))
-
-  (add-hook 'python-mode-hook #'my/bind-python-jupyter-keys)
-#+end_src
 
 ** R (ess)
 *** ess-r-mode-specific keybindings
@@ -727,28 +715,28 @@ Org-babel languages to load
 
 *** Custom functions
 #+begin_src elisp
-      (defun my/org-sort-todo-list ()
-        "Sort an org-mode todo-list from the heading of the list by priority and todo order."
-        (interactive)
-        (org-sort-entries nil ?p nil nil nil nil)
-        (org-sort-entries nil ?o nil nil nil nil))
+  (defun my/org-sort-todo-list ()
+    "Sort an org-mode todo-list from the heading of the list by priority and todo order."
+    (interactive)
+    (org-sort-entries nil ?p nil nil nil nil)
+    (org-sort-entries nil ?o nil nil nil nil))
 
 
-      (defun my/org-sort-todo-list-from-within ()
-        "Sort an org-mode todo-list from within the list by priority and todo order."
-        (interactive)
-        ;; Move up a heading
-        (outline-up-heading 1)
-        ;; Sort once at top of heading
-        (my/org-sort-todo-list))
+  (defun my/org-sort-todo-list-from-within ()
+    "Sort an org-mode todo-list from within the list by priority and todo order."
+    (interactive)
+    ;; Move up a heading
+    (outline-up-heading 1)
+    ;; Sort once at top of heading
+    (my/org-sort-todo-list))
 
-      (defun my/org-sort-todo-list-from-within-and-save ()
-        "Run my/org-sort-todo-list-from-within and save."
-        (interactive)
-        (my/org-sort-todo-list-from-within)
-        (save-buffer)
-  )
-  
+  (defun my/org-sort-todo-list-from-within-and-save ()
+    "Run my/org-sort-todo-list-from-within and save."
+    (interactive)
+    (my/org-sort-todo-list-from-within)
+    (save-buffer)
+    )
+
 #+end_src
 
 *** org-mode-specific keybindings
