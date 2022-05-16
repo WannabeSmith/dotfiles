@@ -133,6 +133,7 @@ Line-by-line scrolling.
 	scroll-conservatively  10000)
 #+end_src
 
+
 ** TODO Use `C-hjkl' for moving to different windows.
 Perhaps disable behaviour of C-w so that we can do "C-w h/j/k/l" in insert mode?
 #+begin_src elisp
@@ -1067,6 +1068,10 @@ Add YASnippet to company-backends. Taken from [[https://www.reddit.com/r/emacs/c
     :config
     ;; Show fine differences for the current diff hunk only.
     (setq magit-diff-refine-hunk t)
+
+    ;; Make escape quit transient maps.
+    (define-key transient-map (kbd "<escape>") 'transient-quit-one)
+
     :defer t)
 #+end_src
 
