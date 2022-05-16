@@ -416,6 +416,13 @@ Create some global yasnippet-related keybindings.
 #+end_src
 
 * Coding
+
+** Formatting
+#+begin_src elisp
+  (use-package reformatter
+    :defer t)
+#+end_src
+
 ** Python
 
 #+begin_src elisp
@@ -514,6 +521,14 @@ Now that we’ve defined my/python-venv-auto-activate, let’s run it whenever o
                           (my/python-venv-auto-activate))))
 #+end_src
 
+*** Formatting
+Create a python formatter using [[https://github.com/psf/black][black]].
+#+begin_src elisp
+  (reformatter-define python-black-format
+    :program "black"
+    :args (list "-"))
+#+end_src
+
 *** python-mode-specific keybindings
 #+begin_src elisp
   (defun my/bind-python-keys ()
@@ -525,8 +540,8 @@ Now that we’ve defined my/python-venv-auto-activate, let’s run it whenever o
         (define-key map (kbd "r") #'pyvenv-restart-python)
         ;; Virtual environment
         (define-key map (kbd "v") #'pyvenv-activate)
-        ;; Format
-        (define-key map (kbd "f") #'+format/buffer) ;; TODO: Need to get a replacement for this!!
+        ;; Format (using the above reformatter-define)
+        (define-key map (kbd "f") #'python-black-format-buffer)
         ;; Jupyter-related bindings
         (define-key map (kbd "j") #'my/jupyter)
         map)))
