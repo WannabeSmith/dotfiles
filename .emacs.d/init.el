@@ -34,8 +34,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Get straight to load org prior to the config.org being run.
-;; This fixes a bug with (use-package org-download) failing to work.
 (straight-use-package 'org)
+
+;; Load org file.
+(require 'org)
 
 ;; Open the real version of a file when presented with a symlink.
 (setq vc-follow-symlinks t)
@@ -43,5 +45,8 @@
 ;; Don't ask for confirmation.
 (setq org-confirm-babel-evaluate nil)
 
-;; Run config.org!
-(org-babel-load-file "~/.emacs.d/config.org")
+;; Tangle config.org into config.el
+(org-babel-tangle-file "~/.emacs.d/config.org" "~/.emacs.d/config.el")
+
+;; Load config.el!
+(load-file "~/.emacs.d/config.el")

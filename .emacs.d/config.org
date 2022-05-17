@@ -24,14 +24,37 @@ Fringe.
 
 Fonts.
 #+begin_src elisp
-  (set-face-attribute 'default nil :family "Roboto Mono" :height 145)
-  (set-face-attribute 'fixed-pitch nil :family "Roboto Mono" :height 145)
-  (set-face-attribute 'variable-pitch nil :family "Times" :height 1.0)
+  (cond
+   ((string-equal system-type "windows-nt")
+    (progn
+      (message "Microsoft Windows")))
+   ((string-equal system-type "darwin") ;  macOS
+    (progn
+      (set-face-attribute 'default nil :family "Roboto Mono" :height 145)
+      (set-face-attribute 'fixed-pitch nil :family "Roboto Mono" :height 145)
+      (set-face-attribute 'variable-pitch nil :family "Times" :height 1.0)
+      ))
+   ((string-equal system-type "gnu/linux")
+    (progn
+      (set-face-attribute 'default nil :family "Roboto Mono")
+      (set-face-attribute 'fixed-pitch nil :family "Roboto Mono")
+      (set-face-attribute 'variable-pitch nil :family "Times")
+      )))
 #+end_src
 
-Load modus themes.
+Use doom-themes.
 #+begin_src elisp
-(load-theme 'modus-operandi)
+  (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
+    (load-theme 'doom-one-light t)
+
+    ;; Enable flashing mode-line on errors
+    ;; (doom-themes-visual-bell-config)
+    (doom-themes-org-config))
 #+end_src
 
 Use doom-modeline.
@@ -41,44 +64,29 @@ Use doom-modeline.
   :init (doom-modeline-mode 1))
 #+end_src
 
-Use doom-themes.
-#+begin_src elisp
-  ;; (use-package doom-themes
-  ;;   :ensure t
-  ;;   :config
-  ;;   ;; Global settings (defaults)
-  ;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-  ;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;;   (load-theme 'doom-one-light t)
-
-  ;;   ;; Enable flashing mode-line on errors
-  ;;   ;; (doom-themes-visual-bell-config)
-  ;;   (doom-themes-org-config))
-#+end_src
-
 Automatically switch between light and dark modes on macOS. Taken from [[https://notes.arne.me/automatic-darkmode-for-emacs/][here]].
 #+begin_src elisp
-  (setq last-dark-mode-state 'unknown)
+;;  (setq last-dark-mode-state 'unknown)
+;;
+ ;; (defun check-and-set-dark-mode ()
+   ;; "Automatically set the theme to match if macOS is in dark mode."
+   ;; (let ((dark-mode-enabled (system-dark-mode-enabled-p)))
+ ;;     (if (not (eq dark-mode-enabled last-dark-mode-state))
+ ;;         (progn
+ ;;           (setq last-dark-mode-state dark-mode-enabled)
+ ;;           (if dark-mode-enabled
+ ;;             (load-theme 'modus-vivendi       t)
+ ;;             (load-theme 'modus-operandi t))))))
+;;
+ ;; (defun system-dark-mode-enabled-p ()
+ ;;   "Check if dark mode is currently enabled on macOS."
+ ;;   (if (string= system-type "darwin")
+ ;;       (string=
+ ;;        (shell-command-to-string "printf %s \"$( osascript -e \'tell application \"System Events\" to tell appearance preferences to return dark mode\' )\"")
+ ;;        "true")
+   ;;     nil))
 
-  (defun check-and-set-dark-mode ()
-    "Automatically set the theme to match if macOS is in dark mode."
-    (let ((dark-mode-enabled (system-dark-mode-enabled-p)))
-      (if (not (eq dark-mode-enabled last-dark-mode-state))
-          (progn
-            (setq last-dark-mode-state dark-mode-enabled)
-            (if dark-mode-enabled
-              (load-theme 'modus-vivendi       t)
-              (load-theme 'modus-operandi t))))))
-
-  (defun system-dark-mode-enabled-p ()
-    "Check if dark mode is currently enabled on macOS."
-    (if (string= system-type "darwin")
-        (string=
-         (shell-command-to-string "printf %s \"$( osascript -e \'tell application \"System Events\" to tell appearance preferences to return dark mode\' )\"")
-         "true")
-        nil))
-
-  (check-and-set-dark-mode)
+ ;; (check-and-set-dark-mode)
   ;; (run-with-timer 0 5 'check-and-set-dark-mode)
 #+end_src
 
@@ -93,33 +101,9 @@ Turn off bell
 #+end_src
 
 * General global options and keybindings
-
-The following global options keybindings are heavily macOS- and vim-focused.
-
-I'm using [[https://bitbucket.org/mituharu/emacs-mac/src/master/][Yamamoto Mitsuharu's Emacs port]] which uses "command" as the meta key. Here, I'm just mapping "option" to 'meta and "command" to 'super. 
+Use M-/ for commenting, to match other apps (namely overleaf).
 #+begin_src elisp
-(setq mac-option-modifier 'meta)
-(setq mac-command-modifier 'super)
-#+end_src
-
-Use cmd+x for M-x.
-#+begin_src elisp
-  (global-set-key (kbd "s-x") #'execute-extended-command)
-#+end_src
-
-Exit Emacs using cmd+q
-#+begin_src elisp
-  (global-set-key (kbd "s-q") #'save-buffers-kill-terminal)
-#+end_src
-
-Paste from the clipboard using cmd+v.
-#+begin_src elisp
-  (global-set-key (kbd "s-v") #'evil-paste-after)
-#+end_src
-
-Use cmd+/ for commenting.
-#+begin_src elisp
-  (global-set-key (kbd "s-/") #'evilnc-comment-or-uncomment-lines)
+  (global-set-key (kbd "M-/") #'evilnc-comment-or-uncomment-lines)
 #+end_src
 
 Make <escape> key behave like escape and keyboard-quit.
@@ -133,8 +117,7 @@ Line-by-line scrolling.
 	scroll-conservatively  10000)
 #+end_src
 
-
-** TODO Use `C-hjkl' for moving to different windows.
+Maybe use `C-hjkl' for moving to different windows.
 Perhaps disable behaviour of C-w so that we can do "C-w h/j/k/l" in insert mode?
 #+begin_src elisp
   ;; (bind-keys* ("C-h" . evil-window-left)
@@ -694,9 +677,22 @@ Remove rainbow delimiters. Maybe add this back?
 
 Sync with beorg on iOS.
 #+begin_src elisp
+  (cond
+   ((string-equal system-type "windows-nt")
+    (progn
+      (message "Not set up on windows")))
+   ((string-equal system-type "darwin") ;  macOS
+    (progn
     (setq
      org-directory
      "~/Library/Mobile Documents/iCloud~com~appsonthemove~beorg/Documents/org/")
+      ))
+   ((string-equal system-type "gnu/linux")
+    (progn
+    (setq
+     org-directory
+     "/mnt/c/Users/t-ianw/iCloudDrive/iCloud~com~appsonthemove~beorg/org")
+      )))
 #+end_src
 
 Set org agenda files.
