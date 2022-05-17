@@ -1,0 +1,7 @@
+[user]
+	name = Ian Waudby-Smith
+	email = 5490890+WannabeSmith@users.noreply.github.com
+[core]
+	editor = nvim
+[pull]
+	rebase = false
