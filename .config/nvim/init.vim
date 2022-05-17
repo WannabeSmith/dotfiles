@@ -112,7 +112,7 @@ augroup vimtex_common
 augroup END
 " ################### End Vimtex ###################
 
-colorscheme nord
+" colorscheme nord
 
 if v:version < 801
   " Vim version is less than 8.1

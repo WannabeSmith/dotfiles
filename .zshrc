@@ -1,6 +1,12 @@
 # Shortcut for neovim
 alias v=nvim
 
+
+# for ZSH
+case "$OSTYPE" in
+  darwin*)
+    # ...
+
 # Use trash instead of rm
 # Depends on https://hasseg.org/trash/
 alias rm='echo "rm is disabled, use trash or /bin/rm instead."'
@@ -11,15 +17,28 @@ export PATH="/usr/local/bin:$PATH"
 # Add doom to path
 export PATH="$HOME/.emacs.d/bin:$PATH"
 
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/i/.oh-my-zsh"
 # rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
+  ;;
+  linux*)
+    # ...
+    export ZSH="/home/iws/.oh-my-zsh"
+
+    export PATH="$HOME/.cargo/bin:$PATH"
+  ;;
+  dragonfly*|freebsd*|netbsd*|openbsd*)
+    # ...
+  ;;
+esac
+
+
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# Path to your oh-my-zsh installation.
-export ZSH="/Users/i/.oh-my-zsh"
 
 # Use the "common" theme: https://github.com/jackharrisonsherlock/common
 ZSH_THEME="common"

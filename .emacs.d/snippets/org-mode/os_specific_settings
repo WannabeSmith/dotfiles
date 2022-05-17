@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: os_specific_settings
+# key: os_specific_settings
+# --
+  (cond
+   ((string-equal system-type "windows-nt")
+    (progn
+      (message "windows")))
+   ((string-equal system-type "darwin") ;  macOS
+    (progn
+	(message "macOS")
+      ))
+   ((string-equal system-type "gnu/linux")
+    (progn
+	(message "linux")
+      )))
