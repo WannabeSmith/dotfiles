@@ -5,12 +5,13 @@
   (cond
    ((string-equal system-type "windows-nt")
     (progn
-      (message "windows")))
+      ;; Windows options here
+      ))
    ((string-equal system-type "darwin") ;  macOS
     (progn
-	(message "macOS")
+      ;; macOS options here
       ))
    ((string-equal system-type "gnu/linux")
     (progn
-	(message "linux")
-      )))
+      ;; Linux options here
+      )))  
