@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: my_general_leader_keybinding
+# key: general_leader_keybinding
+# --
+  (general-create-definer my-${bindings}-def
+    :prefix "C-c ${key}")
+
+  (my-${bindings}-def
+    "" '(:ignore t :which-key "my/${bindings}")
+    "${key}" #'${function}
+    )
