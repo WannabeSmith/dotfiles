@@ -99,10 +99,16 @@ Global line numbers.
   (add-hook 'emacs-startup-hook #'global-display-line-numbers-mode)
 #+end_src
 
-Turn off bell
+Turn off bell.
 #+begin_src elisp
   (setq ring-bell-function 'ignore)
 #+end_src
+
+Show matching parenthesis highlighting.
+#+begin_src elisp
+(show-paren-mode t)
+#+end_src
+
 
 * General global options and keybindings
 Use M-/ for commenting, to match other apps (namely overleaf).
