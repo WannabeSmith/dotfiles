@@ -724,8 +724,16 @@ Remove rainbow delimiters. Maybe add this back?
 #+begin_src elisp
   (use-package pdf-tools
     :config 
+    ;; Turn off blinking in pdf-view
+    ;; Taken from https://github.com/doomemacs/doomemacs/pull/1107
+    (add-hook 'pdf-view-mode-hook
+              (lambda ()
+                (set (make-local-variable 'evil-normal-state-cursor) (list nil))))       
+
     (pdf-tools-install))
+
 #+end_src
+
 ** Org-mode
 #+begin_src elisp
   (use-package org
