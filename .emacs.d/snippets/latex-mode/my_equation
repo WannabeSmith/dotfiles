@@ -2,7 +2,6 @@
 # name: my_equation
 # key: equation
 # --
-\begin{equation}
-    \label{eq:${label}}
+\begin{equation}\label{eq:${label}}
     $0
 \end{equation}
