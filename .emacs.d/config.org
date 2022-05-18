@@ -196,7 +196,12 @@ Denote “C-c m” my/<localleader>, following Doom’s naming of “SPC m”.
   (use-package general
     :ensure t
     :config
-    (defconst my-local-leader "C-c m"))
+    (defconst my-leader "C-c")
+    (defconst my-local-leader "C-c m")
+    )
+
+  (general-create-definer my-leader-def
+    :prefix my-leader)
 
   (general-create-definer my-local-leader-def
     :prefix my-local-leader)
@@ -371,14 +376,16 @@ The which-key package makes discoverability of keybindings simple.
 ** Keybindings
 Create some global yasnippet-related keybindings.
 #+begin_src elisp
-  (global-set-key (kbd "C-c y") 'my/yasnippet)
 
-  (defalias 'my/yasnippet
-    (let ((map (make-sparse-keymap)))
-      ;; Add word to dictionary
-      (define-key map (kbd "i") #'yas-insert-snippet)
-      (define-key map (kbd "n") #'yas-new-snippet)
-      map))
+  (general-create-definer my-yasnippet-def
+    :prefix "C-c y")
+
+  (my-yasnippet-def
+    "" '(:ignore t :which-key "my/yasnippet")
+    "i" #'yas-insert-snippet
+    "n" #'yas-new-snippet
+    )
+
 #+end_src
 
 * Flycheck
@@ -455,7 +462,7 @@ Make LSP ignore virtual environments that satisfy the pattern "venv*".
   (defun my/python-lsp-ignore-venv ()
     (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
   (add-hook 'python-mode-hook
-            '(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
+            #'(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
 #+end_src
 
 ***** Automatic virtual environment loading
@@ -491,7 +498,7 @@ The following functions are essentially helper functions for `my/python-venv-aut
      ;; flatten the list of lists
      (flatten-tree
       ;; Apply my/get-matching-directory-files to all the directories with regexp.
-      (seq-map '(lambda ( dir ) (my/get-matching-directory-files dir regexp)) directories))))
+      (seq-map #'(lambda ( dir ) (my/get-matching-directory-files dir regexp)) directories))))
 
   (defun my/get-matching-project-root-files (regexp)
     "Find all root directories/files that begin with REGEXP"
@@ -831,23 +838,23 @@ Change capture template so that the timestamp is not in the filename.
 
 *** Org-roam-specific keybindings
 #+begin_src elisp
-(global-set-key (kbd "C-c n") 'my/notes)
-#+end_src
 
-#+begin_src elisp
-(defalias 'my/notes
-  (let ((map (make-sparse-keymap)))
+  (general-create-definer my-notes-def
+    :prefix "C-c n")
+
+  (my-notes-def
+    "" '(:ignore t :which-key "my/notes")
     ;; Open org-roam buffer
-    (define-key map (kbd "r") #'org-roam)
+    "r" #'org-roam
     ;; Find file
-    (define-key map (kbd "f") #'org-roam-find-file)
+    "f" #'org-roam-find-file
     ;; Capture
-    (define-key map (kbd "c") #'org-roam-capture)
+    "c" #'org-roam-capture
     ;; Insert link
-    (define-key map (kbd "i") #'org-roam-insert)
+    "i" #'org-roam-insert
     ;; Insert link immediate
-    (define-key map (kbd "i") #'org-roam-insert-immediate)
-    map))
+    "i" #'org-roam-insert-immediate
+    )
 #+end_src
 
 ** Markdown
