@@ -14,7 +14,7 @@
 \usepackage{thm-restate}
 \usepackage{algorithm}
 \usepackage{algorithmic}
-\usepackage{cleveref}
+\usepackage[capitalise,noabbrev]{cleveref}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % thm-restate theorems
