@@ -249,19 +249,24 @@ The keybindings for various modes will be defined in their respective sections w
   
 #+end_src
 
-#+RESULTS:
-: t
-
-** Commenting in evil mode (evil-nerd-commenter)
+Commenting in evil mode with evil-nerd-commenter.
 #+begin_src elisp
   (use-package evil-nerd-commenter
     :after evil
     :ensure t)
 #+end_src
 
-#+RESULTS:
 
-** Additional evil niceties (evil-collection)
+Surrounding in evil mode with evil-surround (emulation of vim.surround).
+#+begin_src elisp
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+#+end_src
+
+
+Additional evil niceties (evil-collection).
 #+begin_src elisp
     (use-package evil-collection
       :after evil
@@ -271,7 +276,7 @@ The keybindings for various modes will be defined in their respective sections w
   )
 #+end_src
 
-** Evil-org-mode integration
+Evil-org-mode integration.
 #+begin_src elisp
   (use-package evil-org
     :ensure t
@@ -281,6 +286,7 @@ The keybindings for various modes will be defined in their respective sections w
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
 #+end_src
+
 
 * Vertico (vertical completion UI)
 A lot of the configuration that follows is taken directly from the [[https://github.com/minad/vertico][vertico.el README.org]].
