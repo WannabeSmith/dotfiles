@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: my_algorithm
+# key: algorithm
+# --
+\begin{algorithm}[!htbp]
+  \caption{${}}
+  \label{algorithm:${}}
+  \begin{algorithmic}
+    \FOR{$t = 1,2, \dots$}
+    \STATE{}\;
+    \IF{}
+    \STATE{\textit{// Comments}}
+    \STATE{}
+    \ELSE{}
+    \STATE{} \;
+    \ENDIF
+    \ENDFOR
+  \end{algorithmic}
+\end{algorithm}
