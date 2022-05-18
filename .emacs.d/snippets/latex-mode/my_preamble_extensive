@@ -12,6 +12,9 @@
 \usepackage{mathabx}
 \usepackage{thmtools}
 \usepackage{thm-restate}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{cleveref}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % thm-restate theorems
@@ -88,6 +91,11 @@
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\arginf}{arginf}
 \DeclareMathOperator*{\argsup}{argsup}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some other useful macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\newcommand{\iid}{\text{i.i.d.}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % meta (todo & comments)
