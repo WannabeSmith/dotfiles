@@ -259,10 +259,20 @@ Commenting in evil mode with evil-nerd-commenter.
 
 Surrounding in evil mode with evil-surround (emulation of vim.surround).
 #+begin_src elisp
-(use-package evil-surround
-  :ensure t
-  :config
-  (global-evil-surround-mode 1))
+  (use-package evil-surround
+    :ensure t
+    :config
+    (add-hook 'LaTeX-mode-hook (lambda ()
+                                 (push '(?\" . ("``" . "''"))
+                                       evil-surround-pairs-alist)
+                                 (push '(?r . ("\\left ( " . " \\right ) "))
+                                       evil-surround-pairs-alist)
+                                 (push '(?c . ("\\left { " . " \\right } "))
+                                       evil-surround-pairs-alist)
+                                 (push '(?s . ("\\left [ " . " \\right ] "))
+                                       evil-surround-pairs-alist)
+                                 ))
+    (global-evil-surround-mode 1))
 #+end_src
 
 
