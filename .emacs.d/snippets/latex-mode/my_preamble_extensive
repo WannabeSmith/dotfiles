@@ -2,7 +2,6 @@
 # name: my_preamble_extensive
 # key: preamble_extensive
 # --
-
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath, amsthm, amssymb, amsfonts}
 \usepackage{dsfont}
@@ -77,12 +76,16 @@
 \newcommand{\infprodseq}[2]{\prodseq{#1}{#2}{\infty}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% confidence sets
+% Terminology
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\ci}{CI}
 \newcommand{\Ci}{Confidence interval}
 \newcommand{\cs}{CS}
 \newcommand{\Cs}{Confidence sequence}
+\newcommand{\nsm}{nonnegative supermartingale}
+\newcommand{\Nsm}{Nonnegative supermartingale}
+\newcommand{\nm}{nonnegative martingale}
+\newcommand{\Nm}{Nonnegative martingale}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % arg min/max/inf/sup
