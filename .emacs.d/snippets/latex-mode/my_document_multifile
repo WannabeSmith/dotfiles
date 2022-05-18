@@ -6,6 +6,7 @@
 
 \usepackage[colorlinks,linkcolor=magenta,citecolor=blue, pagebackref=true]{hyperref}
 \usepackage[margin=1.2in]{geometry}
+\usepackage[numbers]{natbib}
 
 \input{preamble}
 
