@@ -179,8 +179,8 @@ The following global keybindings deliver similar functionality to what one would
 #+begin_src elisp
   (global-set-key (kbd "C-<tab>") #'tab-next)
   (global-set-key (kbd "C-S-<tab>") #'tab-previous)
-  (global-set-key (kbd "s-t") #'my/tab-new-scratch)
-  (global-set-key (kbd "s-w") #'tab-close)
+  (global-set-key (kbd "M-t") #'my/tab-new-scratch)
+  (global-set-key (kbd "M-w") #'tab-close)
 #+end_src
 
 ** Frame management
@@ -190,8 +190,12 @@ Create a new frame with the scratch buffer.
   (defun my/frame-new-scratch ()
     (interactive)
     (make-frame)
-    (switch-to-buffer "*scratch*")
     )
+#+end_src
+
+Create a new frame using cmd+n.
+#+begin_src elisp
+  (global-set-key (kbd "M-n") #'my/frame-new-scratch)
 #+end_src
 
 * Mode-specific custom keybindings
