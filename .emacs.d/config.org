@@ -301,7 +301,6 @@ Evil-org-mode integration.
     (evil-org-agenda-set-keys))
 #+end_src
 
-
 * Vertico (vertical completion UI)
 A lot of the configuration that follows is taken directly from the [[https://github.com/minad/vertico][vertico.el README.org]].
 #+begin_src elisp
