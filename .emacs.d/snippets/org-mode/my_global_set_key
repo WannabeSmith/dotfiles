@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: my_global_set_key
+# key: global_set_key
+# --
+(global-set-key (kbd "${keybinding}") #'${function})
