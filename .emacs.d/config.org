@@ -109,7 +109,6 @@ Show matching parenthesis highlighting.
 (show-paren-mode t)
 #+end_src
 
-
 * General global options and keybindings
 Use M-/ for commenting, to match other apps (namely overleaf).
 #+begin_src elisp
