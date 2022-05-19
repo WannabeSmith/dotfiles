@@ -622,14 +622,15 @@ Install and configure AUCTeX.
               TeX-source-correlate-start-server t)
 
         ;; Update PDF buffers after successful LaTeX runs
-        ;; (add-hook 'TeX-after-compilation-finished-functions
-        ;;           #'TeX-revert-document-buffer))
-        ;; ;; Set up forward/backward search with [[https://skim-app.sourceforge.io][Skim.app]].
+        (add-hook 'TeX-after-compilation-finished-functions
+                  #'TeX-revert-document-buffer)
+
+
         ;; (setq TeX-view-program-list '(("Skim_displayline" "/Applications/Skim.app/Contents/SharedSupport/displayline -g -b %n %o %b")))
         ;; ;; Use Skim_displayline by default for opening pdfs.
         ;; (setq TeX-view-program-selection '((output-dvi "open")
-        ;;                                    (output-pdf "Skim_displayline")
-        ;;                                    (output-html "open")))
+        ;; 				   (output-pdf "Skim_displayline")
+        ;; 				   (output-html "open")))
         ))
      ((string-equal system-type "gnu/linux")
       (progn
@@ -643,11 +644,10 @@ Install and configure AUCTeX.
         (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
               TeX-source-correlate-start-server t)
 
-
         ;; Update PDF buffers after successful LaTeX runs
         (add-hook 'TeX-after-compilation-finished-functions
-                  #'TeX-revert-document-buffer))
-
+                  #'TeX-revert-document-buffer)
+        )
 
       ))
     ;; Use synctex to correlate TeX and PDF.
