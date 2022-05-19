@@ -126,19 +126,12 @@ Line-by-line scrolling.
 	scroll-conservatively  10000)
 #+end_src
 
-Maybe use `C-hjkl' for moving to different windows.
-Perhaps disable behaviour of C-w so that we can do "C-w h/j/k/l" in insert mode?
+Use "C-c hjkl" for moving to different windows.
 #+begin_src elisp
-  ;; (bind-keys* ("C-h" . evil-window-left)
-  ;;             ("C-j" . evil-window-down)
-  ;;             ("C-k" . evil-window-up)
-  ;;             ("C-l" . evil-window-right))
-#+end_src
-
-Use “C-c l” and “C-c j” for splitting windows vertically (right) and horizontally (down)
-#+begin_src elisp
-(global-set-key (kbd "C-c l") #'evil-window-vsplit)
-(global-set-key (kbd "C-c j") #'evil-window-split)
+(global-set-key (kbd "C-c h") #'evil-window-left)
+(global-set-key (kbd "C-c j") #'evil-window-down)
+(global-set-key (kbd "C-c k") #'evil-window-up)
+(global-set-key (kbd "C-c l") #'evil-window-right)
 #+end_src
 
 Switch to the new window after splitting
