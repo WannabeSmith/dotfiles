@@ -463,6 +463,8 @@ Custom keybindings.
     "d" #'eldoc-doc-buffer
     "D" #'xref-find-definitions-other-window
     "r" #'xref-find-references
+    "p" #'flymake-goto-prev-error
+    "n" #'flymake-goto-next-error
     )
 #+end_src
 
