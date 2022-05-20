@@ -814,11 +814,11 @@ Set org agenda files.
 
 Org-babel languages to load
 #+begin_src elisp
-  ;; (org-babel-do-load-languages
-  ;;  'org-babel-load-languages
-  ;;  '((emacs-lisp . t)
-  ;;    (python . t)
-  ;;    (jupyter . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (jupyter . t)))
 #+end_src
 
 *** Custom functions
