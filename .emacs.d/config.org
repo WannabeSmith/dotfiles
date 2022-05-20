@@ -413,11 +413,21 @@ Create some global yasnippet-related keybindings.
     :init (global-flycheck-mode))
   #+end_src
 
-* Text file navigation ([[https://github.com/abo-abo/avy][Avy]])
+* Text file navigation ([[https://github.com/hlissner/evil-snipe][evil-snipe]] and [[ [[https://github.com/abo-abo/avy][Avy]])
+
+#+begin_src elisp
+    (use-package evil-snipe
+      :config
+      (evil-snipe-mode +1)
+      (evil-snipe-override-mode +1)
+      )
+#+end_src
 
 #+begin_src elisp
   (use-package avy
     :config
+    ;; Don't want a timeout. Just require hitting RET.
+    (setq avy-timeout-seconds nil)
     (avy-setup-default)
     (global-set-key (kbd "C-c g") #'avy-goto-char-timer)
     )
