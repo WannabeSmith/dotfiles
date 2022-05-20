@@ -999,6 +999,11 @@ Install spell-fu
   (add-hook 'spell-fu-mode-hook 'my/bind-spelling-bindings)
 #+end_src
 
+* Terminal ([[https://github.com/akermu/emacs-libvterm][vterm]])
+#+begin_src elisp
+(use-package vterm
+    :ensure t)
+#+end_src
 * Frequently accessed files and folders
 #+begin_src elisp
   (setq documents-directory "~/Documents")
