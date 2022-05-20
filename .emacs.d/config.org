@@ -433,36 +433,54 @@ Create some global yasnippet-related keybindings.
     )
 #+end_src
 
-* LSP (lsp-mode)
+* LSP ([[https://github.com/joaotavora/eglot][eglot]])
 
 #+begin_src elisp
-  (use-package lsp-mode
-    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-           ;; (python-mode . lsp)
-           ;; if you want which-key integration
-           (lsp-mode . lsp-enable-which-key-integration)))
+  ;; (use-package lsp-mode
+  ;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+  ;;          ;; (python-mode . lsp)
+  ;;          ;; if you want which-key integration
+  ;;          (lsp-mode . lsp-enable-which-key-integration)))
 
-  (use-package lsp-ui :commands lsp-ui-mode)
+  ;; (use-package lsp-ui :commands lsp-ui-mode)
 
   ;; One day. Debugger.
   ;; (use-package dap-mode)
 #+end_src
 
+Install eglot.
+#+begin_src elisp
+  (use-package eglot)
+#+end_src
+
+Custom keybindings.
+#+begin_src elisp
+  (general-create-definer my-eglot-def
+    :prefix "C-c i")
+
+  (my-eglot-def
+    "" '(:ignore t :which-key "my/eglot")
+    "d" #'eldoc-doc-buffer
+    "D" #'xref-find-definitions-other-window
+    "r" #'xref-find-references
+    )
+#+end_src
+
 ** Python
 #+begin_src elisp
-  (use-package lsp-pyright
-    :ensure t)
-    
+  ;; (use-package lsp-pyright
+  ;;   :ensure t)
+
 #+end_src
 
 *** Virtual environment interaction
 
 Make LSP ignore virtual environments that satisfy the pattern "venv*".
 #+begin_src elisp
-  (defun my/python-lsp-ignore-venv ()
-    (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
-  (add-hook 'python-mode-hook
-            #'(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
+  ;; (defun my/python-lsp-ignore-venv ()
+  ;;   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
+  ;; (add-hook 'python-mode-hook
+  ;;           #'(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
 #+end_src
 
 * Coding
@@ -556,7 +574,8 @@ Now that we’ve defined my/python-venv-auto-activate, let’s run it *and start
   (add-hook 'find-file-hook
             #'(lambda () (when (string= (file-name-extension buffer-file-name) "py")
                            (my/python-venv-auto-activate)
-                           (lsp))))
+                           (eglot-ensure)
+                           )))
 #+end_src
 
 *** Formatting
@@ -576,12 +595,10 @@ Create a python formatter using [[https://github.com/psf/black][black]].
     "r" #'pyvenv-restart-python
     "v" #'pyvenv-activate
     "f" #'python-black-format-buffer
-    "d" #'lsp-ui-doc-glance
     "j" '(:ignore t :which-key "my/jupyter")
     "j R" #'jupyter-repl-associate-buffer
     )
 #+end_src
-
 
 ** R (ess)
 *** TODO ess-r-mode-specific keybindings
