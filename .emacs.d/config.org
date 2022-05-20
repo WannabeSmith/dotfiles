@@ -437,14 +437,10 @@ Create some global yasnippet-related keybindings.
 
 #+begin_src elisp
   (use-package lsp-mode
-    :init
-    ;; set prefix for lsp-command-keymap
-    (setq lsp-keymap-prefix "C-c l")
     :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-           (python-mode . lsp)
+           ;; (python-mode . lsp)
            ;; if you want which-key integration
-           (lsp-mode . lsp-enable-which-key-integration))
-    :commands lsp)
+           (lsp-mode . lsp-enable-which-key-integration)))
 
   (use-package lsp-ui :commands lsp-ui-mode)
 
@@ -455,10 +451,18 @@ Create some global yasnippet-related keybindings.
 ** Python
 #+begin_src elisp
   (use-package lsp-pyright
-    :ensure t
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-pyright)
-                           (lsp))))  ; or lsp-deferred
+    :ensure t)
+    
+#+end_src
+
+*** Virtual environment interaction
+
+Make LSP ignore virtual environments that satisfy the pattern "venv*".
+#+begin_src elisp
+  (defun my/python-lsp-ignore-venv ()
+    (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
+  (add-hook 'python-mode-hook
+            #'(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
 #+end_src
 
 * Coding
@@ -486,7 +490,9 @@ Allow running code from a .py buffer straight to the Jupyter REPL.
   (add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
 #+end_src
 
-*** Virtual environment interaction
+*** Automatic virtual environment loading
+We want to create a function `my/python-venv-auto-activate` that searches for any virtual environments with pattern “venv*” in a particular list of directories; if there’s a unique match, activate it; otherwise, warn the user that there’s no/multiple virtual environments.
+
 Pattern for virtual environments. In particular, we will always assume that virtual environments are within a folder satisfying the regex "venv*", for example "venv" or "venv_project1", and so on.
 #+begin_src elisp
   (defun my/venv_pattern ()
@@ -494,23 +500,8 @@ Pattern for virtual environments. In particular, we will always assume that virt
     "venv*")
 #+end_src
 
-Make LSP ignore virtual environments that satisfy the pattern "venv*".
-#+begin_src elisp
-  (defun my/python-lsp-ignore-venv ()
-    (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
-  (add-hook 'python-mode-hook
-            #'(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
-#+end_src
-
-***** Automatic virtual environment loading
-We want to create a function `my/python-venv-auto-activate` that searches for any virtual environments with pattern “venv*” in a particular list of directories; if there’s a unique match, activate it; otherwise, warn the user that there’s no/multiple virtual environments.
-
 The following functions are essentially helper functions for `my/python-venv-auto-activate` which will itself be defined in the next code block.
 #+begin_src elisp
-  (defun my/venv_pattern ()
-    "Virtual environment pattern"
-    "venv*")
-
   (defun my/venv_directories_to_search ()
     "List of directories in which to search for `my/venv_pattern`"
     ;; Remove all nil elements
@@ -560,11 +551,12 @@ Now that we have the above helper functions, we are ready to define my/python-ve
         (display-warning :warning (concat "Found multiple venvs. Please select one manually using `pyvenv-activate`.")))))
 #+end_src
 
-Now that we’ve defined my/python-venv-auto-activate, let’s run it whenever opening a .py file. Note that we do not use an “(add-hook ‘python-mode-hook …)” approach here because ‘python-mode-hook gets run every time code is sent from the python file to the REPL. Found from sds’s answer [[https://emacs.stackexchange.com/questions/12396/run-command-when-opening-a-file-of-a-specific-filetype][here]].
+Now that we’ve defined my/python-venv-auto-activate, let’s run it *and start LSP* whenever opening a .py file. Note that we do not use an “(add-hook ‘python-mode-hook …)” approach here because ‘python-mode-hook gets run every time code is sent from the python file to the REPL. Found from sds’s answer [[https://emacs.stackexchange.com/questions/12396/run-command-when-opening-a-file-of-a-specific-filetype][here]].
 #+begin_src elisp
   (add-hook 'find-file-hook
             #'(lambda () (when (string= (file-name-extension buffer-file-name) "py")
-                          (my/python-venv-auto-activate))))
+                           (my/python-venv-auto-activate)
+                           (lsp))))
 #+end_src
 
 *** Formatting
@@ -584,6 +576,7 @@ Create a python formatter using [[https://github.com/psf/black][black]].
     "r" #'pyvenv-restart-python
     "v" #'pyvenv-activate
     "f" #'python-black-format-buffer
+    "d" #'lsp-ui-doc-glance
     "j" '(:ignore t :which-key "my/jupyter")
     "j R" #'jupyter-repl-associate-buffer
     )
