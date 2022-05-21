@@ -602,6 +602,11 @@ Create a python formatter using [[https://github.com/psf/black][black]].
     )
 #+end_src
 
+** Jupyter
+#+begin_src elisp
+(use-package ein)
+#+end_src
+
 ** R (ess)
 *** TODO ess-r-mode-specific keybindings
 #+begin_src elisp
