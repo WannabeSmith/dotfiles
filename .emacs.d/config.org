@@ -1009,6 +1009,11 @@ Install spell-fu
 (use-package vterm
     :ensure t)
 #+end_src
+
+
+#+begin_src elisp
+  (global-set-key (kbd "C-c t") #'vterm-other-window)
+#+end_src
 * Frequently accessed files and folders
 #+begin_src elisp
   (setq documents-directory "~/Documents")
