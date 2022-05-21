@@ -1118,25 +1118,22 @@ Install spell-fu
 
 "C-c o" will be reserved for opening files/directories
 #+begin_src elisp
-  (global-set-key (kbd "C-c o") 'my/open)
+  (general-create-definer my-files-def
+    :prefix "C-c f")
 
-  (defalias 'my/open
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "e") #'my/emacs-config)
-      (define-key map (kbd "t") #'my/open-themes-directory)
-      (define-key map (kbd "o") #'my/open-org-directory)
-      (define-key map (kbd "d") #'my/open-documents-directory)
-      (define-key map (kbd "g") #'my/open-gitprojects-directory)
-      (define-key map (kbd "p") #'my/open-papers-directory)
-      (define-key map (kbd "c") #'my/open-cloud-unencrypted-directory)
-      map) "Config-related bindings")
-
-  (defalias 'my/emacs-config
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "c") #'my/open-config-org-file)
-      (define-key map (kbd "i") #'my/open-init-file)
-      (define-key map (kbd "s") #'my/open-snippets-directory)
-      map) "Config-related bindings")
+  (my-files-def
+    "" '(:ignore t :which-key "my/files")
+    "t" #'my/open-themes-directory
+    ;; "o" #'my/open-org-directory
+    "d" #'my/open-documents-directory
+    "g" #'my/open-gitprojects-directory
+    "p" #'my/open-papers-directory
+    "c" #'my/open-cloud-unencrypted-directory
+    "e" '(:ignore t :which-key "my/emacs-config")
+    "e c" #'my/open-config-org-file
+    "e i" #'my/open-init-file
+    "e s" #'my/open-snippets-directory
+    )
 #+end_src
 
 * Autocompletion (company)
