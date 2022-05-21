@@ -131,19 +131,12 @@ Line-by-line scrolling.
 	scroll-conservatively  10000)
 #+end_src
 
-Maybe use `C-hjkl' for moving to different windows.
-Perhaps disable behaviour of C-w so that we can do "C-w h/j/k/l" in insert mode?
+Use "C-c hjkl" for moving to different windows.
 #+begin_src elisp
-  ;; (bind-keys* ("C-h" . evil-window-left)
-  ;;             ("C-j" . evil-window-down)
-  ;;             ("C-k" . evil-window-up)
-  ;;             ("C-l" . evil-window-right))
-#+end_src
-
-Use “C-c l” and “C-c j” for splitting windows vertically (right) and horizontally (down)
-#+begin_src elisp
-(global-set-key (kbd "C-c l") #'evil-window-vsplit)
-(global-set-key (kbd "C-c j") #'evil-window-split)
+(global-set-key (kbd "C-c h") #'evil-window-left)
+(global-set-key (kbd "C-c j") #'evil-window-down)
+(global-set-key (kbd "C-c k") #'evil-window-up)
+(global-set-key (kbd "C-c l") #'evil-window-right)
 #+end_src
 
 Switch to the new window after splitting
@@ -164,6 +157,7 @@ Save place so that when a file is reopened, the cursor returns to the place it w
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "l") #'evil-switch-to-windows-last-buffer)
       (define-key map (kbd "k") #'kill-this-buffer)
+      (define-key map (kbd "K") #'kill-buffer-and-window)
       (define-key map (kbd "s") #'switch-to-buffer)
       map))
 #+end_src
@@ -305,7 +299,6 @@ Evil-org-mode integration.
     (evil-org-agenda-set-keys))
 #+end_src
 
-
 * Vertico (vertical completion UI)
 A lot of the configuration that follows is taken directly from the [[https://github.com/minad/vertico][vertico.el README.org]].
 #+begin_src elisp
@@ -418,7 +411,7 @@ Create some global yasnippet-related keybindings.
 
 #+end_src
 
-* Flycheck
+* On-the-fly checking (flycheck)
 
 #+begin_src elisp
   (use-package flycheck
@@ -426,36 +419,79 @@ Create some global yasnippet-related keybindings.
     :init (global-flycheck-mode))
   #+end_src
 
-* LSP (lsp-mode)
+* Text file navigation ([[https://github.com/hlissner/evil-snipe][evil-snipe]] and [[ [[https://github.com/abo-abo/avy][Avy]])
 
 #+begin_src elisp
-  (use-package lsp-mode
-    :init
-    ;; set prefix for lsp-command-keymap
-    (setq lsp-keymap-prefix "C-c l")
-    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-           (python-mode . lsp)
-           ;; if you want which-key integration
-           (lsp-mode . lsp-enable-which-key-integration))
-    :commands lsp)
+    (use-package evil-snipe
+      :config
+      (evil-snipe-mode +1)
+      (evil-snipe-override-mode +1)
+      )
+#+end_src
 
-  (use-package lsp-ui :commands lsp-ui-mode)
+#+begin_src elisp
+  (use-package avy
+    :config
+    ;; Don't want a timeout. Just require hitting RET.
+    (setq avy-timeout-seconds nil)
+    (avy-setup-default)
+    (global-set-key (kbd "C-c g") #'avy-goto-char-timer)
+    )
+#+end_src
+
+* LSP ([[https://github.com/joaotavora/eglot][eglot]])
+
+#+begin_src elisp
+  ;; (use-package lsp-mode
+  ;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+  ;;          ;; (python-mode . lsp)
+  ;;          ;; if you want which-key integration
+  ;;          (lsp-mode . lsp-enable-which-key-integration)))
+
+  ;; (use-package lsp-ui :commands lsp-ui-mode)
 
   ;; One day. Debugger.
   ;; (use-package dap-mode)
 #+end_src
 
+Install eglot.
+#+begin_src elisp
+  (use-package eglot)
+#+end_src
+
+Custom keybindings.
+#+begin_src elisp
+  (general-create-definer my-eglot-def
+    :prefix "C-c i")
+
+  (my-eglot-def
+    "" '(:ignore t :which-key "my/eglot")
+    "d" #'eldoc-doc-buffer
+    "D" #'xref-find-definitions-other-window
+    "r" #'xref-find-references
+    "p" #'flymake-goto-prev-error
+    "n" #'flymake-goto-next-error
+    )
+#+end_src
+
 ** Python
 #+begin_src elisp
-  (use-package lsp-pyright
-    :ensure t
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-pyright)
-                           (lsp))))  ; or lsp-deferred
+  ;; (use-package lsp-pyright
+  ;;   :ensure t)
+
+#+end_src
+
+*** Virtual environment interaction
+
+Make LSP ignore virtual environments that satisfy the pattern "venv*".
+#+begin_src elisp
+  ;; (defun my/python-lsp-ignore-venv ()
+  ;;   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
+  ;; (add-hook 'python-mode-hook
+  ;;           #'(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
 #+end_src
 
 * Coding
-
 ** Formatting
 #+begin_src elisp
   (use-package reformatter
@@ -479,7 +515,9 @@ Allow running code from a .py buffer straight to the Jupyter REPL.
   (add-hook 'jupyter-repl-mode-hook (lambda () (setq jupyter-repl-echo-eval-p t)))
 #+end_src
 
-*** Virtual environment interaction
+*** Automatic virtual environment loading
+We want to create a function `my/python-venv-auto-activate` that searches for any virtual environments with pattern “venv*” in a particular list of directories; if there’s a unique match, activate it; otherwise, warn the user that there’s no/multiple virtual environments.
+
 Pattern for virtual environments. In particular, we will always assume that virtual environments are within a folder satisfying the regex "venv*", for example "venv" or "venv_project1", and so on.
 #+begin_src elisp
   (defun my/venv_pattern ()
@@ -487,23 +525,8 @@ Pattern for virtual environments. In particular, we will always assume that virt
     "venv*")
 #+end_src
 
-Make LSP ignore virtual environments that satisfy the pattern "venv*".
-#+begin_src elisp
-  (defun my/python-lsp-ignore-venv ()
-    (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
-  (add-hook 'python-mode-hook
-            #'(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
-#+end_src
-
-***** Automatic virtual environment loading
-We want to create a function `my/python-venv-auto-activate` that searches for any virtual environments with pattern “venv*” in a particular list of directories; if there’s a unique match, activate it; otherwise, warn the user that there’s no/multiple virtual environments.
-
 The following functions are essentially helper functions for `my/python-venv-auto-activate` which will itself be defined in the next code block.
 #+begin_src elisp
-  (defun my/venv_pattern ()
-    "Virtual environment pattern"
-    "venv*")
-
   (defun my/venv_directories_to_search ()
     "List of directories in which to search for `my/venv_pattern`"
     ;; Remove all nil elements
@@ -553,11 +576,13 @@ Now that we have the above helper functions, we are ready to define my/python-ve
         (display-warning :warning (concat "Found multiple venvs. Please select one manually using `pyvenv-activate`.")))))
 #+end_src
 
-Now that we’ve defined my/python-venv-auto-activate, let’s run it whenever opening a .py file. Note that we do not use an “(add-hook ‘python-mode-hook …)” approach here because ‘python-mode-hook gets run every time code is sent from the python file to the REPL. Found from sds’s answer [[https://emacs.stackexchange.com/questions/12396/run-command-when-opening-a-file-of-a-specific-filetype][here]].
+Now that we’ve defined my/python-venv-auto-activate, let’s run it *and start LSP* whenever opening a .py file. Note that we do not use an “(add-hook ‘python-mode-hook …)” approach here because ‘python-mode-hook gets run every time code is sent from the python file to the REPL. Found from sds’s answer [[https://emacs.stackexchange.com/questions/12396/run-command-when-opening-a-file-of-a-specific-filetype][here]].
 #+begin_src elisp
   (add-hook 'find-file-hook
             #'(lambda () (when (string= (file-name-extension buffer-file-name) "py")
-                          (my/python-venv-auto-activate))))
+                           (my/python-venv-auto-activate)
+                           (eglot-ensure)
+                           )))
 #+end_src
 
 *** Formatting
@@ -582,6 +607,10 @@ Create a python formatter using [[https://github.com/psf/black][black]].
     )
 #+end_src
 
+** Jupyter
+#+begin_src elisp
+(use-package ein)
+#+end_src
 
 ** R (ess)
 *** TODO ess-r-mode-specific keybindings
@@ -795,11 +824,11 @@ Set org agenda files.
 
 Org-babel languages to load
 #+begin_src elisp
-  ;; (org-babel-do-load-languages
-  ;;  'org-babel-load-languages
-  ;;  '((emacs-lisp . t)
-  ;;    (python . t)
-  ;;    (jupyter . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (jupyter . t)))
 #+end_src
 
 *** Custom functions
@@ -968,7 +997,7 @@ Install spell-fu
 #+end_src
  
 #+begin_src elisp
-  (global-set-key (kbd "C-c s") 'my/spelling)
+  (global-set-key (kbd "C-c s") #'my/spelling)
 
   (defun my/bind-spelling-bindings ()
     (defalias 'my/spelling
@@ -980,6 +1009,16 @@ Install spell-fu
   (add-hook 'spell-fu-mode-hook 'my/bind-spelling-bindings)
 #+end_src
 
+* Terminal ([[https://github.com/akermu/emacs-libvterm][vterm]])
+#+begin_src elisp
+(use-package vterm
+    :ensure t)
+#+end_src
+
+
+#+begin_src elisp
+  (global-set-key (kbd "C-c t") #'vterm-other-window)
+#+end_src
 * Frequently accessed files and folders
 #+begin_src elisp
   (setq documents-directory "~/Documents")

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 personal_ws-1.1 en 19 
+=======
+personal_ws-1.1 en 20 
+>>>>>>> 89d6a99292d8ea3152dd4f719cb0f0929213a774
 adaptively
 adaptivity
 asympcs
@@ -12,7 +16,9 @@ nonasymptotic
 nonasymptotically
 nonnegative
 nonparametric
+nonstationary
 optimality
+prespecified
 quantile
 semiparametric
 semiparametrics
