@@ -469,7 +469,7 @@ Create some global yasnippet-related keybindings.
     :init (global-flycheck-mode))
   #+end_src
 
-* Text file navigation ([[https://github.com/hlissner/evil-snipe][evil-snipe]] and [[ [[https://github.com/abo-abo/avy][Avy]])
+* Text file navigation ([[https://github.com/hlissner/evil-snipe][evil-snipe]], [[https://github.com/abo-abo/avy][Avy]], and [[https://github.com/emacsorphanage/anzu][anzu]])
 
 #+begin_src elisp
     (use-package evil-snipe
@@ -487,6 +487,17 @@ Create some global yasnippet-related keybindings.
     (avy-setup-default)
     (global-set-key (kbd "C-c g") #'avy-goto-char-timer)
     )
+#+end_src
+
+#+begin_src elisp
+  (use-package anzu
+    :config
+    (global-anzu-mode 1))
+
+  (use-package evil-anzu
+    :config
+    (with-eval-after-load 'evil
+      (require 'evil-anzu)))
 #+end_src
 
 * LSP ([[https://github.com/joaotavora/eglot][eglot]])
