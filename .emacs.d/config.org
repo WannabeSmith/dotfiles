@@ -1194,7 +1194,7 @@ Install spell-fu
   (my-files-def
     "" '(:ignore t :which-key "my/files")
     "t" #'my/open-themes-directory
-    ;; "o" #'my/open-org-directory
+    "o" #'my/open-org-directory
     "d" #'my/open-documents-directory
     "g" #'my/open-gitprojects-directory
     "p" #'my/open-papers-directory
