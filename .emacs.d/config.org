@@ -834,14 +834,18 @@ Remove rainbow delimiters. Maybe add this back?
   (use-package org
     :defer t
     :config
-    (setq org-startup-indented t))
-
+    (setq org-startup-indented t)
+    (require 'org-habit)
+    (add-to-list 'org-modules 'org-habit)
+    (setq org-agenda-skip-scheduled-if-done t)
+    ;; (setq org-agenda-skip-deadline-if-done t)
+    )
 #+end_src
 
+Enable org-download so that we can drag and drop screenshots into org.
 #+begin_src elisp
   (use-package org-download
     :config
-    ;; Enable org-download so that we can drag and drop screenshots into org.
     (add-hook 'dired-mode-hook 'org-download-enable)
     :defer t
     )
@@ -869,7 +873,12 @@ Sync with beorg on iOS.
 
 Set org agenda files.
 #+begin_src elisp
-(setq org-agenda-files (list org-directory))
+  (setq org-agenda-files (list org-directory))
+#+end_src
+
+Set default org file (for the sake of org-capture).
+#+begin_src elisp
+  (setq org-default-notes-file (concat org-directory "/inbox.org"))
 #+end_src
 
 Org-babel languages to load
@@ -879,6 +888,26 @@ Org-babel languages to load
    '((emacs-lisp . t)
      (python . t)
      (jupyter . t)))
+#+end_src
+
+*** Global keybindings
+#+begin_src elisp
+
+  (defun org-capture-task
+      ()
+    (interactive)
+    (org-capture nil "t"))
+
+  (general-create-definer my-org-def
+    :prefix "C-c o"))
+
+  (my-org-def
+    "" '(:ignore t :which-key "my/org")
+    "a" #'org-agenda-list
+    "A" #'org-agenda
+    "c" #'org-capture-task
+    )
+
 #+end_src
 
 *** Custom functions
@@ -907,15 +936,38 @@ Org-babel languages to load
 
 #+end_src
 
+#+begin_src elisp
+  (defun my/org-set-todo ()
+    (interactive)
+    "Set the current item to TODO"
+    (org-todo "TODO"))
+
+  (defun my/org-set-done ()
+    (interactive)
+    "Set the current item to DONE"
+    (org-todo "DONE"))
+
+  (defun my/org-set-habit ()
+    (interactive)
+    "Turn the current item into a habit"
+    (org-set-property "STYLE" "habit")
+    (org-todo "IN-PROGRESS")
+    (org-schedule nil)
+    )
+#+end_src
+
 *** org-mode-specific keybindings
 #+begin_src elisp
 
   (my-local-leader-def
-  :keymaps 'org-mode-map
-  "" '(:ignore t :which-key "my/org")
-  "s" #'my/org-sort-todo-list-from-within-and-save
-  )
-
+    :keymaps 'org-mode-map
+    "" '(:ignore t :which-key "my/org")
+    "s" #'my/org-sort-todo-list-from-within-and-save
+    "T" #'my/org-todo
+    "t" #'my/org-set-todo
+    "d" #'my/org-set-done
+    "h" #'my/org-set-habit
+    )
 
 #+end_src
 
