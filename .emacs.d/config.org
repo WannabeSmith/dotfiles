@@ -358,6 +358,9 @@ A lot of the configuration that follows is taken directly from the [[https://git
     :init
     (vertico-mode)
 
+    ;; Make completion flexible
+    (add-to-list 'completion-styles 'flex)
+
     ;; Different scroll margin
     ;; (setq vertico-scroll-margin 0)
 
