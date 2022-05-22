@@ -904,20 +904,20 @@ Org-babel languages to load
 *** Global keybindings
 #+begin_src elisp
 
-  (defun org-capture-task
-      ()
-    (interactive)
-    (org-capture nil "t"))
+    (defun org-capture-task
+        ()
+      (interactive)
+      (org-capture nil "t"))
 
-  (general-create-definer my-org-def
-    :prefix "C-c o"))
+    (general-create-definer my-org-def
+      :prefix "C-c o")
 
-  (my-org-def
-    "" '(:ignore t :which-key "my/org")
-    "a" #'org-agenda-list
-    "A" #'org-agenda
-    "c" #'org-capture-task
-    )
+    (my-org-def
+      "" '(:ignore t :which-key "my/org")
+      "a" #'org-agenda-list
+      "A" #'org-agenda
+      "c" #'org-capture-task
+      )
 
 #+end_src
 
@@ -974,12 +974,18 @@ Org-babel languages to load
     :keymaps 'org-mode-map
     "" '(:ignore t :which-key "my/org")
     "s" #'my/org-sort-todo-list-from-within-and-save
-    "T" #'my/org-todo
+    "T" #'org-todo
     "t" #'my/org-set-todo
     "d" #'my/org-set-done
     "h" #'my/org-set-habit
     )
 
+#+end_src
+
+*** org-agenda-mode-specific keybindings
+Bind "q" to org-agenda-exit instead of org-agenda-quit so that all of the .org files are also deleted
+#+begin_src elisp
+  (define-key org-agenda-mode-map (kbd "q") 'org-agenda-exit)
 #+end_src
 
 *** Headings
@@ -1132,6 +1138,7 @@ Install spell-fu
 #+begin_src elisp
   (global-set-key (kbd "C-c t") #'vterm-other-window)
 #+end_src
+ 
 * Frequently accessed files and folders
 #+begin_src elisp
   (setq documents-directory "~/Documents")
@@ -1179,7 +1186,7 @@ Install spell-fu
     (interactive) (ido-find-file-in-dir org-directory))
 #+end_src
 
-"C-c o" will be reserved for opening files/directories
+"C-c f" will be reserved for opening files/directories
 #+begin_src elisp
   (general-create-definer my-files-def
     :prefix "C-c f")
@@ -1387,4 +1394,5 @@ The following code is largely based on https://christiantietze.de/posts/2021/06/
 
 #+begin_src elisp
   ;; (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
+  ;; (org-agenda-list)
 #+end_src
