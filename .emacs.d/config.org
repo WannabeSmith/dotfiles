@@ -1442,6 +1442,19 @@ The following code is largely based on https://christiantietze.de/posts/2021/06/
 
 #+begin_src elisp
   ;; (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
-  (switch-to-buffer (find-file-noselect (concat org-directory "inbox.org")))
-  (org-agenda-list)
+
+  (cond
+   ((string-equal system-type "windows-nt")
+    (progn
+      ;; Windows options here
+      ))
+   ((string-equal system-type "darwin") ;  macOS
+    (progn
+      (switch-to-buffer (find-file-noselect (concat org-directory "inbox.org")))
+      (org-agenda-list)
+      ))
+   ((string-equal system-type "gnu/linux")
+    (progn
+      ;; Linux options here
+      )))  
 #+end_src
