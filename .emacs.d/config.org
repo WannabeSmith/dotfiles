@@ -1345,7 +1345,32 @@ Add YASnippet to company-backends. Taken from [[https://www.reddit.com/r/emacs/c
 
 Enter insert mode when firing up a magit commit.
 #+begin_src elisp
-(add-hook 'git-commit-mode-hook 'evil-insert-state)
+  (add-hook 'git-commit-mode-hook 'evil-insert-state)
+#+end_src
+
+
+** git-gutter(-fringe)
+
+git-gutter styles taken from [[https://github.com/doomemacs/doomemacs/blob/develop/modules/ui/vc-gutter/config.el][hlissner]].
+#+begin_src elisp
+  (use-package git-gutter
+    :config
+    (global-git-gutter-mode +1))
+
+  (use-package git-gutter-fringe
+    :config 
+    ;; standardize default fringe width
+    (if (fboundp 'fringe-mode) (fringe-mode '4))
+
+    ;; places the git gutter outside the margins.
+    (setq-default fringes-outside-margins t)
+    ;; thin fringe bitmaps
+    (define-fringe-bitmap 'git-gutter-fr:added [224]
+      nil nil '(center repeated))
+    (define-fringe-bitmap 'git-gutter-fr:modified [224]
+      nil nil '(center repeated))
+    (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240]
+      nil nil 'bottom))
 #+end_src
 
 * Configuration-related
