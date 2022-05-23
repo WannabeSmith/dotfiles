@@ -968,6 +968,18 @@ Org-babel languages to load
     (org-todo "IN-PROGRESS")
     (org-schedule nil)
     )
+
+  ;; Same functions as above but for org-agenda.
+  (defun my/org-agenda-set-todo ()
+    (interactive)
+    "Set the current item to TODO"
+    (org-agenda-todo "TODO"))
+
+  (defun my/org-agenda-set-done ()
+    (interactive)
+    "Set the current item to DONE"
+    (org-agenda-todo "DONE"))
+
 #+end_src
 
 *** org-mode-specific keybindings
@@ -989,6 +1001,14 @@ Org-babel languages to load
 Bind "q" to org-agenda-exit instead of org-agenda-quit so that all of the .org files are also deleted
 #+begin_src elisp
   (define-key org-agenda-mode-map (kbd "q") 'org-agenda-exit)
+  
+  (my-local-leader-def
+    :keymaps 'org-agenda-mode-map
+    "" '(:ignore t :which-key "my/org-agenda")
+    "T" #'org-agenda-todo
+    "t" #'my/org-agenda-set-todo
+    "d" #'my/org-agenda-set-done
+    )
 #+end_src
 
 *** Headings
