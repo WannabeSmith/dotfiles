@@ -1438,9 +1438,10 @@ The following code is largely based on https://christiantietze.de/posts/2021/06/
 
 #+end_src
 
-* Open config on startup.
+* Open on startup.
 
 #+begin_src elisp
   ;; (switch-to-buffer (find-file-noselect "~/.emacs.d/config.org"))
-  ;; (org-agenda-list)
+  (switch-to-buffer (find-file-noselect (concat org-directory "inbox.org")))
+  (org-agenda-list)
 #+end_src
