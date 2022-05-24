@@ -1167,7 +1167,7 @@ Install spell-fu
 
 
 #+begin_src elisp
-  (global-set-key (kbd "C-c t") #'vterm-other-window)
+  (global-set-key (kbd "C-c T") #'vterm-other-window)
 #+end_src
  
 * Frequently accessed files and folders
