@@ -675,6 +675,7 @@ Create a python formatter using [[https://github.com/psf/black][black]].
     "f" #'python-black-format-buffer
     "j" '(:ignore t :which-key "my/jupyter")
     "j R" #'jupyter-repl-associate-buffer
+    "j r" #'jupyter-repl-restart-kernel
     )
 #+end_src
 
