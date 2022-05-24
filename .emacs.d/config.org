@@ -915,20 +915,29 @@ Org-babel languages to load
 *** Global keybindings
 #+begin_src elisp
 
-    (defun org-capture-task
-        ()
-      (interactive)
-      (org-capture nil "t"))
+  (defun org-capture-task ()
+    (interactive)
+    (org-capture nil "t"))
 
-    (general-create-definer my-org-def
-      :prefix "C-c o")
+  (defun org-open-habits ()
+    (interactive)
+    (find-file (expand-file-name "habits.org" org-directory)))
 
-    (my-org-def
-      "" '(:ignore t :which-key "my/org")
-      "a" #'org-agenda-list
-      "A" #'org-agenda
-      "c" #'org-capture-task
-      )
+  (defun org-open-inbox ()
+    (interactive)
+    (find-file (expand-file-name "inbox.org" org-directory)))
+
+  (general-create-definer my-org-def
+    :prefix "C-c o")
+
+  (my-org-def
+    "" '(:ignore t :which-key "my/org")
+    "a" #'org-agenda-list
+    "A" #'org-agenda
+    "c" #'org-capture-task
+    "h" #'org-open-habits
+    "i" #'org-open-inbox
+    )
 
 #+end_src
 
@@ -1459,7 +1468,7 @@ The following code is largely based on https://christiantietze.de/posts/2021/06/
    ((string-equal system-type "darwin") ;  macOS
     (progn
       (switch-to-buffer (find-file-noselect (concat org-directory "inbox.org")))
-      (org-agenda-list)
+      ;; (org-agenda-list)
       ))
    ((string-equal system-type "gnu/linux")
     (progn
