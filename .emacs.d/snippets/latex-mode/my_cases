@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: my_cases
+# key: cases
+# --
+\begin{cases}
+    ${value1} & \text{if}~${condition1}\\\\
+    ${value2} & \text{if}~${condition2}\\\\
+\end{cases}
