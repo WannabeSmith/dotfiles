@@ -1173,14 +1173,31 @@ Install spell-fu
   (add-hook 'spell-fu-mode-hook 'my/bind-spelling-bindings)
 #+end_src
 
-* Terminal ([[https://github.com/akermu/emacs-libvterm][vterm]])
+* Terminal ([[https://github.com/akermu/emacs-libvterm][vterm]] and iTerm)
+Install vterm.
 #+begin_src elisp
-(use-package vterm
+  (use-package vterm
     :ensure t)
+#+end_src
+
+Create function for opening iTerm. Taken and modified from [[https://www.reddit.com/r/emacs/comments/27xoo5/open_current_directory_in_iterm2_from_emacs/][here]].
+#+begin_src elisp
+  (defun iterm-here ()
+    (interactive)
+    (shell-command "open -a iTerm $PWD" nil nil))
 #+end_src
 
 
 #+begin_src elisp
+    (general-create-definer my-terminal-def
+    :prefix "C-c T")
+
+  (my-terminal-def
+    "" '(:ignore t :which-key "my/terminal")
+    "i" #'iterm-here
+    "v" #'vterm-other-window
+    )
+
   (global-set-key (kbd "C-c T") #'vterm-other-window)
 #+end_src
  
