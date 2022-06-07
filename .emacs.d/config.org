@@ -478,6 +478,7 @@ Create some global yasnippet-related keybindings.
     :ensure t
     :init (global-flycheck-mode))
   #+end_src
+
 * Text file navigation ([[https://github.com/hlissner/evil-snipe][evil-snipe]], [[https://github.com/abo-abo/avy][Avy]], and [[https://github.com/emacsorphanage/anzu][anzu]])
 
 #+begin_src elisp
@@ -562,6 +563,11 @@ Make LSP ignore virtual environments that satisfy the pattern "venv*".
 #+end_src
 
 * Coding
+** Documentation
+#+begin_src elisp
+(setq eldoc-echo-area-use-multiline-p nil)
+#+end_src
+
 ** Formatting
 #+begin_src elisp
   (use-package reformatter
