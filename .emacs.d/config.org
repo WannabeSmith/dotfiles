@@ -478,7 +478,6 @@ Create some global yasnippet-related keybindings.
     :ensure t
     :init (global-flycheck-mode))
   #+end_src
-
 * Text file navigation ([[https://github.com/hlissner/evil-snipe][evil-snipe]], [[https://github.com/abo-abo/avy][Avy]], and [[https://github.com/emacsorphanage/anzu][anzu]])
 
 #+begin_src elisp
