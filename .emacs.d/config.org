@@ -495,7 +495,7 @@ Create some global yasnippet-related keybindings.
     ;; Don't want a timeout. Just require hitting RET.
     (setq avy-timeout-seconds nil)
     (avy-setup-default)
-    (global-set-key (kbd "C-c g") #'avy-goto-char-timer)
+    (global-set-key (kbd "C-c n") #'avy-goto-char-timer)
     )
 #+end_src
 
@@ -1078,22 +1078,22 @@ Change capture template so that the timestamp is not in the filename.
 *** Org-roam-specific keybindings
 #+begin_src elisp
 
-  (general-create-definer my-notes-def
-    :prefix "C-c n")
+  ;; (general-create-definer my-notes-def
+  ;;   :prefix "C-c n")
 
-  (my-notes-def
-    "" '(:ignore t :which-key "my/notes")
-    ;; Open org-roam buffer
-    "r" #'org-roam
-    ;; Find file
-    "f" #'org-roam-find-file
-    ;; Capture
-    "c" #'org-roam-capture
-    ;; Insert link
-    "i" #'org-roam-insert
-    ;; Insert link immediate
-    "i" #'org-roam-insert-immediate
-    )
+  ;; (my-notes-def
+  ;;   "" '(:ignore t :which-key "my/notes")
+  ;;   ;; Open org-roam buffer
+  ;;   "r" #'org-roam
+  ;;   ;; Find file
+  ;;   "f" #'org-roam-find-file
+  ;;   ;; Capture
+  ;;   "c" #'org-roam-capture
+  ;;   ;; Insert link
+  ;;   "i" #'org-roam-insert
+  ;;   ;; Insert link immediate
+  ;;   "i" #'org-roam-insert-immediate
+  ;;   )
 #+end_src
 
 ** Markdown
