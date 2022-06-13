@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: my_restatable_lemma
+# key: restatable_lemma
+# --
+\begin{restatable}[]{lemma}{${name}}\label{lemma:${name}}
+    $0 
+\end{restatable}
