@@ -510,45 +510,45 @@ Create some global yasnippet-related keybindings.
       (require 'evil-anzu)))
 #+end_src
 
-* LSP ([[https://github.com/joaotavora/eglot][eglot]])
+* LSP
+
+Install eglot.
+#+begin_src elisp
+  ;; (use-package eglot)
+#+end_src
+
+Custom keybindings.
+#+begin_src elisp
+  ;; (general-create-definer my-eglot-def
+  ;;   :prefix "C-c i")
+
+  ;; (my-eglot-def
+  ;;   "" '(:ignore t :which-key "my/eglot")
+  ;;   "d" #'eldoc-doc-buffer
+  ;;   "D" #'xref-find-definitions-other-window
+  ;;   "r" #'xref-find-references
+  ;;   "p" #'flymake-goto-prev-error
+  ;;   "n" #'flymake-goto-next-error
+  ;;   )
+#+end_src
 
 #+begin_src elisp
-  ;; (use-package lsp-mode
-  ;;   :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
-  ;;          ;; (python-mode . lsp)
-  ;;          ;; if you want which-key integration
-  ;;          (lsp-mode . lsp-enable-which-key-integration)))
+  (use-package lsp-mode
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           ;; (python-mode . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration)))
 
-  ;; (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package lsp-ui :commands lsp-ui-mode)
 
   ;; One day. Debugger.
   ;; (use-package dap-mode)
 #+end_src
 
-Install eglot.
-#+begin_src elisp
-  (use-package eglot)
-#+end_src
-
-Custom keybindings.
-#+begin_src elisp
-  (general-create-definer my-eglot-def
-    :prefix "C-c i")
-
-  (my-eglot-def
-    "" '(:ignore t :which-key "my/eglot")
-    "d" #'eldoc-doc-buffer
-    "D" #'xref-find-definitions-other-window
-    "r" #'xref-find-references
-    "p" #'flymake-goto-prev-error
-    "n" #'flymake-goto-next-error
-    )
-#+end_src
-
 ** Python
 #+begin_src elisp
-  ;; (use-package lsp-pyright
-  ;;   :ensure t)
+  (use-package lsp-pyright
+    :ensure t)
 
 #+end_src
 
@@ -556,10 +556,10 @@ Custom keybindings.
 
 Make LSP ignore virtual environments that satisfy the pattern "venv*".
 #+begin_src elisp
-  ;; (defun my/python-lsp-ignore-venv ()
-  ;;   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
-  ;; (add-hook 'python-mode-hook
-  ;;           #'(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
+  (defun my/python-lsp-ignore-venv ()
+    (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\venv*"))
+  (add-hook 'python-mode-hook
+            #'(lambda () (add-hook 'lsp-mode-hook 'my/python-lsp-ignore-venv)))
 #+end_src
 
 * Coding
@@ -657,7 +657,7 @@ Now that we’ve defined my/python-venv-auto-activate, let’s run it *and start
   (add-hook 'find-file-hook
             #'(lambda () (when (string= (file-name-extension buffer-file-name) "py")
                            (my/python-venv-auto-activate)
-                           (eglot-ensure)
+                           (lsp)
                            )))
 #+end_src
 
@@ -1197,8 +1197,6 @@ Create function for opening iTerm. Taken and modified from [[https://www.reddit.
     "i" #'iterm-here
     "v" #'vterm-other-window
     )
-
-  (global-set-key (kbd "C-c T") #'vterm-other-window)
 #+end_src
  
 * Frequently accessed files and folders
