@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: my_ceil
+# key: ceil
+# --
+\left \lceil $0 \right \rceil
