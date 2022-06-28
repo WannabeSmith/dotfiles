@@ -536,6 +536,7 @@ Custom keybindings.
   (use-package lsp-mode
     :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
            ;; (python-mode . lsp)
+           ;; Handling python-mode lsp later in Python section. Search for my/python-venv-auto-activate
            ;; if you want which-key integration
            (lsp-mode . lsp-enable-which-key-integration)))
 
