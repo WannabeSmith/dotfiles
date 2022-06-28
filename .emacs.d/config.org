@@ -36,7 +36,10 @@ Disable scrollbar, toolbar, tooltips, and menu bar.
   (scroll-bar-mode -1)
   (tool-bar-mode -1)  
   (tooltip-mode -1)   
+  (menu-bar-mode -1)
 #+end_src
+
+#+RESULTS:
 
 Fringe.
 #+begin_src elisp
@@ -179,11 +182,18 @@ Automatically detect dark mode on macOS. Taken from [[https://notes.arne.me/auto
       ))
    ((string-equal system-type "gnu/linux")
     (progn
-      ;; Default to light mode.
-      (my/set-light-theme)
+      (if (display-graphic-p)
+          (progn
+            ;; if graphic
+            (my/set-light-theme))
+        ;; else (optional)
+        (my/set-dark-theme))
       )))  
 
 #+end_src
+
+#+RESULTS:
+: dark
 
 * General global options and keybindings
 Use M-/ for commenting, to match other apps (namely overleaf).
@@ -739,8 +749,8 @@ Install and configure AUCTeX.
         (setq TeX-view-program-list '(("Skim_displayline" "/Applications/Skim.app/Contents/SharedSupport/displayline -g -b %n %o %b")))
         ;; Use Skim_displayline by default for opening pdfs.
         (setq TeX-view-program-selection '((output-dvi "open")
-        				   (output-pdf "Skim_displayline")
-        				   (output-html "open")))
+                                           (output-pdf "Skim_displayline")
+                                           (output-html "open")))
         ))
      ((string-equal system-type "gnu/linux")
       (progn
@@ -749,14 +759,17 @@ Install and configure AUCTeX.
         ;; (setq pdf-sync-backward-display-action t)
         ;; (setq pdf-sync-forward-display-action t)       
 
-        (setq TeX-view-program-list '(("pdf-tools" TeX-pdf-tools-sync-view)))
+        ;; (setq TeX-view-program-list '(("pdf-tools" TeX-pdf-tools-sync-view)))
 
-        (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
-              TeX-source-correlate-start-server t)
+        ;; (setq TeX-view-program-selection '((output-pdf "pdf-tools"))
+        ;;       TeX-source-correlate-start-server t)
 
         ;; Update PDF buffers after successful LaTeX runs
-        (add-hook 'TeX-after-compilation-finished-functions
-                  #'TeX-revert-document-buffer)
+        ;; (add-hook 'TeX-after-compilation-finished-functions
+        ;;           #'TeX-revert-document-buffer)
+
+        (add-to-list 'TeX-view-program-selection
+                     '(output-pdf "Zathura"))
         )
 
       ))
@@ -784,6 +797,7 @@ Install and configure AUCTeX.
 #+end_src
 
 #+RESULTS:
+: t
 
 Install math and auctex additions to company-mode.
 #+begin_src elisp
@@ -826,6 +840,7 @@ Bind latex-specific bindings.
     "" '(:ignore t :which-key "my/LaTeX")
     "c" #'my/latex-save-and-compile
     "b" #'my/latex-bibtex
+    "v" #'TeX-view
     )
 
 
@@ -1155,7 +1170,7 @@ Install spell-fu
     (add-hook 'LaTeX-mode-hook
               (lambda ()
                 (setq spell-fu-faces-exclude
-                      '(font-latex-math-face))
+                      '(font-latex-math-face, font-latex-script-char-face))
                 (spell-fu-mode)))
     )
 #+end_src
