@@ -66,8 +66,8 @@ let g:slime_python_ipython=1
 
 " ################### Vimtex ###################
 " vimtex<->Skim integration
-let g:vimtex_view_method = "skim"
-let g:vimtex_view_general_viewer = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+let g:vimtex_view_method = "zathura"
+" let g:vimtex_view_general_viewer = '/Applications/Skim.app/Contents/SharedSupport/displayline'
 let g:vimtex_view_general_options = '-r @line @pdf @tex'
 let g:vimtex_compiler_progname = 'nvr'
 
@@ -110,15 +110,13 @@ augroup vimtex_common
     autocmd!
     autocmd FileType tex call SetServerName()
 augroup END
+
+" Don't open quickfix window on warning
+" (https://github.com/lervag/vimtex/issues/864)
+let g:vimtex_quickfix_open_on_warning = 0
+
+let g:vimtex_overload_DoNoMatchParen = 1
 " ################### End Vimtex ###################
 
-" colorscheme nord
-
-if v:version < 801
-  " Vim version is less than 8.1
-  " Example use-case: logging into PSC/Bridges where Vim version = 8.0
-  " Disable CoC
-  let g:coc_disable_startup_warning = 1
-  let g:coc_start_at_startup=0
-endif
+colorscheme industry
 
