@@ -558,6 +558,19 @@ Custom keybindings.
 
   (use-package lsp-ui :commands lsp-ui-mode)
 
+
+  (general-create-definer my-lsp-def
+    :prefix "C-c i")
+
+  (my-lsp-def
+   "" '(:ignore t :which-key "my/lsp")
+   ;; "d" #'eldoc-doc-buffer
+   "D" #'lsp-find-definition
+   "r" #'lsp-find-references
+   "p" #'flycheck-previous-error
+   "n" #'flycheck-next-error
+   )
+
   ;; One day. Debugger.
   ;; (use-package dap-mode)
 #+end_src
