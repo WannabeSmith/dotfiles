@@ -1498,6 +1498,12 @@ The following code is largely based on https://christiantietze.de/posts/2021/06/
 
 #+end_src
 
+* Tools
+#+begin_src elisp
+  (defun my/delete-this-file ()
+    (interactive)
+    (delete-file (buffer-file-name)))
+#+end_src
 * Open on startup.
 
 #+begin_src elisp
