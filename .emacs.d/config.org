@@ -31,15 +31,15 @@ Disable startup message
   (setq inhibit-startup-message t)
 #+end_src 
 
-Disable scrollbar, toolbar, tooltips, and menu bar.
+Disable scrollbar, toolbar, and tooltips.
 #+begin_src elisp
   (scroll-bar-mode -1)
   (tool-bar-mode -1)  
   (tooltip-mode -1)   
-  (menu-bar-mode -1)
-#+end_src
 
-#+RESULTS:
+  ;; Keep menu-bar-mode on. https://emacs.stackexchange.com/questions/28121/osx-switching-to-virtual-desktop-doesnt-focus-emacs
+  ;; (menu-bar-mode -1)
+#+end_src
 
 Fringe.
 #+begin_src elisp
