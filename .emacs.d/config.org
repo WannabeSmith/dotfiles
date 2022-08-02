@@ -31,15 +31,15 @@ Disable startup message
   (setq inhibit-startup-message t)
 #+end_src 
 
-Disable scrollbar, toolbar, tooltips, and menu bar.
+Disable scrollbar, toolbar, and tooltips.
 #+begin_src elisp
   (scroll-bar-mode -1)
   (tool-bar-mode -1)  
   (tooltip-mode -1)   
-  (menu-bar-mode -1)
-#+end_src
 
-#+RESULTS:
+  ;; Keep menu-bar-mode on. https://emacs.stackexchange.com/questions/28121/osx-switching-to-virtual-desktop-doesnt-focus-emacs
+  ;; (menu-bar-mode -1)
+#+end_src
 
 Fringe.
 #+begin_src elisp
@@ -54,8 +54,8 @@ Fonts.
       (message "Microsoft Windows")))
    ((string-equal system-type "darwin") ;  macOS
     (progn
-      (set-face-attribute 'default nil :family "Roboto Mono" :height 145)
-      (set-face-attribute 'fixed-pitch nil :family "Roboto Mono" :height 145)
+      (set-face-attribute 'default nil :family "Fira Mono" :height 145)
+      (set-face-attribute 'fixed-pitch nil :family "Fira Mono" :height 145)
       (set-face-attribute 'variable-pitch nil :family "Times" :height 1.0)
       ))
    ((string-equal system-type "gnu/linux")
@@ -66,22 +66,24 @@ Fonts.
       )))
 #+end_src
 
+#+RESULTS:
+
 Use doom-themes.
 #+begin_src elisp
-  ;; ;; First, install all-the-icons. 
-  ;; ;; Note: on a fresh install, we need to run M-x all-the-icons-install-fonts.
-  ;; (use-package all-the-icons)
+  ;; First, install all-the-icons. 
+  ;; Note: on a fresh install, we need to run M-x all-the-icons-install-fonts.
+  (use-package all-the-icons)
 
-  ;; (use-package doom-themes
-  ;;   :ensure t
-  ;;   :config
-  ;;   ;; Global settings (defaults)
-  ;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-  ;;         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (use-package doom-themes
+    :ensure t
+    :config
+    ;; Global settings (defaults)
+    (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+          doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-  ;;   ;; Enable flashing mode-line on errors
-  ;;   ;; (doom-themes-visual-bell-config)
-  ;;   (doom-themes-org-config))
+    ;; Enable flashing mode-line on errors
+    ;; (doom-themes-visual-bell-config)
+    (doom-themes-org-config))
 #+end_src
 
 Use doom-modeline.
@@ -110,8 +112,8 @@ Show matching parenthesis highlighting.
 ** Light/dark modes.
 
 #+begin_src elisp
-  (setq my/light-theme 'modus-operandi)
-  (setq my/dark-theme 'modus-vivendi)
+  (setq my/light-theme 'doom-one-light)
+  (setq my/dark-theme 'doom-zenburn)
 #+end_src
 
 The variable my/light-dark-flag is currently set to nil, but we will set it to 'light or 'dark depending on whether my/light-theme or my/dark-theme is currently active.
@@ -767,11 +769,20 @@ Install and configure AUCTeX.
         ;;           #'TeX-revert-document-buffer)
 
 
+        ;; Skim
+        ;; (add-to-list 'TeX-view-program-selection
+        ;;              '(output-pdf "Skim"))
+  
         (setq TeX-view-program-list '(("Skim_displayline" "/Applications/Skim.app/Contents/SharedSupport/displayline -g -b %n %o %b")))
         ;; Use Skim_displayline by default for opening pdfs.
         (setq TeX-view-program-selection '((output-dvi "open")
                                            (output-pdf "Skim_displayline")
                                            (output-html "open")))
+
+        ;; zathura
+        ;; (add-to-list 'TeX-view-program-selection
+        ;;              '(output-pdf "Zathura"))
+
         ))
      ((string-equal system-type "gnu/linux")
       (progn
@@ -1511,6 +1522,12 @@ The following code is largely based on https://christiantietze.de/posts/2021/06/
 
 #+end_src
 
+* Tools
+#+begin_src elisp
+  (defun my/delete-this-file ()
+    (interactive)
+    (delete-file (buffer-file-name)))
+#+end_src
 * Open on startup.
 
 #+begin_src elisp

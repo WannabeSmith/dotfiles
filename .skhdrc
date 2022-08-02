@@ -1,0 +1,82 @@
+#!/usr/bin/env sh
+
+# focus window to the east/west/north/south and
+# focus display if that returns an error.
+# Idea came from https://github.com/koekeishiya/yabai/issues/526
+cmd + ctrl - h : yabai -m window --focus west || yabai -m display --focus west
+cmd + ctrl - j : yabai -m window --focus south || yabai -m display --focus south
+cmd + ctrl - k : yabai -m window --focus north || yabai -m display --focus north
+cmd + ctrl - l : yabai -m window --focus east || yabai -m display --focus east
+
+# swap managed window
+shift + cmd + ctrl - h : yabai -m window --swap west
+shift + cmd + ctrl - j : yabai -m window --swap south
+shift + cmd + ctrl - k : yabai -m window --swap north
+shift + cmd + ctrl - l : yabai -m window --swap east
+
+# move managed window
+shift + cmd + ctrl + alt - h : yabai -m window --warp west
+shift + cmd + ctrl + alt - j : yabai -m window --warp south
+shift + cmd + ctrl + alt - k : yabai -m window --warp north
+shift + cmd + ctrl + alt - l : yabai -m window --warp east
+
+# rotate tree
+cmd + ctrl - r : yabai -m space --rotate 90
+
+# toggle window fullscreen zoom
+cmd + ctrl - f : yabai -m window --toggle zoom-fullscreen
+
+# toggle padding and gap
+cmd + ctrl - g : yabai -m space --toggle padding; yabai -m space --toggle gap
+
+# float / unfloat window and center on screen
+cmd + ctrl - t : yabai -m window --toggle float;\
+          yabai -m window --grid 4:4:1:1:2:2
+
+# toggle window split type
+cmd + ctrl - e : yabai -m window --toggle split
+
+# balance size of windows
+cmd + ctrl - 0 : yabai -m space --balance
+
+# move window and focus desktop
+shift + cmd + ctrl - n : yabai -m window --space next 
+shift + cmd + ctrl - p : yabai -m window --space previous 
+
+cmd + ctrl - 1 : yabai -m window --space 1
+cmd + ctrl - 2 : yabai -m window --space 2
+cmd + ctrl - 3 : yabai -m window --space 3
+cmd + ctrl - 4 : yabai -m window --space 4
+cmd + ctrl - 5 : yabai -m window --space 5
+cmd + ctrl - 6 : yabai -m window --space 6
+cmd + ctrl - 7 : yabai -m window --space 7
+cmd + ctrl - 8 : yabai -m window --space 8
+cmd + ctrl - 9 : yabai -m window --space 9
+
+# create desktop, move window and follow focus - uses jq for parsing json (brew install jq)
+# shift + cmd + ctrl - n : yabai -m space --create && \
+#                    index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
+#                    yabai -m window --space "${index}" && \
+#                    yabai -m space --focus "${index}"
+
+# fast focus desktop
+cmd + ctrl - 0 : yabai -m space --focus recent
+
+# Resize window "left"
+ctrl + alt - h : yabai -m window --resize right:-30:0 || yabai -m window --resize left:-30:0
+# Resize window "down"
+ctrl + alt - j : yabai -m window --resize bottom:0:30 || yabai -m window --resize top:0:30
+# Resize window "up"
+ctrl + alt - k : yabai -m window --resize bottom:0:-30 || yabai -m window --resize top:0:-30
+# Resize window "right"
+ctrl + alt - l : yabai -m window --resize right:30:0 || yabai -m window --resize left:30:0
+
+# Move window "left"
+ctrl + alt + cmd - h : yabai -m window --move rel:-50:0
+# Move window "down"
+ctrl + alt + cmd - j : yabai -m window --move rel:0:50
+# Move window "up"
+ctrl + alt + cmd - k : yabai -m window --move rel:0:-50
+# Move window "right"
+ctrl + alt + cmd - l : yabai -m window --move rel:50:0
+
