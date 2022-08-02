@@ -2,7 +2,6 @@
 # name: my_theorem
 # key: theorem
 # --
-\begin{theorem}
-    \label{theorem:${label}}
-    ${}
+\begin{theorem}\label{theorem:${label}}
+    $0
 \end{theorem}
