@@ -1,10 +1,11 @@
-personal_ws-1.1 en 28
+personal_ws-1.1 en 31
 adaptively
 adaptivity
 asympcs
 asymptotics
 boundedness
 cumulant
+differentially
 gaussians
 hoeffding
 hyperparameters
@@ -20,10 +21,12 @@ nonstationary
 optimality
 pointwise
 prespecified
+priori
 quantile
 quantiles
 semiparametric
 semiparametrics
 supermartingale
 supermartingales
+unimprovable
 waudby
