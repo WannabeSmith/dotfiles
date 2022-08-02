@@ -769,11 +769,20 @@ Install and configure AUCTeX.
         ;;           #'TeX-revert-document-buffer)
 
 
+        ;; Skim
+        ;; (add-to-list 'TeX-view-program-selection
+        ;;              '(output-pdf "Skim"))
+  
         (setq TeX-view-program-list '(("Skim_displayline" "/Applications/Skim.app/Contents/SharedSupport/displayline -g -b %n %o %b")))
         ;; Use Skim_displayline by default for opening pdfs.
         (setq TeX-view-program-selection '((output-dvi "open")
                                            (output-pdf "Skim_displayline")
                                            (output-html "open")))
+
+        ;; zathura
+        ;; (add-to-list 'TeX-view-program-selection
+        ;;              '(output-pdf "Zathura"))
+
         ))
      ((string-equal system-type "gnu/linux")
       (progn
