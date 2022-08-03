@@ -262,7 +262,7 @@ The following global keybindings deliver similar functionality to what one would
   (global-set-key (kbd "C-S-<tab>") #'tab-previous)
 
   (general-create-definer my-tabs-def
-    :prefix "C-c t")
+    :prefix "C-c T")
 
   (my-tabs-def
    "" '(:ignore t :which-key "my/tabs")
@@ -1237,7 +1237,7 @@ Create function for opening iTerm. Taken and modified from [[https://www.reddit.
 
 #+begin_src elisp
     (general-create-definer my-terminal-def
-    :prefix "C-c T")
+    :prefix "C-c t")
 
   (my-terminal-def
     "" '(:ignore t :which-key "my/terminal")
